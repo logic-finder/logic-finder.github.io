@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Web Audio API Spec Korean Translation</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <header>
+      <p><a href="../index.html">return to home</a></p>
+      <br>
+      <p id="title">W3C Web Audio API Specification Korean Translation</p>
+      <p class="description">It would be appreciated if you note that this translation is <strong>unofficial</strong>; it is just for the pure sake of my studying Web Audio API.</p>
+      <p class="description">이 번역이 <strong>비공식</strong>임에 주목해주신다면 감사하겠습니다. 이 번역은 단지 순수하게 제가 Web Audio API를 공부하기 위한 것입니다.</p>
+      <a href="https://www.w3.org/TR/webaudio/">link to the original document</a>
+      <p>notice: currently on work: 21.11.18 ~ </p>
+    </header>
+    <main>
+      <div id="frame">
+        <h1>개요</h1>
+        <p>이 명세는 웹 애플리케이션에서 오디오를 프로세싱하고 합성하기 위한 고수준의 WEB API를 기술합니다. 이 API의 주요한 패러다임은 오디오 라우팅 그래프에 관한 것인데, 오디오 라우팅 그래프란 다수의 AudioNode 객체들이 함께 연결되어 전반적인 오디오 렌더링을 정의하는 것입니다. 실제적인 프로세싱은 근본적인 구현 (보통 최적화된 Assembly / C / C++ 코드) 에서 주로 일어나지만, 직접적인 스크립트 프로세싱과 합성 또한 지원됩니다.</p>
+        <p>아래의 '소개' 절은 이 명세의 동기를 다룹니다.</p>
+        <p>이 API는 웹 플랫폼상의 다른 API 및 요소와 함께 사용되도록 설계되었습니다. 주요한 것으로는 XMLHttpRequest [XHR] 이 있습니다 (responseType과 response 어트리뷰트를 사용). 게임과 상호작용이 일어나는 어플리케이션에 대해서는, canvas 2D [2dcontext] 와 WebGL [WEBGL] 3D 그래픽 API와 함께 사용되는 것이 기대됩니다.</p>
+        <h1>이 문서의 상태</h1>
+        <p>생략</p>
+        <h1>소개</h1>
+        <p>웹에서의 오디오는 이 시점까지 상당히 원시적이었고 아주 최근까지는 Flash나 QuickTime과 같은 플러그인을 통해 전송되었습니다. HTML5에서의 audio 요소의 소개는 아주 중요했는데, 이는 기본적인 스트리밍 오디오 재생을 가능케 했습니다. 그러나, 더욱 복잡한 오디오 애플리케이션을 다루기에는 충분히 강력하지 못했습니다. 정교한 웹 기반의 게임과 상호작용이 일어나는 애플리케이션에 대해서, 또 다른 해결책이 요구되었습니다. 현대의 데스크톱 오디오 프로덕션 애플리케이션에서 발견되는 몇몇 믹싱, 프로세싱, 필터링 태스크에 더불어 현대 게임의 오디오 엔진에서 발견되는 능력들을 포함하는 것이 이 명세의 목표입니다.</p>
+        <p>Web Audio API는 사용 경우 <a href="https://www.w3.org/TR/webaudio-usecases/" target="_blank">[webaudio-usecases]</a> 의 넓은 다양성을 염두에 두고 설계되었습니다. 이상적으로, 이 API는 스크립트를 통해 제어되고 브라우저에서 실행되는 최적화된 C++ 엔진으로 적절하게 구현될 수 있는 모든 사용 경우를 지원할 수 있어야 합니다. 그렇긴 하지만, 현대의 데스크톱 오디오 소프트웨어는 아주 발전된 능력을 가지고 있어서, 그것들 중 몇몇은 이 시스템으로 개발하기 어렵거나 불가능할지도 모릅니다. Apple의 Logic Audio가 그런 애플리케이션 중 하나인데, 이 애플리케이션은 외부 MIDI 컨트롤러, 임의 플러그인 오디오 이펙트, 신디사이저, 대단히 최적화된 직접 녹음형(direct-to-disk) 오디오 파일 읽기/쓰기, 단단히 통합된 time-stretching 등등을 지원합니다. 그럼에도 불구하고, 이 제안된 시스템은 적절히 복잡한 게임과 음악적인 애플리케이션을 포함하는 상호작용이 일어나는 애플리케이션의 넓은 범위를 꽤 지원할 수 있을 것입니다. 그리고 이 API는 WebGL에 의해 제공되는 아주 발전된 그래픽 기능의 아주 훌륭한 보완물이 될 수 있습니다. 이 API는 더욱 발전된 능력이 추후에 더해질 수 있도록 설계되었습니다.</p>
+        <h2>기능</h2>
+        <p>Web Audio API는 아래의 주요한 기능들을 지원합니다.</p>
+        <ul>
+          <li>간단하거나 복잡한 믹싱/이펙트 아키텍처를 위한 모듈러 라우팅</li>
+          <li>높은 dynamic 범위. 내부 프로세싱에서 32비트 float을 사용.</li>
+          <li>드럼 머신과 시퀸서와 같은 아주 높은 정도의 리듬 정밀도를 요구하는 음악 애플리케이션을 위한 낮은 레이턴시를 가지는 sample-accurate scheduled 사운드 재생. 이 기능은 또한 이펙트의 동적 생성의 가능성을 포함합니다.</li>
+          <li>엔벨로프, 페이드인/페이드아웃, granular 이펙트, 필터 sweep, LFO 등을 위한 오디오 파라미터의 automation</li>
+          <li>오디오 스트림에서의 유연한 채널 핸들링. 채널이 나눠지거나 합쳐질 수 있게 함.</li>
+          <li>&lt;audio&gt; 또는 &lt;video&gt; 미디어 요소로부터의 오디오 소스 프로세싱
+            <ul>
+              <li>MediaStreamTrackAudioSourceNode와 [webrtc]를 사용한 원격 peer로부터 받은 오디오 프로세싱</li>
+              <li>MediaStreamAudioDestinationNode와 [webrtc]를 사용해 원격 peer로 생성되거나 프로세싱된 오디오 스트림 전송</li>
+            </ul>
+          </li>
+          <li>스크립트를 사용한 직접적 오디오 스트림 합성과 프로세싱</li>
+          <li>3D 게임과 immersive한 환경의 넓은 범위를 지원하는 공간화된(spatialized) 오디오
+            <ul>
+              <li>패닝 모델: equalpower, HRTF, pass-through</li>
+              <li>거리 감쇠(attenuation)</li>
+              <li>sound cone</li>
+              <li>방해/폐쇄 (obstuction/occlusion)</li>
+              <li>음원(source)/청자(listener) 기반</li>
+            </ul>
+          </li>
+          <li>선형 이펙트의 넓은 범위를, 특히 아주 높은 품질의 room 이펙트를 위한 convolution 엔진. 아래는 가능한 효과의 몇 가지 예입니다.
+            <ul>
+              <li>작은/큰 방(room)</li>
+              <li>대성당(cathedral)</li>
+              <li>콘서트 홀</li>
+              <li>동굴(cave)</li>
+              <li>터널(tunnel)</li>
+              <li>복도(hallway)</li>
+              <li>숲(forest)</li>
+              <li>원형 극장(amphitheater)</li>
+              <li>출입구를 거치는 멀리 있는 방으로부터의 소리</li>
+              <li>extreme 필터</li>
+              <li>기묘한 backward 이펙트</li>
+              <li>extreme 빗(comb) 필터 이펙트</li>
+            </ul>
+          </li>
+          <li>믹스의 전반적인 제어와 sweetening을 위한 dynamics compression</li>
+          <li>효율적인 실시간 시간 영역(time-domain) 그리고 주파수 영역(frequency-domain) 분석 / 음악 시각화 지원</li>
+          <li>lowpass, highpass, 그리고 다른 일반적인 필터를 위한 효율적인 biquad 필터</li>
+          <li>distortion을 위한 waveshaping 효과와 다른 비선형적 효과</li>
+          <li>오실레이터(oscilator)</li>
+        </ul>
+        <h3>모듈러 라우팅</h3>
+        <p>모듈러 라우팅은 다른 AudioNode 객체 사이의 임의적인 연결을 가능케 합니다. 각 노드는 입력과 출력 양 쪽 모두 또는 어느 한 쪽을 가질 수 있습니다. 소스 노드는 입력이 없고 하나의 출력만을 가지고 있습니다. 목적지(destination) 노드는 하나의 입력을 가지고 출력이 없는 노드입니다. 필터와 같은 다른 노드들은 소스 노드와 목적지 노드 사이에 놓일 수 있습니다. 개발자는 두 객체가 함께 연결될 때의 저수준의 스트림 포맷 디테일에 대해 걱정할 필요가 없습니다. 올은 일이 단지 일어나니까요. 예를 들자면, 만약 모노 오디오 스트림이 스테레오 입력에 연결되었다면 API는 단지 좌측 채널과 우측 채널을 적절히 믹스할 것입니다.</p>
+        <p>가장 단순한 경우, 하나의 소스가 바로 출력으로 route될 수 있습니다. 모든 라우팅은 하나의 AudioDestinationNode를 포함하고 있는 AudioContext내에서 발생합니다.</p>
+        <figure>
+          <img src="img/modular-routing1.png" width="305" height="128">
+          <figcaption><strong>도식 1</strong> 모듈러 라우팅의 단순한 예제</figcaption>
+        </figure>
+        <p>위 그림은 이 단순한 라우팅을 보여줍니다. 아래는 하나의 사운드를 재생하는 간단한 예제입니다.</p>
+        <pre>예제 1
+const context = new AudioContext();
+
+function playSound() {
+  const source = context.createBufferSource();
+  source.buffer = dogBarkingBuffer;
+  source.connect(context.destination);
+  source.start(0);
+}
+        </pre>
+        <p>아래는 세 개의 소스와 최종 출력 스테이지에서 dynamics compressor로 보내지는 convolution reverb를 보여주는 더욱 복잡한 예시입니다.</p>
+        <figure>
+          <img src="img/modular-routing2.png" width="561" height="411">
+          <figcaption><strong>도식 2</strong> 모듈러 라우팅의 더욱 복잡한 예제</figcaption>
+        </figure>
+        <pre>예제 2
+let context;
+let compressor;
+let reverb;
+let source1, source2, source3;
+let lowpassFilter;
+let waveShaper;
+let panner;
+let dry1, dry2, dry3;
+let wet1, wet2, wet3;
+let mainDry;
+let mainWet;
+function setupRoutingGraph () {
+  context = new AudioContext();
+  // 이펙트 노드를 생성합니다.
+  lowpassFilter = context.createBiquadFilter();
+  waveShaper = context.createWaveShaper();
+  panner = context.createPanner();
+  compressor = context.createDynamicsCompressor();
+  reverb = context.createConvolver();
+  // main wet과 dry를 생성합니다.
+  mainDry = context.createGain();
+  mainWet = context.createGain();
+  // 마지막 compressor를 마지막 목적지에 연결합니다.
+  compressor.connect(context.destination);
+  // main dry와 wet을 compressor에 연결합니다.
+  mainDry.connect(compressor);
+  mainWet.connect(compressor);
+  // reverb를 main wet에 연결합니다.
+  reverb.connect(mainWet);
+  // 몇 가지 소스를 생성합니다.
+  source1 = context.createBufferSource();
+  source2 = context.createBufferSource();
+  source3 = context.createOscillator();
+  source1.buffer = manTalkingBuffer;
+  source2.buffer = footstepsBuffer;
+  source3.frequency.value = 440;
+  // source1을 연결합니다.
+  dry1 = context.createGain();
+  wet1 = context.createGain();
+  source1.connect(lowpassFilter);
+  lowpassFilter.connect(dry1);
+  lowpassFilter.connect(wet1);
+  dry1.connect(mainDry);
+  wet1.connect(reverb);
+  // source2를 연결합니다.
+  dry2 = context.createGain();
+  wet2 = context.createGain();
+  source2.connect(waveShaper);
+  waveShaper.connect(dry2);
+  waveShaper.connect(wet2);
+  dry2.connect(mainDry);
+  wet2.connect(reverb);
+  // source3을 연결합니다.
+  dry3 = context.createGain();
+  wet3 = context.createGain();
+  source3.connect(panner);
+  panner.connect(dry3);
+  panner.connect(wet3);
+  dry3.connect(mainDry);
+  wet3.connect(reverb);
+  // 소스들을 지금 시작시킵니다.
+  source1.start(0);
+  source2.start(0);
+  source3.start(0);
+}
+        </pre>
+        <p>모듈러 라우팅은 또한 AudioNode들의 출력이 다른 AudioNode의 행동을 제어하는 AudioParam 파라미터에 route될 수 있게 합니다. 아래의 시나리오에서, 노드의 출력은 입력 시그널보다는 조절 시그널로서 행동합니다.</p>
+        <figure>
+          <img src="img/modular-routing3.png" width="346" height="337">
+          <figcaption><strong>도식 3</strong> 하나의 오실레이터가 다른 오실레이터의 주파수를 조절하는 모습을 보여주는 모듈러 라우팅 시나리오</figcaption>
+        </figure>
+        <pre>예제 3
+function setupRoutingGraph() {
+  const context = new AudioContext();
+  // 조절 시그널을 공급하는 낮은 주파수의 오실레이터를 생성합니다
+  const lfo = context.createOscillator();
+  lfo.frequency.value = 1.0;
+  // 조절될 높은 주파수의 오실레이터를 생성합니다
+  const hfo = context.createOscillator();
+  hfo.frequency.value = 440.0;
+  // gain 노드를 생성하는데 이 노드의 gain은 조절 시그널의 진폭을 결정합니다
+  const modulationGain = context.createGain();
+  modulationGain.gain.value = 50;
+  // 그래프를 설정하고 오실레이터들을 시작시킵니다
+  lfo.connect(modulationGain);
+  modulationGain.connect(hfo.detune);
+  hfo.connect(context.destination);
+  hfo.start(0);
+  lfo.start(0);
+}
+        </pre>
+        <h2>API 개요</h2>
+        <p>정의되는 인터페이스들은 아래와 같습니다.</p>
+        <ul>
+          <li>AudioContext 인터페이스. 이 인터페이스는 AudioNode간의 연결을 표현하는 오디오 시그널 그래프를 포함합니다.</li>
+          <li>AudioNode 인터페이스. 이 인터페이스는 오디오 소스, 오디오 출력, 중간 프로세싱 모듈을 표현합니다. AudioNode는 모듈러 방식으로 동적으로 연결될 수 있습니다. AudioNode는 AudioContext의 컨텍스트 내에서 존재합니다.</li>
+          <li>AnalyserNode 인터페이스. 이는 음악 시각화나 다른 시각화 애플리케이션에서의 사용을 위한 AudioNode입니다.</li>
+          <li>AudioBuffer 인터페이스. 이는 메모리에 상주하는(memory-resident) 오디오 에셋으로 작업하기 위한 것입니다. 이 오디오 에셋은 한 번의 소리, 혹은 더 긴 오디오 클립을 표현할 수 있습니다.</li>
+          <li>AudioBufferSourceNode 인터페이스. 이는 AudioBuffer에서 오디오를 생성하는 AudioNode입니다.</li>
+          <li>AudioDestinationNode 인터페이스. 모든 렌더링된 오디오에 대한 마지막 목적지를 나타내는 AudioNode의 서브클래스입니다.</li>
+          <li>AudioParam 인터페이스. 볼륨과 같은 AudioNode 기능의 개별적 측면을 제어합니다.</li>
+          <li>AudioListener 인터페이스. 공간화를 위해 PannerNode와 함께 사용됩니다.</li>
+          <li>AudioWorklet 인터페이스. 스크립트를 사용해 직접 오디오를 프로세싱할 수 있는 사용자 정의 노드를 생성하기 위한 팩토리를 나타냅니다.</li>
+          <li>AudioWorkletGlobalScope 인터페이스. AudioWorkletProcessor의 프로세싱 스크립트가 실행되는 컨텍스트입니다.</li>
+          <li>AudioWorkletNode 인터페이스. AudioWorkletProcessor 내에서 프로세싱되는 노드를 나타내는 AudioNode입니다.</li>
+          <li>AudioWorkletProcessor 인터페이스. 오디오 worker 내부의 단일 노드 인스턴스를 나타냅니다.</li>
+          <li>BiquadFilterNode 인터페이스. 다음과 같은 일반적인 low-order 필터들에 대한 AudioNode입니다.
+            <ul>
+              <li>Low Pass</li>
+              <li>High Pass</li>
+              <li>Band Pass</li>
+              <li>Low Shelf</li>
+              <li>High Shelf</li>
+              <li>Peaking</li>
+              <li>Notch</li>
+              <li>Allpass</li>
+            </ul>
+          </li>
+          <li>ChannelMergerNode 인터페이스. 다수의 오디오 스트림으로부터의 채널을 하나의 오디오 스트림으로 결합하기 위한 AudioNode.</li>
+          <li>ChannelSplitterNode 인터페이스. 라우팅 그래프에서 오디오 스트림의 개개의 채널에 접근하기 위한 AudioNode.</li>
+          <li>ConstantSourceNode 인터페이스. AudioParam이 명목상의 constant 출력값의 automation을 허용하게 하며, 저 값을 생성하기 위한 AudioNode.</li>
+          <li>ConvolverNode 인터페이스. (콘서트 홀의 소리와 같이) 실시간 선형 이펙트를 적용하기 위한 AudioNode.</li>
+          <li>DelayNode 인터페이스. 동적으로 조정 가능한 가변적인 딜레이를 적용하는 AudioNode.</li>
+          <li>DynamicsCompressorNode 인터페이스. dynamics compression을 위한 AudioNode.</li>
+          <li>GainNode 인터페이스. 명시적인 gain 제어를 위한 AudioNode.</li>
+          <li>IIRFilterNode 인터페이스. 일반적인 IIR 필터를 위한 AudioNode.</li>
+          <li>MediaElementAudioSourceNode 인터페이스. &lt;audio&gt;, &lt;video&gt;, 혹은 그 밖의 미디어 요소로부터의 오디오 소스인 AudioNode.</li>
+          <li>MediaStreamTrackAudioSourceNode 인터페이스. MediaStreamTrack으로부터의 오디오 소스인 AudioNode.</li>
+          <li>MediaStreamAudioDestinationNode 인터페이스. 원격 peer에게 전송되는 MediaStream으로의 오디오 목적지인 AudioNode.</li>
+          <li>PannerNode 인터페이스. 3D 공간에서의 공간화/포지셔닝을 위한 AudioNode.</li>
+          <li>PeriodicWave 인터페이스. OscillatorNode에 의한 사용을 위한 사용자 정의 주기 파형을 명시하기 위한 인터페이스입니다.</li>
+          <li>OscillatorNode 인터페이스. 주기 파형을 생성하기 위한 AudioNode.</li>
+          <li>StereoPannerNode 인터페이스. 스테레오 스트림에서 오디오 입력의 equal-power 포지셔닝을 위한 AudioNode.</li>
+          <li>WaveShaperNode 인터페이스. distortion과 그 밖의 다른 subtle warming 효과를 위한 비선형적 waveshaping 효과를 적용하는 AudioNode.</li>
+        </ul>
+        <p>Web Audio API에서 폐기(deprecated)되었지만 이것들의 대체물의 구현 경험이 있을 때 까지는 아직 제거되지 않을 몇몇 기능들이 있습니다.</p>
+        <ul>
+          <li>ScriptProcessorNode 인터페이스. 스크립트를 사용해 직접적으로 오디오를 생성하거나 프로세싱하기 위한 AudioNode.</li>
+          <li>AudioProcessingEvent 인터페이스. ScriptProcessorNode 객체와 함께 사용되는 이벤트 유형입니다.</li>
+        </ul>
+    </div>
+    </main>
+  </body>
+</html>
