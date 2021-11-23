@@ -21,6 +21,7 @@ hr {
 hr::after {
   background: white;
   content: '♪';
+  font-size: 1.5rem;
   position: relative;
   top: -14px;
 }
