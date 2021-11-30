@@ -237,6 +237,91 @@ function setupRoutingGraph() {
           <li>ScriptProcessorNode 인터페이스. 스크립트를 사용해 직접적으로 오디오를 생성하거나 프로세싱하기 위한 AudioNode.</li>
           <li>AudioProcessingEvent 인터페이스. ScriptProcessorNode 객체와 함께 사용되는 이벤트 유형입니다.</li>
         </ul>
+        <h1>Audio API</h1>
+        <h2>BaseAudioContext 인터페이스</h2>
+        <p>BaseAudioContext 인터페이스는 AudioNode 객체들의 집합과 이 객체들의 연결을 나타냅니다. 이 인터페이스는 AudioDestinationNode로 향하는 임의적인 신호 라우팅을 고려합니다. 노드들은 이 컨텍스트에서 생성되고 그리고 나서 함께 연결됩니다.</p>
+        <p>BaseAudioContext는 직접적으로 인스턴스화되지 않지만, 대신 실체가 있는 인터페이스인 AudioContext (실시간 렌더링용) 와 OfflineAudioContext (오프라인 렌더링용) 에 의해 상속됩니다.</p>
+        <p>BaseAudioContext는 내부 슬롯 [[pending promises]] 를 가지고 생성되는데, 이 내부 슬롯은 초기적으로는 빈 promise의 정렬된 리스트입니다.</p>
+        <p>각 BaseAudioContext는 고유의 미디어 요소 이벤트 태스크 소스를 가지고 있습니다. 추가적으로, BaseAudioContext는 두 개의 private 슬롯 [[rendering thread state]] 와 [[control thread state]]를 가지고 있는데, 이 슬롯들은 AudioContextState로부터 값을 취하며, 둘 다 초기적으로 "suspended"로 설정되어 있습니다.</p>
+        <pre>
+enum AudioContextState {
+  "suspended",
+  "running",
+  "closed"
+};
+        </pre>
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">열거형 설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"<i>suspended</i>"</td>
+              <td>이 컨텍스트는 현재 연기되었습니다 (context time은 진행되지 않으며, audio 하드웨어는 전원이 차단되었거나/released 되었을 수 있습니다).</td>
+            </tr>
+            <tr>
+              <td>"<i>running</i>"</td>
+              <td>오디오가 처리되고 있습니다.</td>
+            </tr>
+            <tr>
+              <td>"<i>closed</i>"</td>
+              <td>이 컨텍스트는 released되었고, 더 이상 오디오를 처리하기 위해 사용될 수 없습니다. 모든 시스템 오디오 자원이 released되었습니다.</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <pre>
+callback DecodeErrorCallback = undefined (DOMException error);
+
+callback DecodeSuccessCallback = undefined (AudioBuffer decodedData);
+
+[Exposed=Window]
+interface BaseAudioContext : EventTarget {
+  readonly attribute AudioDestinationNode destination;
+  readonly attribute float sampleRate;
+  readonly attribute double currentTime;
+  readonly attribute AudioListener listener;
+  readonly attribute AudioContextState state;
+  [SameObject, SecureContext]
+  readonly attribute AudioWorklet audioWorklet;
+  attribute EventHandler onstatechange;
+
+  AnalyserNode createAnalyser ();
+  BiquadFilterNode createBiquadFilter ();
+  AudioBuffer createBuffer (unsigned long numberOfChannels,
+                            unsigned long length,
+                            float sampleRate);
+  AudioBufferSourceNode createBufferSource ();
+  ChannelMergerNode createChannelMerger (optional unsigned long numberOfInputs = 6);
+  ChannelSplitterNode createChannelSplitter (
+    optional unsigned long numberOfOutputs = 6);
+  ConstantSourceNode createConstantSource ();
+  ConvolverNode createConvolver ();
+  DelayNode createDelay (optional double maxDelayTime = 1.0);
+  DynamicsCompressorNode createDynamicsCompressor ();
+  GainNode createGain ();
+  IIRFilterNode createIIRFilter (sequence<double> feedforward,
+                                 sequence<double> feedback);
+  OscillatorNode createOscillator ();
+  PannerNode createPanner ();
+  PeriodicWave createPeriodicWave (sequence<float> real,
+                                   sequence<float> imag,
+                                   optional PeriodicWaveConstraints constraints = {});
+  ScriptProcessorNode createScriptProcessor(
+    optional unsigned long bufferSize = 0,
+    optional unsigned long numberOfInputChannels = 2,
+    optional unsigned long numberOfOutputChannels = 2);
+  StereoPannerNode createStereoPanner ();
+  WaveShaperNode createWaveShaper ();
+
+  Promise<AudioBuffer> decodeAudioData (
+    ArrayBuffer audioData,
+    optional DecodeSuccessCallback? successCallback,
+    optional DecodeErrorCallback? errorCallback);
+};          
+        </pre>
     </div>
     </main>
   </body>
