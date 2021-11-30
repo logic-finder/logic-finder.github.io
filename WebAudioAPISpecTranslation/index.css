@@ -100,3 +100,11 @@ main #frame pre {
   font-size: 1.3rem;
   margin-left: 10px;
 }
+
+main #frame th {
+  font-size: 1.3rem;
+}
+
+main #frame td {
+  font-size: 1.3rem;
+}
