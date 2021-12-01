@@ -108,3 +108,11 @@ main #frame th {
 main #frame td {
   font-size: 1.3rem;
 }
+
+main #frame dt {
+  font-size: 1.3rem;
+}
+
+main #frame dd {
+  font-size: 1.3rem;
+}
