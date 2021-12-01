@@ -322,6 +322,14 @@ interface BaseAudioContext : EventTarget {
     optional DecodeErrorCallback? errorCallback);
 };          
         </pre>
+        <h3>어트리뷰트</h3>
+        <dl>
+          <dt><i>audioWorklet</i> / 자료형: AudioWorklet / 읽기 전용</dt>
+          <dd>Worklet 객체로의 접근을 가능케 하는데, Worklet 객체는 [HTML] 과 AudioWorklet에 의해 정의된 알고리즘을 통해 AudioWorkletProcessor 클래스 정의를 포함하고 있는 스크립트를 import할 수 있습니다.</dd>
+          <br>
+          <dt></i>currentTime</i> / 자료형: double / 읽기 전용</dt>
+          <dd>currentTime은 컨텍스트의 렌더링 그래프에 의해 가장 최근에 처리된 오디오 블럭의 마지막 sample frame 바로 다음의 샘플 프레임의 시간 (초) 입니다. 만약 컨텍스트의 렌더링 그래프가 아직 오디오 블럭을 처리하지 않았다면, currentTime은 0의 값을 갖습니다.</dd>
+        </dl>
     </div>
     </main>
   </body>
