@@ -329,10 +329,17 @@ interface BaseAudioContext : EventTarget {
           <br>
           <dt></i>currentTime</i> / 자료형: double / 읽기 전용</dt>
           <dd>currentTime은 컨텍스트의 렌더링 그래프에 의해 가장 최근에 처리된 오디오 블럭의 마지막 sample frame 바로 다음의 샘플 프레임의 시간 (초) 입니다. 만약 컨텍스트의 렌더링 그래프가 아직 오디오 블럭을 처리하지 않았다면, currentTime은 0의 값을 갖습니다.</dd>
+          <br>
           <dd>currentTime의 시간 좌표계에서, 0의 값은 그래프에 의해 처리되는 첫번째 블럭의 첫번째 샘플 프레임과 일치합니다. 이 계(system)에서 경과된 시간은 BaseAudioContext에 의해 생성된 오디오 스트림에서의 경과된 시간과 일치하는데, 이 시간은 이 계의 다른 시계와 동기화되지 않았을 수 있습니다. (OfflineAudioContext의 경우, 스트림이 어떠한 장치에서도 현재 재생되고 있지 않으므로, 실제 시간에 대한 근사치조차도 존재하지 않습니다.</dd>
+          <br>
           <dd>Web Audio API에서의 모든 예정된 시간들은 currentTime의 값에 관련이 있습니다.</dd>
+          <br>
           <dd>BaseAudioContext가 "running" 상태일 때, 이 어트리뷰트의 값은, 하나의 render quantum에 일치하며, 단조적으로 증가하고 획일적인 증가 속에서 렌더링 스레드에 의해 갱신됩니다. 따라서, 실행 중인 컨텍스트의 경우, 이 계가 오디오 블럭을 처리해 가는 동안 currentTime은 꾸준히 증가하고, 항상 처리될 다음 오디오 블럭의 시작 시간을 나타냅니다. 현재 상태에서 예정된 어떠한 변화가 일어날지도 모를 때 이것은 또한 가능한 가장 빠른 시간입니다.</dd>
           <dd>currentTime은 반환되기 전에 반드시 control thread에서 atomically하게 read되어야만 합니다.</dd>
+          <br>
+          <dt><i>destination</i> / 자료형: AudioDestinationNode / 읽기 전용</dt>
+          <dd>모든 오디오의 최종 목적지를 나타내는 하나의 입력을 가진 AudioDestinationNode. 보통 이것은 실제 오디오 하드웨어를 나타냅니다. 오디오를 현재 렌더링하고 있는 모든 AudioNode는 직접적으로 혹은 간접적으로 목적지에 연결됩니다.</dd>
+          <br>
         </dl>
     </div>
     </main>
