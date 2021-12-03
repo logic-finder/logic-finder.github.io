@@ -111,6 +111,7 @@ main #frame td {
 
 main #frame dt {
   font-size: 1.3rem;
+  font-weight: bold;
 }
 
 main #frame dd {
