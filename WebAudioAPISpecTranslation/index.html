@@ -346,6 +346,9 @@ interface BaseAudioContext : EventTarget {
           <dt><i>onstatechange</i> / 자료형: EventHandler</dt>
           <dd>AudioContext의 상태가 변경되었을 때 BaseAudioContext에 전파되는 이벤트에 대한 EventHandler를 설정하기 위해 사용되는 프로퍼티 (예: 해당하는 promise가 resolve되었을 때). Event 유형의 이벤트가 이벤트 핸들러에 전파될 것인데, 이는 AudioContext의 상태를 직접적으로 질의할 수 있습니다. 새롭게 생성된 AudioContext는 항상 suspended 상태에서 시작하고, 언제든지 다른 상태로 상태가 변경될 때 상태 변화 이벤트가 발생될 것입니다. 이 이벤트는 oncomplete 이벤트가 발생되기 이전에 발생됩니다.</dd>
           <br>
+          <dt><i>sampleRate</i> / 자료형: float / 읽기 전용</dt>
+          <dd>BaseAudioContext가 오디오를 다루는 (초당 샘플 프레임에서의) 샘플 레이트. 이것은 컨텍스트의 모든 AudioNode가 이 rate에서 실행될 것으로 추정합니다. 이 추정을 내림에 있어, 샘플 레이트 전환기 혹은 "varispeed" 프로세서는 실시간 프로세싱이 지원되지 않습니다. 나이퀴스트 주파수는 이 샘플 레이트 값의 절반입니다.</dd>
+          <br>
         </dl>
     </div>
     </main>
