@@ -349,6 +349,9 @@ interface BaseAudioContext : EventTarget {
           <dt><i>sampleRate</i> / 자료형: float / 읽기 전용</dt>
           <dd>BaseAudioContext가 오디오를 다루는 (초당 샘플 프레임에서의) 샘플 레이트. 이것은 컨텍스트의 모든 AudioNode가 이 rate에서 실행될 것으로 추정합니다. 이 추정을 내림에 있어, 샘플 레이트 전환기 혹은 "varispeed" 프로세서는 실시간 프로세싱이 지원되지 않습니다. <strong><i>나이퀴스트 주파수</i></strong>는 이 샘플 레이트 값의 절반입니다.</dd>
           <br>
+          <dt><i>state</i> / 자료형: AudioContextState / 읽기 전용</dt>
+          <dd>BaseAudioContext의 현재 상태를 기술합니다. 이 어트리뷰트를 get하는 것은 [[control thread state]] 슬롯의 내용을 반환합니다.</dd>
+          <br>
         </dl>
     </div>
     </main>
