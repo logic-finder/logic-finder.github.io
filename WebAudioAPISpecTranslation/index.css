@@ -117,3 +117,17 @@ main #frame dt {
 main #frame dd {
   font-size: 1.3rem;
 }
+
+main #frame table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+main #frame table td {
+  border: 1px solid black;
+}
+
+main #frame table caption {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
