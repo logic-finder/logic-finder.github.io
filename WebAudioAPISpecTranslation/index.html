@@ -365,6 +365,41 @@ interface BaseAudioContext : EventTarget {
           <dd>매개변수 없음</dd>
           <dd>반환 유형: BiquadFilterNode</dd>
           <br>
+          <dt><i>createBuffer(numOfChannels, length, sampleRate)</i></dt>
+          <dd>주어진 크기의 AudioBuffer를 생성합니다. 버퍼 내의 오디오 데이터는 0으로 초기화될 것입니다 (silent). 만약 인자가 어느 하나라도 음수거나, 0이거나, 명목상의 범위 바깥에 있다면 NotSupportedError가 반드시 발생되어야 합니다.</dd>
+          <table>
+            <caption>BaseAudioContext.createBuffer() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>numberOfChannels</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>버퍼가 얼마나 많은 채널을 가질 지 결정합니다. 구현은 반드시 적어도 32개의 채널을 지원해야 합니다.</td>
+            </tr>
+            <tr>
+              <td>length</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>샘플 프레임 내의 버퍼 크기를 결정합니다. 이것은 반드시 적어도 1이어야 합니다.</td>
+            </tr>
+            <tr>
+              <td>sampleRate</td>
+              <td>float</td>
+              <td>x</td>
+              <td>x</td>
+              <td>초당 샘플 프레임 내의 버퍼의 선형 PCM 오디오 데이터의 샘플 레이트를 기술합니다. 구현은 반드시 적어도 범위 8000에서 96000까지의 샘플 레이터를 지원해야 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: AudioBuffer</dd>
+          <br>
         </dl>
     </div>
     </main>
