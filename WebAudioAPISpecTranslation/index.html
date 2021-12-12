@@ -404,6 +404,27 @@ interface BaseAudioContext : EventTarget {
           <dd>AudioBufferSourceNode의 팩토리 메서드</dd>
           <dd>매개변수 없음</dd>
           <dd>반환 유형: AudioBufferSourceNode</dd>
+          <br>
+          <dt><i>createChannelMerger(numberOfInputs)</i></dt>
+          <dd>channel merger를 나타내는 ChannelMergerNode의 팩토리 메서드. 만약 numberOfInputs가 1보다 작거나 지원되는 채널의 수보다 크다면 IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
+          <table>
+            <caption>BaseAudioContext.createChannelMerger(numberOfInputs) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>numberOfInputs</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>입력의 수를 결정합니다. 32까지의 값이 반드시 지원되어야만 합니다. 만약 명시되지 않았다면, 6이 사용될 것입니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: ChannelMergerNode</dd>
         </dl>
     </div>
     </main>
