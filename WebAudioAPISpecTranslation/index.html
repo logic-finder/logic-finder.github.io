@@ -457,6 +457,27 @@ interface BaseAudioContext : EventTarget {
           <dd>매개변수 없음</dd>
           <dd>반환 유형: ConvolverNode</dd>
           <br>
+          <dt><i>createDelay(maxDelayTime)</i></dt>
+          <dd>DelayNode의 팩토리 메서드. 초기 기본 delay time은 0초입니다.</dd>
+          <table>
+            <caption>BaseAudioContext.createDelay(maxDelayTime) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>maxDelayTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>v</td>
+              <td>지연선(delay line)을 고려하는 최대 delay time (초) 를 명시합니다. 만약 명시되었다면, 이 값은 반드시 0보다 크고 3분보다 작아야 하며 그렇지 않다면 NotSupportedError 예외가 반드시 발생되어야 합니다. 만약 명시되지 않았다면, 1이 사용될 것입니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: DelayNode</dd>
+          <br>
         </dl>
     </div>
     </main>
