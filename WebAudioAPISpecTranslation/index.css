@@ -131,3 +131,13 @@ main #frame table caption {
   font-size: 1.3rem;
   font-weight: bold;
 }
+
+main #frame div.note {
+  border: 1px solid black;
+  border-left: 5px solid black;
+}
+
+main #frame div.note p {
+  font-size: 1.3rem;
+  margin: 5px;
+}
