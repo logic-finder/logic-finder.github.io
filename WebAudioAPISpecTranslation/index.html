@@ -516,6 +516,27 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: IIRFilterNode</dd>
           <br>
         </dl>
+        <h2>AudioParam 인터페이스</h2>
+        <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
+        <p>주어진 자동화 이벤트의 행동은 이 이벤트의 자동화 이벤트 시간과 리스트의 인접한 이벤트의 자동화 이벤트 뿐만이 아니라, AudioContext의 현재 시간의 함수입니다. 다음의 <strong>자동화 메서드</strong>들은 이벤트 리스트에 메서드에 따른 새로운 이벤트를 추가함으로써 이벤트 리스트를 변경시킵니다.</p>
+        <ul>
+          <li>setValueAtTime() - setValue</li>
+          <li>linearRampToValueAtTime() - LinearRampToValue</li>
+          <li>exponentialRampToValueAtTime() - exponentialRampToValue</li>
+          <li>setTargetAtTime() - setTarget</li>
+          <li>setValueCurveAtTime() - setValueCurve</li>
+        </ul>
+        <p>다음의 규칙이 이 메서드들을 호출할 때 적용될 것입니다:</p>
+        <ul>
+          <li>자동화 이벤트 시간은 일반적인 샘플 레이트에 관하여 양자화되지 않습니다. 곡선과 경사를 결정하는 공식은 이벤트를 예정할 때 주어진 정확한 수치적 시간에 적용됩니다.</li>
+          <li>만약 이 이벤트들 중 하나가 이미 하나 이상의 이벤트가 있는 시간에 추가되었다면, 이 이벤트는 그 이벤트들 이후에 리스트에 배치될 것이지만, 시간이 그 이벤트 이후에 있는 이벤트 전입니다.</li>
+          <li>만약 setValueCurveAtTime()이 시간 T와 기간 D로 호출되고 T보다 엄격하게 큰 시간을 가지지만, T+D보다는 엄격히 작은 어떠한 이벤트가 있다면, NotSupportedError 예외가 반드시 발생되어야 합니다. 요컨대, 다른 이벤트를 포함하고 있는 시간 기간 동안에 value curve를 예정하는 것은 괜찮지 않지만, 다른 이벤트의 시간에 정확히 value curve를 예정하는 것은 괜찮습니다.</li>
+          <li>유사하게 만약 [T, T+D)에 포함된 시간에 자동화 메서드가 호출되었다면 NotSupportedError가 반드시 발생되어야만 합니다 (T는 curve의 시간이고 D는 기간임).</li>
+        </ul>
+        <br>
+        <div class="note">
+          <p>노트: AudioParam 어트리뷰트는 읽기 전용입니다. 단, value 어트리뷰트는 예외입니다.</p>
+        </div>
     </div>
     </main>
   </body>
