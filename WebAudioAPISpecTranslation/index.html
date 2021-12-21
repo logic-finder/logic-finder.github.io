@@ -490,7 +490,7 @@ interface BaseAudioContext : EventTarget {
           <br>
           <dt><i>createIIRFilter(feedforward, feedback)</i></dt>
           <table>
-            <caption>BaseAudioContext.createcreateIIRFilter(feedforward, feedback) 메서드의 인자</caption>
+            <caption>BaseAudioContext.createIIRFilter(feedforward, feedback) 메서드의 인자</caption>
             <tr>
               <td>매개변수</td>
               <td>자료형</td>
@@ -524,6 +524,50 @@ interface BaseAudioContext : EventTarget {
           <dd>PannerNode의 팩토리 메서드</dd>
           <dd>매개변수 없음</dd>
           <dd>반환 유형: PannerNode</dd>
+          <br>
+          <dt><i>createPeriodicWave(real, imag, constraints)</i></dt>
+          <dd>PeriodicWave를 생성하기 위한 팩토리 메서드</dd>
+          <dd>이 메서드를 호출할 때, 다음의 단계를 실행합니다:</dd>
+          <ol>
+            <li>만약 real과 imag가 같은 길이가 아니면, IndexSizeError가 반드시 발생되어야 합니다.</li>
+            <li>o가 PeriodicWaveOptions 유형의 새로운 객체이게 합니다.</li>
+            <li>이 팩토리 메서드에 전달된 real과 imag 파라미터를 각각 o에 같은 이름의 어트리뷰트로 설정합니다.</li>
+            <li>o에 disableNormalization 어트리뷰트를 이 팩토리 메서드에 전달된 constraints 어트리뷰트의 disableNormalization 어트리뷰트의 값으로 설정합니다.</li>
+            <li>BaseAudioContext에 이 팩토리 메서드가 첫번째 인자로서 호출되었음을 전달하며, 새로운 PeriodicWave p와, o를 생성합니다.</li>
+            <li>p를 반환합니다.</li>
+          </ol>
+          <table>
+            <caption>BaseAudioContext.createPeriodicWave() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>real</td>
+              <td>seqeunce&lt;float&gt;</td>
+              <td>x</td>
+              <td>x</td>
+              <td>코사인 파라미터의 sequence. 더욱 자세한 설명은 real 생성자 인자를 참조하십시오.</td>
+            </tr>
+            <tr>
+              <td>imag</td>
+              <td>seqeunce&lt;float&gt;</td>
+              <td>x</td>
+              <td>x</td>
+              <td>사인 파라미터의 sequence. 더욱 자세한 설명은 imag 생성자 인자를 참조하십시오.</td>
+            </tr>
+            <tr>
+              <td>constraints</td>
+              <td>PeriodicWaveConstraints</td>
+              <td>x</td>
+              <td>v</td>
+              <td>만약 주어지지 않았다면, 파형은 정규화(normalize)됩니다. 그렇지 않으면, 파형은 constraints에 의해 주어진 값에 따라 정규화됩니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: PeriodicWave</dd>
           <br>
         </dl>
         <h2>AudioParam 인터페이스</h2>
