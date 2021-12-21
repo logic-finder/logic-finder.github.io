@@ -83,6 +83,11 @@ main #frame ul li {
   margin-left: 30px;
 }
 
+main #frame ol li {
+  font-size: 1.3rem;
+  margin-left: 30px;
+}
+
 main #frame figure {
   display: block;
   width: max-content;
