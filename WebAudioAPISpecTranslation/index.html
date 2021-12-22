@@ -569,6 +569,35 @@ interface BaseAudioContext : EventTarget {
           </table>
           <dd>반환 유형: PeriodicWave</dd>
           <br>
+          <dt><i>createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels)</i></dt>
+          <dd>ScriptProcessorNode의 팩토리 메서드. 이 메서드는 폐기되었습니다. 왜냐하면 이 메서드는 AudioWorkletNode에 의해 대체되는 것이 의도되었기 때문입니다.</dd>
+          <dd>추후 번역</dd>
+          <br>
+          <dt><i>createStereoPanner()</i></dt>
+          <dd>StereoPannerNode의 팩토리 메서드</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: StereoPannerNode</dd>
+          <br>
+          <dt><i>createWaveShaper()</i></dt>
+          <dd>비선형 왜곡을 나타내는 WaveShaperNode의 팩토리 메서드</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: WaveShaperNode</dd>
+          <br>
+          <dt><i>decodeAudioData(audioData, successCallback, errorCallback)</i></dt>
+          <dd>ArrayBuffer에 포함된 오디오 파일 데이터를 비동기적으로 디코드합니다.</dd>
+          <dd>추후 번역</dd>
+          <br>
+          <h3>콜백 DecodeSuccessCallback() 파라미터</h3>
+          <dl>
+            <dt>decodedData / 유형: AudioBuffer</dt>
+            <dd>디코드된 오디오 데이터를 포함하고 있는 AudioBuffer</dd>
+          </dl>
+          <br>
+          <h3>콜백 DecodeErrorCallback() 파라미터</h3>
+          <dl>
+            <dt>error / 유형: DOMException</dt>
+            <dd>디코드 도중에 발생한 에러</dd>
+          </dl>
         </dl>
         <h2>AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
