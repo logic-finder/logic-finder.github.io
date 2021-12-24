@@ -237,8 +237,8 @@ function setupRoutingGraph() {
           <li>ScriptProcessorNode 인터페이스. 스크립트를 사용해 직접적으로 오디오를 생성하거나 프로세싱하기 위한 AudioNode.</li>
           <li>AudioProcessingEvent 인터페이스. ScriptProcessorNode 객체와 함께 사용되는 이벤트 유형입니다.</li>
         </ul>
-        <h1>Audio API</h1>
-        <h2>BaseAudioContext 인터페이스</h2>
+        <h1>1. Audio API</h1>
+        <h2>1.1. BaseAudioContext 인터페이스</h2>
         <p>BaseAudioContext 인터페이스는 AudioNode 객체들의 집합과 이 객체들의 연결을 나타냅니다. 이 인터페이스는 AudioDestinationNode로 향하는 임의적인 신호 라우팅을 고려합니다. 노드들은 이 컨텍스트에서 생성되고 그리고 나서 함께 연결됩니다.</p>
         <p>BaseAudioContext는 직접적으로 인스턴스화되지 않지만, 대신 실체가 있는 인터페이스인 AudioContext (실시간 렌더링용) 와 OfflineAudioContext (오프라인 렌더링용) 에 의해 상속됩니다.</p>
         <p>BaseAudioContext는 내부 슬롯 [[pending promises]] 를 가지고 생성되는데, 이 내부 슬롯은 초기적으로는 빈 promise의 정렬된 리스트입니다.</p>
@@ -322,7 +322,7 @@ interface BaseAudioContext : EventTarget {
     optional DecodeErrorCallback? errorCallback);
 };          
         </pre>
-        <h3>어트리뷰트</h3>
+        <h3>1.1.1. 어트리뷰트</h3>
         <dl>
           <dt><i>audioWorklet</i> / 자료형: AudioWorklet / 읽기 전용</dt>
           <dd>Worklet 객체로의 접근을 가능케 하는데, Worklet 객체는 [HTML] 과 AudioWorklet에 의해 정의된 알고리즘을 통해 AudioWorkletProcessor 클래스 정의를 포함하고 있는 스크립트를 import할 수 있습니다.</dd>
@@ -353,7 +353,7 @@ interface BaseAudioContext : EventTarget {
           <dd>BaseAudioContext의 현재 상태를 기술합니다. 이 어트리뷰트를 get하는 것은 [[control thread state]] 슬롯의 내용을 반환합니다.</dd>
         </dl>
         <br>
-        <h3>메서드</h3>
+        <h3>1.1.2. 메서드</h3>
         <dl>
           <dt><i>createAnalyser()</i></dt>
           <dd>AnalyserNode의 팩토리 메서드.</dd>
@@ -587,19 +587,22 @@ interface BaseAudioContext : EventTarget {
           <dd>ArrayBuffer에 포함된 오디오 파일 데이터를 비동기적으로 디코드합니다.</dd>
           <dd>추후 번역</dd>
           <br>
-          <h3>콜백 DecodeSuccessCallback() 파라미터</h3>
+          <h3>1.1.3. 콜백 DecodeSuccessCallback() 파라미터</h3>
           <dl>
             <dt>decodedData / 유형: AudioBuffer</dt>
             <dd>디코드된 오디오 데이터를 포함하고 있는 AudioBuffer</dd>
           </dl>
           <br>
-          <h3>콜백 DecodeErrorCallback() 파라미터</h3>
+          <h3>1.1.4. 콜백 DecodeErrorCallback() 파라미터</h3>
           <dl>
             <dt>error / 유형: DOMException</dt>
             <dd>디코드 도중에 발생한 에러</dd>
           </dl>
         </dl>
-        <h2>AudioParam 인터페이스</h2>
+        <br>
+        <h3>1.1.5. 생애 주기</h3>
+        <p>한 번 생성되고 나면, AudioContext는 자신이 재생할 소리가 더 이상 남아있지 않거나, 페이지가 꺼질 때까지 계속 소리를 재생합니다.</p>
+        <h2>1.6. AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
         <p>주어진 자동화 이벤트의 행동은 이 이벤트의 자동화 이벤트 시간과 리스트의 인접한 이벤트의 자동화 이벤트 뿐만이 아니라, AudioContext의 현재 시간의 함수입니다. 다음의 <strong>자동화 메서드</strong>들은 이벤트 리스트에 메서드에 따른 새로운 이벤트를 추가함으로써 이벤트 리스트를 변경시킵니다.</p>
         <ul>
