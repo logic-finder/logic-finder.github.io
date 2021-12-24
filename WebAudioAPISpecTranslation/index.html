@@ -602,6 +602,19 @@ interface BaseAudioContext : EventTarget {
         <br>
         <h3>1.1.5. 생애 주기</h3>
         <p>한 번 생성되고 나면, AudioContext는 자신이 재생할 소리가 더 이상 남아있지 않거나, 페이지가 꺼질 때까지 계속 소리를 재생합니다.</p>
+        <br>
+        <h3>1.1.6. 자기 성찰(introspection) 또는 직렬화 primitives(기본 요소?)의 부족</h3>
+        <p>Web Audio API는 오디오 소스 스케쥴링에 사용하고 나서 잊는(fire-and-forget) 접근 방식을 취합니다. 즉, 소스 노드는 AudioContext의 생애 주기 동안 각 노트에 대해 생성되고, 절대로 명시적으로 그래프에서 제거되지 않습니다. 이것은 직렬화 API와 호환되지 않습니다. 왜냐하면 직렬화될 수 있는 노드들의 안정된 집합이 존재하지 않기 때문입니다.</p>
+        <p>게다가, 자기 성찰 API를 가지는 것은 content 스크립트가 가비지 컬렉션을 관찰할 수 있게 허용할 것입니다.</p>
+        <h3>1.1.7. BaseAudioContext 서브클래스와 연관된 시스템 자원</h3>
+        <p>서브클래스 AudioContext와 OfflineAudioContext는 비용이 많이 드는(expensive) 객체로 여겨져야 합니다. 이 객체들은 생성하는 것은 높은 우선도의 스레드를 생성하는 것이나, 낮은 레이턴시의 시스템 오디오 스트림을 사용하는 것을 포함할 수도 있는데, 양측 다 에너지 소모에 영향을 가집니다. 문서에서 하나 이상의 AudioContext를 생성하는 것은 보통 필요하지 않습니다.</p>
+        <p>BaseAudioContext 서브클래스를 구성하거나 재개하는 것은 그 컨텍스트에 대해 시스템 자원을 취득하는 것을 포함합니다. AudioContext에 대해, 이것은 또한 시스템 오디오 스트림의 생성을 요구합니다. 이 연산들은 컨텍스트가 컨텍스트의 연관된 오디오 그래프로부터 출력을 생성하는 것을 시작할 때 반환됩니다.</p>
+        <p>추가적으로, 유저 에이전트는 구현이 정의된(implementation-defined) AudioContext의 최대 수를 가질 수 있는데, 이는 새로운 AudioContext를 생성하려는 시도가 실패한 이후에, NotSupportedError를 발생시킵니다.</p>
+        <p>suspend와 close는 작성자로 하여금 시스템 자원을 해방하게 할 수 있는데, 이는 스레드, 프로세스, 오디오 스트림을 포함합니다. BaseAudioContext를 연기(suspend)하는 것은 BaseAudioContext의 일부 자원을 해방하는 구현을 허용하고, BaseAudioContext가 이후에 resume을 호출함으로써 작동을 계속하도록 허락합니다. AudioContext를 닫는(close)것은 AudioContext의 모든 자원을 해방하는 구현을 허락하는데, 이는 AudioContext가 사용될 수 없거나 다시 재개될 수 없는 이후입니다.</p>
+        <div class="note">
+          <p>노트: 예를 들어, 이것은 audio callback이 정기적으로 발생되는 것을 기다리거나, 하드웨어가 프로세싱을 위해 준비되기를 기다리는 것을 포함할 수 있습니다.</p>
+        </div>
+        <br>
         <h2>1.6. AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
         <p>주어진 자동화 이벤트의 행동은 이 이벤트의 자동화 이벤트 시간과 리스트의 인접한 이벤트의 자동화 이벤트 뿐만이 아니라, AudioContext의 현재 시간의 함수입니다. 다음의 <strong>자동화 메서드</strong>들은 이벤트 리스트에 메서드에 따른 새로운 이벤트를 추가함으로써 이벤트 리스트를 변경시킵니다.</p>
