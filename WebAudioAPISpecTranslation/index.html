@@ -710,8 +710,105 @@ interface AudioContext : BaseAudioContext {
           <br>
           <dt><i>outputLatency</i> / 자료형: double / 읽기 전용 / 현재 파이어폭스 엔진에만 있음</dt>
           <dd>오디오 출력 레이턴시의 추정 (단위: 초). 예: UA가 호스트 시스템에게 버퍼를 재생하는 것과 버퍼 내의 첫번째 샘플이 실제로 오디오 출력 장치에 의해 처리되는 시간을 요구하는 것. 음향 시그널을 생산하는 스피커와 헤드폰과 같은 장치에 대해서, 이 후자의 시간은 샘플의 소리가 생산될 때의 시간을 나타냅니다.</dd>
+          <br>
+          <dd>outputLatency 어트리뷰트 값은 플랫폼과 연결된 하드웨어 오디오 출력 장치에 달려 있습니다. outputLatency 어트리뷰트 값은 연결된 오디오 출력 장치가 동일한 이상 컨텍스트의 생명 주기에 대해 변하지 않습니다. 만약 오디오 출력 장치가 변경되었다면 outputLatency 어트리뷰트 값은 그에 맞추어 갱신될 것입니다.</dd>
         </dl>
+        <br>
+        <h3>1.2.3. 메서드</h3>
+        <dl>
+          <dt><i>close()</i></dt>
+          <dd>사용되고 있던 시스템 자원을 해방하며 AudioContext를 닫습니다. 이것은 자동적으로 AudioContext가 생성한 모든 객체를를 해방하지 않을 것이지만, AudioContext의 currentTime의 진행을 유예할 것이고, 오디오 데이터를 프로세싱하는 것을 멈춥니다.</dd>
+          <br>
+          <dd>close가 호출되었을 때, 아래의 단계를 수행합니다:</dd>
+          <dd>추후 번역</dd>
+          <br>
+          <div class="note">
+            <p>AudioContext가 closed되었을 때, 구현은 suspending되었을 때보다 더 공격적으로 자원을 해방하는 것을 선택할 수 있습니다.</p>
+          </div>
+          <br>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: Promise&lt;undefined&gt;</dd>
+          <br>
+          <dt><i>createMediaElementSource(mediaElement)</i></dt>
+          <dd>주어진 HTMLMediaElement로 MediaElementAudioSourceNode를 생성합니다. 이 메서드를 호출한 결과로서, HTMLMediaElement로부터의 오디오 재생이 AudioContext의 프로세싱 그래프 내로 재라우팅(re-route)될 것입니다.</dd>
+          <br>
+          <table>
+            <caption>AudioContext.createMediaElementSource() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>mediaElement</td>
+              <td>HTMLMediaElement</td>
+              <td>x</td>
+              <td>x</td>
+              <td>재라우팅될 미디어 요소</td>
+            </tr>
+          </table>
+          <br>
+          <dd>반환 유형: MediaElementAudioSourceNode</dd>
+          <br>
+          <dt><i>createMediaStreamDestination</i></dt>
+          <dd>MediaStreamAudioDestinationNode를 생성합니다</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: MediaStreamAudiodestinationNode</dd>
+          <br>
+          <dt><i>createMediaStreamSource(mediaStream)</i></dt>
+          <dd>MediaStreamAudioSourceNode를 생성합니다</dd>
+          <dd>매개변수 없음</dd>
+          <br>
+          <table>
+            <caption>AudioContext.createMediaStreamSource() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>mediaStream</td>
+              <td>MediaStream</td>
+              <td>x</td>
+              <td>x</td>
+              <td>소스(source)로서 작동할 미디어 스트림.</td>
+            </tr>
+          </table>
+          <br>
+          <dd>반환 유형: MediaStreamAudioSourceNode</dd>
+          <br>
+          <dt><i>getOutputTimestamp()</i></dt>
+          <dd>컨텍스트에 대해 두 개의 연관된 오디오 스트림 포지션 값을 포함하고 있는 새로운 AudioTimeStamp 인스턴스를 반환합니다: contextTime 멤버는 (컨텍스트의 currentTime과 같은 단위와 기원에서) 오디오 출력 장치에 의해 현재 렌더링되고 있는 샘플 프레임의 시간 (예: 출력 오디오 스트림 포지션)  입니다; performanceTime 멤버는 (performance.now()와 같은 단위와 기원에서) 저장된 contextTime에 해당하는 샘플 프레임이 오디오 출력 장치에 의해 렌더링된 순간을 추산하는 시간을 포함합니다. (이는 [hr-time-3] 에서 기술됨).</dd>
+          <br>
+          <dd>만약 컨텍스트의 렌더링 그래프가 아직 오디오 블럭을 처리하지 않았다면, getOutputTimestamp 호출은 두 멤버가 모두 0을 포함하고 있는 AudioTimestamp 인스턴스를 반환합니다.</dd>
+          <br>
+          <dd>컨텍스트의 렌더링 그래프가 오디오 블럭의 처리를 시작한 이후에, 이것의 currentTime 어트리뷰트 값은 항상 getOutputTimestamp 메서드 호출로 인해 얻어진 contextTime 값을 넘어섭니다.</dd>
+          <br>
+          <pre>예제 4
+getOutputTimestamp 메서드로부터 반환된 값은 컨텍스트의 시간 값보다 살짝 후의 퍼포먼스 시간 추산을 얻기 위해 사용될 수 있습니다:
 
+function outputPerformanceTime(contextTime) {
+  const timestamp = context.getOutputTimestamp();
+  const elapsedTime = contextTime - timestamp.contextTime;
+  return timestamp.performanceTime + elapsedTime * 1000;
+}
+
+상기의 예제에서 추산의 정확도는 인자 값이 얼마나 현재 출력 오디오 스트림 포지션에 가까운지에 달려 있습니다: 주어진 contextTime이 timestamp.contextTime에 가까울수록, 얻어지는 추산의 정확도는 좋아집니다.
+          </pre>
+          <br>
+          <div class="note">
+            <p>노트: 컨텍스트의 currentTime과 getOutputTimestamp 메서드 호출로부터 얻어진 contextTime의 차이는 신용 가능한 출력 레이턴시 추산으로써 여겨질 수 없습니다. 왜냐하면 currentTime은 비균일한 시간 구간에서 증가될 수 있으므로, outputLatency 어트리뷰트가 대신 사용되어야 합니다.</p>
+          </div>
+          <br>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: AudioTimestamp</dd>
+          <br>
+        </dl>
+        <br>
 
         <h2>1.6. AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
