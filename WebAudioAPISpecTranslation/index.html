@@ -807,6 +807,258 @@ function outputPerformanceTime(contextTime) {
           <dd>매개변수 없음</dd>
           <dd>반환 유형: AudioTimestamp</dd>
           <br>
+          <dt><i>resume()</i></dt>
+          <dd>AudioContext가 연기되었을 때 AudioContext의 currentTime의 진행을 재개합니다.</dd>
+          <dd>resume이 호출되었을 때, 아래의 절차를 실행합니다:</dd>
+          <dd>추후 번역</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: Promise&lt;undefined&gt;</dd>
+          <br>
+          <dt><i>suspend()</i></dt>
+          <dd>AudioContext의 currentTime의 진행을 연기하고, 이미 처리된 모든 현재의 컨텍스트 프로세싱 블럭들이 목적지에서 재생되는 것을 허용하고, 그리고 나서 시스템이 오디오 하드웨어에 대한 주장(claim)을 해방하도록 허용합니다. 이것을 일반적으로 어플리케이션이 AudioContext가 어떤 때는 필요가 없을 것이라는 것을 알고, 일시적으로 AudioContext에 연관된 시스템 자원을 해방하기를 소원할 때 유용합니다. 이 promise는 프레임 버퍼가 비었을 때 (프레임 버퍼가 하드웨어에서 손을 뗐을 때), 혹은 일시적으로 (다른 효과 없이) 만약 컨텍스트가 이미 연기되었을 경우 resolve합니다. 이 promise는 컨텍스트가 closed되었을 때 rejected됩니다.</dd>
+          <br>
+          <dd>suspend가 호출되었을 때, 아래의 절차를 수행합니다:</dd>
+          <dd>추후 번역</dd>
+        </dl>
+        <br>
+        <h3>1.2.4. AudioContextOptions</h3>
+        <p>AudioContextOptions 딕셔너리는 AudioContext에 대해 사용자가 정의한 옵션들을 명시하기 위해 사용됩니다.</p>
+        <br>
+        <pre>
+dictionary AudioContextOptions {
+  (AudioContextLatencyCategory or double) latencyHint = "interactive";
+  float sampleRate;
+};
+        </pre>
+        <br>
+        <h4>1.2.4.1. 딕셔너리 AudioContextOptions 멤버</h4>
+        <dl>
+          <dt><i>latencyHint</i> / 자료형: (AudioContextLatencyCategory 또는 double) / 기본값: "interactive"</dt>
+          <dd>재생의 유형을 명시하는데, 이는 오디오 출력 레이턴시와 파워 소모 사이의 균형(tradeoff)에 영향을 미칩니다.</dd>
+          <br>
+          <dd>latencyHint의 선호된 값은 AudioContextLatencyCategory로부터의 값입니다. 그러나, double 또한 레이턴시와 파워 소모를 균형잡기 위한 더 좋은 제어를 위한 레이턴시 (단위: 초) 를 위해 명시될 수 있습니다. 이 숫자를 적절히 해석하는 것은 브라우저의 재량에 있습니다. 사용되는 실제 레이턴시는 AudioContext의 baseLatenct 어트리뷰트에 의해 주어집니다.</dd>
+          <br>
+          <dt><i>sampleRate / 자료형: float</i></dt>
+          <dd>생성될 AudioContext에 대해 이 값에 sampleRate를 설정합니다. 이 지원된 값들은 AudioBuffer의 샘플 레이트와 같습니다. 만약 명시된 샘플 레이트가 지원되지 않는다면 NotSupportedError 예외가 반드시 발생되어야 합니다.</dd>
+          <br>
+          <dd>만약 sampleRate가 명시되지 않았다면, 이 AudioContext의 출력 장치의 선호되는 샘플 레이트가 사용됩니다.</dd>
+        </dl>
+        <br>
+        <h3>1.2.5. AudioTimestamp</h3>
+        <pre>
+dictionary AudioTimestamp {
+  double contextTime;
+  DOMHighResTimeStamp performanceTime;
+};
+        </pre>
+        <br>
+        <h4>1.2.5.1. 딕셔너리 AudioTimestamp 멤버</h4>
+        <dl>
+          <dt><i>contextTime</i> / 자료형: double</dt>
+          <dd>BaseAudioContext의 currentTime의 시간 좌표계의 점(point)를 나타냅니다.</dd>
+          <br>
+          <dt><i>performanceTime</i> / 자료형: DOMHighResTimeStamp</dt>
+          <dd>퍼포먼스 인터페이스 구현의 시간 좌표계의 점을 나타냅니다 ([hr-time-3]에서 기술됩니다).</dd>
+        </dl>
+        <br>
+        <h2>1.3. OfflineAudioContext 인터페이스</h2>
+        <p>OfflineAudioContext는 실시간보다 (잠재적으로) 렌더링/믹싱다운을 더 빠르게 하기 위한 BaseAudioContext의 특정한 유형입니다. 이것은 오디오 하드웨어로 렌더링하지 않지만, 대신 가능한 한 빨리 렌더링하는데, AudioBuffer로 렌더링된 결과와 함께 반환된 promise를 fulfill합니다.</p>
+        <pre>
+[Exposed=Window]
+interface OfflineAudioContext : BaseAudioContext {
+  constructor(OfflineAudioContextOptions contextOptions);
+  constructor(unsigned long numberOfChannels, unsigned long length, float sampleRate);
+  Promise<AudioBuffer> startRendering();
+  Promise<undefined> resume();
+  Promise<undefined> suspend(double suspendTime);
+  readonly attribute unsigned long length;
+  attribute EventHandler oncomplete;
+};          
+        </pre>
+        <br>
+        <h3>1.3.1. 생성자</h3>
+        <dl>
+          <dt><i>OfflineAudioContext(contextOptions)</i></dt>
+          <dd>만약 current settings object의 responsible document가 완전히 active하지 않다면, InvalidStateError를 발생시키고 아래의 과정들을 중단합니다.</dd>
+          <br>
+          <dd>c를 새로운 OfflineAudioContext 객체라고 합니다. c를 다음과 같이 초기화합니다:</dd>
+          <ol>
+            <li>c에 대해 [[control thread state]]를 "suspended"로 설정합니다.</li>
+            <li>c에 대해 [[rendering thread state]]를 "suspended"로 설정합니다.</li>
+            <li>AudioDestinationNode의 channelCount가 contextOptions.numberOfChannels로 설정된 채로 AudioDestinationNode를 생성합니다.</li>
+          </ol>
+          <br>
+          <table>
+            <caption>OfflineAudioContext.constructor(contextOptions) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>contextOptions</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>이 컨텍스트를 생성하는 데 필요한 초기 파라미터들.</td>
+            </tr>
+          </table>
+          <br>
+          <dt><i>OfflineAudioContext(numberOfChannels, length, sampleRate)</i></dt>
+          <dd>OfflineAudioContext는 AudioContext.createBuffer와 같은 인자로 생성될 수 있습니다. 만약 인자 중 하나라도 음수거나, 0이거나, 명목상의 범위 밖이면 NotSupportedError가 반드시 발생되어야 합니다.</dd>
+          <br>
+          <dd>OfflineAudioContext는 아래가 대신 호출된 것처럼 생성됩니다.</dd>
+          <br>
+          <pre>
+new OfflineAudioContext({
+  numberOfChannels: numberOfChannels,
+  length: length,
+  sampleRate: sampleRate
+})
+          </pre>
+          <table>
+            <caption>OfflineAudioContext.constructor(numberOfChannels, length, sampleRate) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>numberOfChannels</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>버퍼가 얼마나 많은 채널을 가질 지 결정합니다. 지원되는 채널의 수는 createBuffer()를 참고하세요.</td>
+            </tr>
+            <tr>
+              <td>length</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>샘플 프레임 내의 버퍼의 크기를 결정합니다.</td>
+            </tr>
+            <tr>
+              <td>sampleRate</td>
+              <td>float</td>
+              <td>x</td>
+              <td>x</td>
+              <td>초당 샘플 프레임 내의 버퍼 내의 선형 PCM 오디오 데이터의 샘플 레이트를 기술합니다. 유효한 샘플 레이트에 대해서는 createBuffer()를 참고하세요.</td>
+            </tr>
+          </table>
+        </dl>
+        <br>
+        <h3>1.3.2. 어트리뷰트</h3>
+        <dl>
+          <dt><i>length</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>샘플 프레임 내의 버퍼의 크기. 이것은 생성자의 length 파라미터의 값과 같습니다.</dd>
+          <br>
+          <dt><i>oncomplete</i> / 자료형: EventHandler</dt>
+          <dd>OfflineAudioCompletionEvent 유형의 EventHandler. 이것은 OfflineAudioContext에서 발생되는 마지막 이벤트입니다.</dd>
+        </dl>
+        <br>
+        <h3>1.3.3. 메서드</h3>
+        <dl>
+          <dt><i>startRendering()</i></dt>
+          <dd>주어진 현재 연결과 예정된 변화를 가지고, 오디오 렌더링을 시작합니다.</dd>
+          <br>
+          <dd>비록 렌더링된 오디오 데이터를 얻는 일차적인 방법은 이것의 promise 반환 값을 통해서이지만, 이 인스턴스는 또한 레거시의 이유로 complete라는 이름의 이벤트를 발생시킬 것입니다.</dd>
+          <dd>추후 번역</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: Promise&lt;AudioBuffer&gt;</dd>
+          <br>
+          <dt><i>resume()</i> / 현재 크롬 엔진에만 있음</dt>
+          <dd>OfflineAudioContext의 currentTime의 진행을 OfflineAudioContext가 suspended되었을 때 재개시킵니다.</dd>
+          <br>
+          <dd>이 메서드가 호출되었을 때, 아래의 절차를 수행합니다:</dd>
+          <dd>추후 번역</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: Promise&lt;AudioBuffer&gt;</dd>
+          <dt><i>suspend(suspendTime)</i></dt>
+          <dd>특정한 시간에 오디오 컨텍스트에서의 시간 진행의 연기를 예정하고 promise를 반환합니다. 이거슨 일반적으로 OfflineAudioContext에서 오디오 그래프를 동기적으로(synchronously) 조작할 때 유용합니다.</dd>
+          <br>
+          <dd>연기의 최대 정밀도는 render quantum의 크기이고 명시된 연기 시간은 가장 가까운 render quantum 경계선(boundary) 까지에서 반올림될 것입니다. 이러한 이유로, 다수의 연기를 같은 quantized 프레임에 예정하는 것은 허용되지 않습니다. 또한, 정밀한 연기를 보장하기 위해 스케쥴링은 컨텍스트가 실행 중(running)이 아닌 동안에 이루어져야 합니다.</dd>
+          <br>
+          <table>
+            <caption>OfflineAudioContext.suspend() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>suspendTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>x</td>
+              <td>
+                명시된 시간에 렌더링의 연기를 예정하는데, 이는 quantized되고 render quantum 크기까지 반올림될 것입니다. 만약 quantized 프레임 수가
+                <ol>
+                  <li>음수거나</li>
+                  <li>current time보다 작거나 혹은 같거나</li>
+                  <li>전체 render duration보다 크거나 혹은 같거나</li>
+                  <li>같은 시간에 또 다른 suspend가 예정되어 있다면</li>
+                </ol>
+                promise는 InvalidStateError와 함께 rejected됩니다.
+              </td>
+            </tr>
+          </table>
+          <br>
+          <dd>반환 유형: Promise&lt;undefined&gt;</dd>
+        </dl>
+        <br>
+        <h3>1.3.4. OfflineAudioContextOptions</h3>
+        <p>이것은 OfflineAudioContext를 생성하는 데 쓰이는 옵션들을 명시합니다.</p>
+        <pre>
+dictionary OfflineAudioContextOptions {
+  unsigned long numberOfChannels = 1;
+  required unsigned long length;
+  required float sampleRate;
+};
+        </pre>
+        <h4>1.3.4.1. 딕셔너리 OfflineAudioContextOptions 멤버</h4>
+        <dl>
+          <dt><i>length</i> / 자료형: unsigned long</dt>
+          <dd>샘플 프레임에서의 렌더링된 AudioBuffer의 길이</dd>
+          <br>
+          <dt><i>numberOfChannels</i> / 자료형: unsigned long / 기본값: 1</dt>
+          <dd>이 OfflineAudioContext의 채널의 수.</dd>
+          <br>
+          <dt><i>sampleRate</i> / 자료형: float</dt>
+          <dd>이 OfflineAudioContext의 샘플 레이트</dd>
+        </dl>
+        <br>
+        <h3>1.3.5. OfflineAudioCompletionEvent 인터페이스</h3>
+        <p>이것은 레거시적 이유로 OfflineAudioContext에 전파되는 Event 객체입니다.</p>
+        <pre>
+[Exposed=Window]
+interface OfflineAudioCompletionEvent : Event {
+  constructor (DOMString type, OfflineAudioCompletionEventInit eventInitDict);
+  readonly attribute AudioBuffer renderedBuffer;
+};
+        </pre>
+        <h4>1.3.5.1. 어트리뷰트</h4>
+        <dl>
+          <dt><i>renderedBuffer / 자료형: AudioBuffer / 읽기 전용</i></dt>
+          <dd>렌더링된 오디오 데이터를 포함하고 있는 AudioBuffer</dd>
+        </dl>
+        <br>
+        <h4>1.3.5.2. OfflineAudioCompletionEventInit</h4>
+        <br>
+        <pre>
+dictionary OfflineAudioCompletionEventInit : EventInit {
+  required AudioBuffer renderedBuffer;
+};
+        </pre>
+        <h5>1.3.5.2.1. 딕셔너리 OfflineAudioCompletionEventInit 멤버</h5>        
+        <dl>
+          <dt><i>renderedBuffer / 자료형: AudioBuffer</i></dt>
+          <dd>이 이벤트의 renderedBuffer 어트리뷰트에 할당될 값</dd>
         </dl>
         <br>
 
