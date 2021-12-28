@@ -72,6 +72,14 @@ main #frame h3 {
   font-size: 1.9rem;
 }
 
+main #frame h4 {
+  font-size: 1.6rem;
+}
+
+main #frame h5 {
+  font-size: 1.3rem;
+}
+
 main #frame p {
   font-size: 1.5rem;
   text-align: justify;
