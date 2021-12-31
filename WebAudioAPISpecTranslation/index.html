@@ -1123,6 +1123,35 @@ interface AudioBuffer {
           </table>
         </dl>
         <br>
+        <h3>1.4.2. 어트리뷰트</h3>
+        <dl>
+          <dt><i>duration</i> / 자료형: double / 읽기 전용</dt>
+          <dd>PCM 오디오 데이터의 지속 기간 (단위: 초)</dd>
+          <br>
+          <dd>이것은 [[length]]와 [[sample rate]] 사이에서 나눗셈을 수행함으로써 AudioBuffer의 [[sample rate]]와 [[length]]로부터 계산됩니다.</dd>
+          <br>
+          <dt><i>length</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>샘플 프레임의 PCM 오디오 데이터의 길이. 이것은 반드시 [[length]]의 값을 반환해야만 합니다.</dd>
+          <br>
+          <dt><i>numberOfChannels</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>이산 오디오 채널의 수. 이것은 반드시 [[number of channels]]의 값을 반환해야만 합니다.</dd>
+          <br>
+          <dt><i>sampleRate</i> / 자료형: float / 읽기 전용</dt>
+          <dd>초당 샘플 내의 PCM 오디오 데이터의 샘플 레이트. 이것은 반드시 [[sample rate]]의 값을 반환해야만 합니다.</dd>
+        </dl>
+        <br>
+        <h3>1.4.3. 메서드</h3>
+        <p>추후 번역</p>
+        <br>
+        <h3>1.4.4. AudioBufferOptions</h3>
+        <p>추후 번역</p>
+        <br>
+        <h4>1.4.4.1. 딕셔너리 AudioBufferOptions 멤버</h4>
+        <p>추후 번역</p>
+        <br>
+        <h2>1.5. AudioNode 인터페이스</h2>
+        <p>AudioNode는 AudioContext의 구성 요소입니다. 이 인터페이스는 오디오 소스, 오디오 목적지, 중간 프로세싱 모듈을 나타냅니다. 이 모듈들은 오디오를 렌더링하여 오디오 하드웨어로 보내는 프로세싱 그래프를 형성하기 위해 함께 연결될 수 있습니다. 각 노드들은 입력 그리고/또는 출력을 가질 수 있습니다. 소스 노드는 입력이 없고 하나의 출력이 있습니다. 필터와 같은 대부분의 프로세싱 노드들은 하나의 입력과 하나의 출력을 갖습니다. 각 유형의 AudioNode는 어떻게 이것이 오디오를 처리하거나 합성하는지에 대한 세부 사항이 다릅니다. 하지만, 일반적으로, AudioNode는 (입력이 있다면) 입력을 처리하고, (출력이 있다면) 출력으로 오디오를 생성합니다.</p>
+        <br>
 
         <h2>1.6. AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
