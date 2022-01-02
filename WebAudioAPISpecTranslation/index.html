@@ -1187,6 +1187,41 @@ interface AudioNode : EventTarget {
 };
         </pre>
         <br>
+        <h3>1.5.1. AudioNode 생성</h3>
+        <p>AudioNode는 두 가지 방법으로 생성될 수 있는데 그 방법이란 특정한 인터페이스에 대한 생성자를 사용하는 것 혹은 BaseAudioContext 또는 AudioContext의 팩토리 메서드를 사용하는 것입니다.</p>
+        <br>
+        <p>AudioNode의 생성자의 첫번째 인자로써 전달되는 BaseAudioContext는 생성될 AudioNode의 연관된 BaseAudioContext라고 불려집니다. 유사하게, 팩토리 메서드를 사용할 때, AudioNode의 연관된 BaseAudioContext는 이 팩토리 메서드가 호출된 BaseAudioContext입니다.</p>
+        <br>
+        <p>추후 번역</p>
+        <br>
+        <p>팩토리 메서드의 연관된 인터페이스란 이 메서드로부터 반환된 객체의 인터페이스입니다. 인터페이스의 연관된 옵션 객체란 이 인터페이스의 생성자에 전달될 수 있는 옵션 객체입니다.</p>
+        <br>
+        <p>AudioNode는 [DOM]에 기술된 대로, EventTarget입니다. 이것이 의미하는 바는 다른 EventTarget들이 이벤트를 받아들이는 것과 같은 방식으로 AudioNode에 이벤트를 전파할 수 있다는 것입니다.</p>
+        <br>
+        <pre>
+enum ChannelCountMode {
+  "max",
+  "clamped-max",
+  "explicit"
+};
+        </pre>
+        <br>
+        <p>추후 번역</p>
+        <br>
+        <pre>
+enum ChannelInterpretation {
+  "speakers",
+  "discrete"
+};
+        </pre>
+        <br>
+        <p>추후 번역</p>
+        <br>
+        <h3>1.5.2. AudioNode 꼬리 시간(tail-time)</h3>
+        <p>AudioNode는 꼬리 시간을 가질 수 있습니다. 이는 AudioNode에 아무 소리도 입력되지 않았을 지라도(fed silence), 출력은 소리가 있을 수 있다(non-silent)는 것입니다.</p>
+        <br>
+        <p>만약 과거의 입력이 미래의 출력에 영향을 주는 것과 같은 내부 프로세싱 상태를 AudioNode가 가지고 있다면 AudioNode는 0이 아닌 꼬리 시간을 가집니다. AudioNode는 심지어 입력이 소리 있음에서 소리 없음으로 전이된 후일지라도 계산된 꼬리 시간동안 소리가 있는 출력을 생성하는 것을 계속할 수도 있습니다.</p>
+        <br>
 
         <h2>1.6. AudioParam 인터페이스</h2>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
