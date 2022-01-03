@@ -1222,8 +1222,30 @@ enum ChannelInterpretation {
         <br>
         <p>만약 과거의 입력이 미래의 출력에 영향을 주는 것과 같은 내부 프로세싱 상태를 AudioNode가 가지고 있다면 AudioNode는 0이 아닌 꼬리 시간을 가집니다. AudioNode는 심지어 입력이 소리 있음에서 소리 없음으로 전이된 후일지라도 계산된 꼬리 시간동안 소리가 있는 출력을 생성하는 것을 계속할 수도 있습니다.</p>
         <br>
-
+        <h3>1.5.3. AudioNode 생명 주기</h3>
+        <p>만약 다음의 조건 중 어느 하나라도 부합한다면, AudioNode는 render quantum 도중에 활발히 처리 중(actively processing)일 수 있습니다.</p>
+        <p>추후 번역</p>
+        <p>활발히 처리 중이 아닌 AudioNode는 무음을 내는 채널 하나를 출력합니다.</p>
+        <br>
+        <h3>1.5.4. 어트리뷰트</h3>
+        <p>추후 번역</p>
+        <br>
+        <h3>1.5.5. 메서드</h3>
+        <p>추후 번역</p>
+        <br>
+        <h3>1.5.6. AudioNodeOptions</h3>
+        <p>추후 번역</p>
+        <br>
+        <h4>1.5.6.1. 딕셔너리 AudioNodeOptions 멤버</h4>
+        <p>추후 번역</p>
+        <br>
         <h2>1.6. AudioParam 인터페이스</h2>
+        <p>AudioParam은 AudioNode의 기능의 개별적 측면을 제어하는데, 예를 들자면 음량이 있습니다. 이 파라미터는 value 어트리뷰트를 사용하여 특정한 값으로 즉시 설정될 수 있습니다. 또는, 값은 아주 정밀한 시간에 (AudioContext의 currentTime 어트리뷰트의 좌표계에서) 발생하도록 예정될 수도 있는데, 엔벨로프, 볼륨 페이드, LFO, filter sweep, grain window 등이 그 예입니다. 이 방법으로, 임의적인 타임라인 기반의 자동화 곡선이 모든 AudioParam에 대해서 설정될 수 있습니다. 추가적으로, AudioNode의 출력으로부터의 오디오 신호는 AudioParam에 연결될 수 있고 고유 파라미터 값으로 평가됩니다.</p>
+        <br>
+        <p>몇몇 합성과 AudioNode 처리는 어트리뷰트의 값이 반드시 '오디오 샘플 당' 기반으로 고려되어져야만 하는 어트리뷰트로써 AudioParam을 가집니다. 다른 AudioParam에 대해서는, 샘플 정확성은 중요하지 않으며 값 변화는 더욱 조악하게 샘플될 수 있습니다. 개개의 AudioParam은 이것이 a-rate 파라미터인지 k-rate 파라미터인지를 명시할 것입니다. a-rate 파라미터란 이것의 값이 반드시 '오디오 샘플 당' 기반으로 고려되어져야 함을 의미합니다.</p>
+        <br>
+        <p>구현은 반드시 블럭 프로세싱을 사용해야 하며, 각 AudioNode는 하나의 render quantum을 처리합니다.</p>
+        <br>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
         <p>주어진 자동화 이벤트의 행동은 이 이벤트의 자동화 이벤트 시간과 리스트의 인접한 이벤트의 자동화 이벤트 뿐만이 아니라, AudioContext의 현재 시간의 함수입니다. 다음의 <strong>자동화 메서드</strong>들은 이벤트 리스트에 메서드에 따른 새로운 이벤트를 추가함으로써 이벤트 리스트를 변경시킵니다.</p>
         <ul>
