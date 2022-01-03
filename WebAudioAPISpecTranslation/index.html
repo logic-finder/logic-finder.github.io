@@ -1246,6 +1246,12 @@ enum ChannelInterpretation {
         <br>
         <p>구현은 반드시 블럭 프로세싱을 사용해야 하며, 각 AudioNode는 하나의 render quantum을 처리합니다.</p>
         <br>
+        <p>각 render quantum에 대해, <strong><i>k-rate</i></strong> 파라미터의 값은 반드시 첫 번째 샘플 프레임의 시간에 샘플되어야만 하고, 그 값은 반드시 전체 블럭에 대해 사용되어야만 합니다. <strong><i>a-rate</i></strong> 파라미터의 값은 반드시 블럭의 각 샘플 프레임에 대해 샘플되어야만 합니다. AudioParam에 따라, 이것의 rate는 automationRate 어트리뷰트를 "a-rate"나 "k-rate"로 설정함으로써 제어될 수 있습니다. 추가적인 세부 사항은 각 AudioParam의 설명을 참고해 보세요.</p>
+        <br>
+        <p>각 AudioParam은 이 파라미터의 <strong>단순한 명목상의 범위</strong>를 함께 형성하는 minValue와 maxValue 어트리뷰트를 포함하고 있습니다. 실제로는, 파라미터의 값은 [minValue, maxValue] 범위로 강제됩니다. 전체 사항에 대해서는 § 1.6.3. 값의 계산을 참고해 보세요.</p>
+        <br>
+        <p>많은 AudioParam의 경우 minValue와 maxValue는 최대로 가능한 범위로 설정되는 것이 의도됩니다. 이 경우, maxValue는 <strong><i>most-positive-single-float</i></strong> 값으로 설정되어야 하는데, 이 값은 3.4028235e38입니다. (그러나, 오직 IEEE-754 double precision float value만을 지원하는 JavaScript에서는, 이것은 반드시 3.4028234663852886e38로 작성되어야만 합니다.) 유사하게, minValue는 <strong><i>most-negative-single-float</i></strong>로 설정되어야 하고, 이 값은 -3.4028235e38입니다. (유사하게, 이것은 반드시 JavaScript에서 -3.4028234663852886e38로 작성되어야만 합니다.)</p>
+        <br>
         <p>AudioParam은 0개 이상의 <strong>자동화 이벤트</strong>를 유지합니다. 각 자동화 이벤트는, AudioContext의 currentTime 어트리뷰트의 시간 좌표계의 <strong>자동화 이벤트 시간</strong>에 관련하여, 특정한 시간 범위에 대한 파라미터의 값 변화를 명시합니다. 자동화 이벤트의 리스트는 자동화 이벤트 시간의 오름차순으로 유지됩니다.</p>
         <p>주어진 자동화 이벤트의 행동은 이 이벤트의 자동화 이벤트 시간과 리스트의 인접한 이벤트의 자동화 이벤트 뿐만이 아니라, AudioContext의 현재 시간의 함수입니다. 다음의 <strong>자동화 메서드</strong>들은 이벤트 리스트에 메서드에 따른 새로운 이벤트를 추가함으로써 이벤트 리스트를 변경시킵니다.</p>
         <ul>
@@ -1255,6 +1261,7 @@ enum ChannelInterpretation {
           <li>setTargetAtTime() - setTarget</li>
           <li>setValueCurveAtTime() - setValueCurve</li>
         </ul>
+        <br>
         <p>다음의 규칙이 이 메서드들을 호출할 때 적용될 것입니다:</p>
         <ul>
           <li>자동화 이벤트 시간은 일반적인 샘플 레이트에 관하여 양자화되지 않습니다. 곡선과 경사를 결정하는 공식은 이벤트를 예정할 때 주어진 정확한 수치적 시간에 적용됩니다.</li>
@@ -1266,6 +1273,18 @@ enum ChannelInterpretation {
         <div class="note">
           <p>노트: AudioParam 어트리뷰트는 읽기 전용입니다. 단, value 어트리뷰트는 예외입니다.</p>
         </div>
+        <br>
+        <p>AudioParam의 automation rate는 다음의 값 중 하나와 함게 automationRate 어트리뷰트를 설정함으로써 선택될 수 있습니다. 그러나, 몇몇 AudioParam은 automation rate가 변경될 수 있는지에 대한 제약을 가지고 있습니다.</p>
+        <br>
+        <p>추후 번역</p>
+        <br>
+        <h3>1.6.1. 어트리뷰트</h3>
+        <h3>1.6.2. 메서드</h3>
+        <h3>1.6.3. 값의 계산</h3>
+        <br>
+        <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
+        <p></p>
+        <br>
     </div>
     </main>
   </body>
