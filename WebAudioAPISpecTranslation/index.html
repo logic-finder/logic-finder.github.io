@@ -1274,7 +1274,7 @@ enum ChannelInterpretation {
           <p>노트: AudioParam 어트리뷰트는 읽기 전용입니다. 단, value 어트리뷰트는 예외입니다.</p>
         </div>
         <br>
-        <p>AudioParam의 automation rate는 다음의 값 중 하나와 함게 automationRate 어트리뷰트를 설정함으로써 선택될 수 있습니다. 그러나, 몇몇 AudioParam은 automation rate가 변경될 수 있는지에 대한 제약을 가지고 있습니다.</p>
+        <p>AudioParam의 automation rate는 다음의 값 중 하나와 함께 automationRate 어트리뷰트를 설정함으로써 선택될 수 있습니다. 그러나, 몇몇 AudioParam은 automation rate가 변경될 수 있는지에 대한 제약을 가지고 있습니다.</p>
         <br>
         <p>추후 번역</p>
         <br>
@@ -1283,7 +1283,191 @@ enum ChannelInterpretation {
         <h3>1.6.3. 값의 계산</h3>
         <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
-        <p></p>
+        <p>이 인터페이스는 AudioBufferSourceNode, ConstantSourceNode, OscillatorNode와 같은 소스 노드의 공통적인 기능을 나타냅니다.</p>
+        <br>
+        <p>소스가 시작되기 전에 (start()를 호출함으로써) 소스 노드는 반드시 무음 (0) 을 출력해야 합니다. 소스가 정지된 후 (stop()을 호출함으로써), 소스는 반드시 무음을 출력해야 합니다 (0).</p>
+        <br>
+        <p>AudioScheduledSourceNode는 직접적으로 인스턴스화될 수 없지만, 대신 소스 노드에 대한 구체적인 인터페이스에 의해 확장됩니다.</p>
+        <br>
+        <p>AudioScheduledSourceNode는 이것의 연관된 BaseAudioContext의 currentTime이 AudioScheduledSourceNode가 시작되기로 설정된 시간보다 크거나 같고, 이것이 정지되기로 설정된 시간보다 작을 때 <strong>재생</strong>된다고 말해집니다.</p>
+        <br>
+        <p>AudioScheduledSourceNode는 내부 boolean 슬롯 [[source started]]와 함께 생성되는데, 이는 초기적으로 false로 설정되어 있습니다.</p>
+        <br>
+        <pre>
+[Exposed=Window]
+interface AudioScheduledSourceNode : AudioNode {
+  attribute EventHandler onended;
+  undefined start(optional double when = 0);
+  undefined stop(optional double when = 0);
+};
+        </pre>
+        <br>
+        <h3>1.7.1. 어트리뷰트</h3>
+        <h3>1.7.2. 메서드</h3>
+        <br>
+        <h2>1.8. AnalyserNode 인터페이스</h2>
+        <p>이 인터페이스는 실시간 주파수 그리고 시간 영역 분석 정보를 제공 가능한 노드를 나타냅니다. 오디오 스트림은 입력에서 출력까지 처리되지 않은 채로 전달될 것입니다.</p>
+        <br>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td>이 output은 연결되지 않은 채로 남아있을 수도 있습니다.</td>
+          </tr>
+          <tr>
+            <td>channelCount</td>
+            <td>2</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCountMode</td>
+            <td>"max"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelInterPretation</td>
+            <td>"speakers"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <pre>
+[Exposed=Window]
+interface AnalyserNode : AudioNode {
+  constructor (BaseAudioContext context, optional AnalyserOptions options = {});
+  undefined getFloatFrequencyData (Float32Array array);
+  undefined getByteFrequencyData (Uint8Array array);
+  undefined getFloatTimeDomainData (Float32Array array);
+  undefined getByteTimeDomainData (Uint8Array array);
+  attribute unsigned long fftSize;
+  readonly attribute unsigned long frequencyBinCount;
+  attribute double minDecibels;
+  attribute double maxDecibels;
+  attribute double smoothingTimeConstant;
+};
+        </pre>
+        <br>
+        <h3>1.8.1. 생성자</h3>
+        <h3>1.8.2. 어트리뷰트</h3>
+        <h3>1.8.3. 메서드</h3>
+        <h3>1.8.4. AnalyserOptions</h3>
+        <h4>1.8.4.1. 딕셔너리 AnalyserOptions 멤버</h4>
+        <h3>1.8.5. 시간 영역 다운 믹싱</h3>
+        <p>현재 시간 영역 데이터가 계산될 때, 입력 신호는 반드시 마치 channelCount가 1이고, channelCountMode가 "max"이고, channelInterpretation이 "speakers"인 것처럼 모노로 다운믹스되어야만 합니다. 이것은 AnalyserNode 자체의 설정과는 무관합니다. 가장 최신의 fftSize 프레임이 다운믹싱 연산에 사용됩니다.</p>
+        <br>
+        <h3>1.8.6. 시간에 따른 FFT windowing과 smoothing</h3>
+        <p>현재 주파수 데이터가 계산될 때, 다음의 연산이 수행될 것입니다.</p>
+        <br>
+        <ol>
+          <li>현재 시간 영역 데이터를 계산합니다.</li>
+          <li>Blackman window를 시간 영역 입력 데이터에 적용합니다.</li>
+          <li>푸리에 변환을 window된 시간 영역 입력 데이터에 적용하여 real과 imaginary 주파수 데이터를 얻습니다.</li>
+          <li>시간에 따라 주파수 영역 데이터를 smooth합니다.</li>
+          <li>dB로 변환합니다.</li>
+        </ol>
+        <br>
+        <h2>1.9. AudioBufferSourceNode 인터페이스</h2>
+        <p>이 인터페이스는 Audiobuffer 내의 in-memory 오디오 에셋으로부터의 오디오 소스를 나타냅니다. 이것은 높은 정도의 스케쥴링 유연성과 정확성을 요구하는 오디오 에셋 재생에 유용합니다. 만약 network- 또는 disk-backed 에셋의 sample-accurate 재생이 요구된다면, 구현자는 AudioWorkletNode를 사용하여 재생을 구현해야 합니다.</p>
+        <br>
+        <p>start() 메서드는 사운드 재생이 일어날 때를 예정하기 위해 사용됩니다. start() 메서드는 여러 번 호출될 수는 없을지도 모릅니다. 재생은 버퍼의 오디오 데이터가 완전히 재생되었을 때 (만약 loop 어트리뷰트가 false라면), 혹은 stop() 메서드가 호출되고 명시된 시간에 도달했을 때 자동적으로 정지할 것입니다. 자세한 사항은 start()와 stop() 설명을 참고해 보세요.</p>
+        <br>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>0</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCount</td>
+            <td>2</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCountMode</td>
+            <td>"max"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelInterPretation</td>
+            <td>"speakers"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <p>출력의 채널의 수는 buffer 어트리뷰트에 할당된 AudioBuffer의 채널의 수와 동일하거나, 만약 buffer가 null이면 무음인 채널 하나입니다.</p>
+        <br>
+        <p>추가적으로, 만약 버퍼가 하나 이상의 채널을 가지고 있다면, AudioBufferSourceNode 출력은 다음의 조건 중 하나가 부합하는 시간 이후에 반드시 render quantum의 시작에 무음인 하나의 채널로 변경되어야만 합니다.</p>
+        <br>
+        <ul>
+          <li>버퍼의 끝에 도달했습니다.</li>
+          <li>지속 기간에 도달했습니다.</li>
+          <li>정지 시간에 도달했습니다.</li>
+        </ul>
+        <br>
+        <p>AudioBufferSourceNode의 <strong>playhead 포지션</strong>은 시간 오프셋 (초) 을 나타내는 어떠한 양으로써 정의되고, 이 오프셋은 버퍼의 첫번째 샘플 프레임의 시간 좌표계에 관련있습니다. 이러한 값은 노드의 playbackRate와 detune 파라미터와는 별도로 생각되어져야 할 것입니다. 일반적으로, playhead 포지션은 subsample-accurate할 수 있고 정확한 샘플 프레임 포지션을 나타낼 필요가 없습니다. 이것은 0과 버퍼의 지속 기간 사이에서 유효한 값을 추정할 수 있습니다.</p>
+        <br>
+        <p>playbackRate와 detune 어트리뷰트는 복합적인 파라미터를 형성합니다. 이것들은 함께 사용되어 <strong><i>computedPlaybackRate</i></strong> 값을 결정합니다.</p>
+        <br>
+        <p>computedPlaybackRate(t) = playbackRate(t) * pow(2, detune(t) / 1200)</p>
+        <br>
+        <p>이 복합적인 파라미터의 명목상의 범위는 (−∞,∞)입니다.</p>
+        <br>
+        <p>AudioBufferSourceNode는 내부 boolean 슬롯 [[buffer set]]과 함께 생성되는데, 이는 초기적으로 false로 설정됩니다.</p>
+        <br>
+        <pre>
+[Exposed=Window]
+interface AudioBufferSourceNode : AudioScheduledSourceNode {
+  constructor (BaseAudioContext context,
+               optional AudioBufferSourceOptions options = {});
+  attribute AudioBuffer? buffer;
+  readonly attribute AudioParam playbackRate;
+  readonly attribute AudioParam detune;
+  attribute boolean loop;
+  attribute double loopStart;
+  attribute double loopEnd;
+  undefined start (optional double when = 0,
+                   optional double offset,
+                   optional double duration);
+};
+        </pre>
+        <br>
+        <h3>1.9.1. 생성자</h3>
+        <h3>1.9.2. 어트리뷰트</h3>
+        <h3>1.9.3. 메서드</h3>
+        <h3>1.9.4. AudioBufferSourceOptions</h3>
+        <h4>1.9.4.1. 딕셔너리 AudioBufferSourceOptions 멤버</h4>
+        <h3>1.9.5. 반복</h3>
+        <h3>1.9.6. AudioBuffer 내용의 재생</h3>
         <br>
     </div>
     </main>
