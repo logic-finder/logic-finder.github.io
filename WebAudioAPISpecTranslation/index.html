@@ -1472,7 +1472,9 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
-        <p>AudioDestinationNode의 출력은 이것의 입력을 합침으로써 생산되며, MediaStreamAudioDestinationNode 또는 MediaRecorder로 가는 AudioContext의 출력을 캡쳐할 수도 있습니다. ([mediastream-recording] 에서 기술됩니다).</p>
+        <p>AudioDestinationNode의 출력은 이것의 입력을 합침으로써 생산되며, MediaStreamAudioDestinationNode 또는 MediaRecorder로 가는 AudioContext의 출력을 캡쳐할 수도 있습니다 ([mediastream-recording] 에서 기술됩니다).</p>
+        <br>
+        <p>AudioDestinationNode는 AudioContext나 OfflineAudioContext의 목적지일 수 있고, 채널 속성들은 컨텍스트가 무엇인지에 달려 있습니다.</p>
         <br>
     </div>
     </main>
