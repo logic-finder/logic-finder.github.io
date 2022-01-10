@@ -1517,6 +1517,57 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
         <br>
         <p>channelCount는 maxChannelCount보다 작거나 같은 값 무엇으로든 설정될 수 있습니다. 만약 이 값이 유효한 범위 내에 없다면 IndexSizeError는 반드시 발생되어야 합니다. 구체적인 예제로써, 만약 오디오 하드웨어가 8 채널의 출력을 지원한다면, channelCount는 8로 설정되고, 출력의 8 채널을 렌더링할 수 있을 것입니다.</p>
         <br>
+        <p>OfflineAudioContext에 대해, 기본값은 아래와 같습니다.</p>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCount</td>
+            <td>numberOfChannels</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCountMode</td>
+            <td>"explicit"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelInterPretation</td>
+            <td>"speakers"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <p>numberOfChannels는 OfflineAudioContext를 생성할 때 명시됩니다. 이 값은 변하지 않을 것입니다. 만약 channelCount가 다른 값으로 변경된다면 NotSupportedError 예외가 반드시 발생되어야 합니다.</p>
+        <br>
+        <pre>
+[Exposed=Window]
+interface AudioDestinationNode : AudioNode {
+  readonly attribute unsigned long maxChannelCount;
+};
+        </pre>
+        <br>
+        <h3>1.10.1. 어트리뷰트</h3>
+        <p>추후 번역</p>
+        <br>
     </div>
     </main>
   </body>
