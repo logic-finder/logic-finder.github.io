@@ -1568,6 +1568,30 @@ interface AudioDestinationNode : AudioNode {
         <h3>1.10.1. 어트리뷰트</h3>
         <p>추후 번역</p>
         <br>
+        <h2>1.11. AudioListener 인터페이스</h2>
+        <p>이 인터페이스는 오디오 장면을 듣고 있는 사람의 위지와 방향을 나타냅니다. 모든 PannerNode 객체는 BaseAudioContext의 listener에 관하여 공간화합니다. § 6 공간화에 대한 더욱 자세한 사항은 공간화/패닝을 참고하세요.</p>
+        <br>
+        <p>positionX, positionY, positionZ 파라미터는 3D 카르테시안 좌표공간에서의 listener의 위치를 나타냅니다. PannerNode 객체는 공간화를 위해 각 오디오 소스에 관련된 이 위치를 사용합니다.</p>
+        <br>
+        <p>forwardX, forwardY, forwardZ 파라미터는 3D 공간에서의 방향 벡터를 나타냅니다. forward 벡터와 up 벡터 둘 다 listener의 방향을 결정하기 위해 사용됩니다. 간단한 말로 하자면, forward 벡터는 사람의 코가 가리키고 있는 방향을 나타냅니다. up 벡터는 사람의 머리 위가 가리키고 있는 방향을 나타냅니다. 이 두 벡터는 선형적으로 독립적일 것이 기대됩니다. 어떻게 이 값들이 해석되어야 하는지에 대한 규범적인 요구 조건에 대해서는, § 6 공간화/패닝 섹션을 참고해 보세요.</p>
+        <br>
+        <pre>
+[Exposed=Window]
+interface AudioListener {
+  readonly attribute AudioParam positionX;
+  readonly attribute AudioParam positionY;
+  readonly attribute AudioParam positionZ;
+  readonly attribute AudioParam forwardX;
+  readonly attribute AudioParam forwardY;
+  readonly attribute AudioParam forwardZ;
+  readonly attribute AudioParam upX;
+  readonly attribute AudioParam upY;
+  readonly attribute AudioParam upZ;
+  undefined setPosition (float x, float y, float z);
+  undefined setOrientation (float x, float y, float z, float xUp, float yUp, float zUp);
+};
+        </pre>
+        <br>
     </div>
     </main>
   </body>
