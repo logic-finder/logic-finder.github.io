@@ -1628,6 +1628,40 @@ interface AudioListener {
         <p>이 노드의 입력은 모노 (1 채널) 혹은 스테레오 (2 채널) 이고 증가될 수 없습니다. 더욱 많은 채널을 가진 노드로부터의 연결은 적절하게 다운믹스될 것입니다.</p>
         <p>이 노드에는 channelCount 제약과 channelCountMode 제약이 있습니다. 이 제약들은 이 노드에의 입력이 모노나 스테레오임을 보장합니다.</p>
         <br>
+        <h2>1.18. DelayNode 인터페이스</h2>
+        <p>딜레이 라인은 오디오 어플리케이션에서 기본적인 구성 요소입니다. 이 인터페이스는 하나의 입력과 하나의 출력을 가진 AudioNode입니다.</p>
+        <p>표는 추후 번역</p>
+        <p>출력의 채널 수는 항상 입력의 채널 수와 같습니다.</p>
+        <p>이것은 들어오는 오디오 신호를 특정한 양만큼 지연시킵니다. 정확히 말하자면, 각 시간 t, 입력 신호 input(t), 지연 시간 delayTime(t), 출력 신호 output(t)에서, 출력은 output(t) = input(t - delayTime(t))일 것입니다. 기본 delayTime은 0초 (지연 없음) 입니다.</p>
+        <p>DelayNode의 입력의 채널 수가 바뀔 때 (따라서 출력 채널 수도 바뀜), 노드에 의해 아직 출력되지 않았고 이것의 내부 상태의 일부인 지연된 오디오 샘플들이 있을 수 있습니다. 만약 이 샘플들이 다른 채널 카운트와 함께 일찍 수신되었다면, 이것들은 반드시 새롭게 수신된 입력과 혼합되기 전에 업믹스되거나 다운믹스되어 모든 내부 딜레이 라인 믹싱이 하나의 지배적인 채널 레이아웃을 사용하여 일어나도록 해야 합니다.</p>
+        <div class="note">
+          <p>노트: 정의에 의해, DelayNode는 딜레이의 양과 동일한 오디오 프로세싱 레이턴시를 삽입합니다.</p>
+        </div>
+        <br>
+        <pre>
+[Exposed=Window]
+interface DelayNode : AudioNode {
+  constructor (BaseAudioContext context, optional DelayOptions options = {});
+  readonly attribute AudioParam delayTime;
+};
+        </pre>
+        <br>
+        <h2>1.19. DynamicsCompressorNode 인터페이스</h2>
+        <p>DynamicsCompressorNode는 dynamics compression 이펙트를 구현하는 AudioNode 프로세서입니다.</p>
+        <p>dynamics compression은 음악 프로덕션과 게임 오디오에서 아주 일반적으로 사용됩니다. 이것은 신호의 가장 소리가 큰 부분의 볼륨을 줄이고 가장 작은 부분의 볼륨을 높입니다. 전반적으로, 크고, 풍부하고, 꽉 찬 소리가 달성될 수 있습니다. 이것은 다수의 각 사운드가 동시에 재생되어 전반적인 신호 레벨을 제어하고 스피커로 가는 오디오 출력이 클리핑(왜곡)되는 것을 방지하는 것을 돕는 게임과 뮤지컬 어플리케이션에서 보통 중요합니다.</p>
+        <br>
+        <h2>1.20. GainNode 인터페이스</h2>
+        <p>오디오 신호의 gain을 변경하는 것은 오디오 어플리케이션에서 기본적인 작동입니다. 이 인터페이스는 하나의 입력과 하나의 출력을 가진 AudioNode입니다.</p>
+        <p>표는 추후에 번역</p>
+        <p>GainNode의 입력 데이터의 각 채널의 각 샘플은 반드시 gain AudioParam의 computedValue에 의해 곱해져야 합니다.</p>
+        <pre>
+[Exposed=Window]
+interface GainNode : AudioNode {
+  constructor (BaseAudioContext context, optional GainOptions options = {});
+  readonly attribute AudioParam gain;
+};
+        </pre>
+        <br>
     </div>
     </main>
   </body>
