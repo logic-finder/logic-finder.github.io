@@ -1662,6 +1662,71 @@ interface GainNode : AudioNode {
 };
         </pre>
         <br>
+        <h2>1.21. IIRFilterNode 인터페이스</h2>
+        <p>IIRFilterNode는 일반적인 IIR 필터를 구현하는 AudioNode 프로세서입니다. 일반적으로, 다음의 이유로 higher-order 필터를 구현함에 있어 BiquadFilterNode를 사용하는 것이 최선입니다.</p>
+        <ul>
+          <li>일반적으로 수치적 문제에 덜 민감함</li>
+          <li>필터 파라미터들이 자동화될 수 있음</li>
+          <li>모든 even-ordered IIR 필터를 생성하기 위해 사용될 수 있음</li>
+        </ul>
+        <br>
+        <p>그러나, odd-ordered 필터는 생성될 수 없으므로, 만약 그러한 필터가 필요하거나 자동화가 필요하지 않다면, IIR 필터가 적절할 수 있습니다.</p>
+        <p>한 번 생성되고 나면, IIR 필터의 계수들은 변경될 수 없습니다.</p>
+        <p>표는 추후 번역</p>
+        <p>출력 채널의 수는 항상 입력 채널의 수와 같습니다.</p>
+        <pre>
+[Exposed=Window]
+interface IIRFilterNode : AudioNode {
+  constructor (BaseAudioContext context, IIRFilterOptions options);
+  undefined getFrequencyResponse (Float32Array frequencyHz,
+                                  Float32Array magResponse,
+                                  Float32Array phaseResponse);
+};
+        </pre>
+        <br>
+        <h2>1.22. MediaElementAudioSourceNode 인터페이스</h2>
+        <p>이 인터페이스는 &lt;audio&gt; 혹은 &lt;video&gt; 요소로부터의 오디오 소스를 나타냅니다.</p>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>0</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time 참조</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <p>출력 채널의 수는 HTMLMediaElement에 의해 참조되는 미디어 채널의 수와 일치합니다. 따라서, 미디어 요소의 src 어트리뷰트에의 변화는 이 노드에 의해 출력되는 채널의 수를 변화시킬 수 있습니다.</p>
+        <p>만약 HTMLMediaElement의 샘플 레이트가 연관된 AudioContext의 샘플 레이트와 다르다면, HTMLMediaElement로부터의 출력은 반드시 리샘플링되어 컨텍스트의 샘플 레이트와 일치해야만 합니다.</p>
+        <p>MediaElementAudioSourceNode는 AudioContext의 createMediaElementSource() 메서드 혹은 생성자의 MediaElementAudioSourceOptions 딕셔너리의 mediaElement 멤버를 사용함으로써 HTMLMediaElement가 주어졌을 때 생성됩니다.</p>
+        <p>하나의 출력의 채널의 수는 createMediaElementSource()에의 인자로써 전달된 HTMLMediaElement에 의해 참조되는 오디오 채널의 수와 동일하거나, 만약 HTMLMediaElement가 오디오를 가지고 있지 않다면 1입니다.</p>
+        <p>MediaElementAudioSourceNode가 생성된 이후에 HTMLMediaElement는 반드시 동일한 양식으로 행동해야만 하나, 하나의 예외가 있습니다. 그 예외란 렌더링된 오디오가 더 이상 직접적으로 들리지 않지만, 대신 라우팅 그래프를 통해 연결되어 있는 MediaElementAudioSourceNode의 결과로써 들리는 것입니다. 따라서 정지, 탐색, 볼륨, src 어트리뷰트 변화, HTMLMediaElement의 다른 측면들은 만약 MediaElementAudioSourceNode와 함께 사용되지 않는다면 반드시 이것들이 일반적으로 행동하는 것처럼 행동해야 합니다.</p>
+        <pre>
+예제 11
+const mediaElement = document.getElementById('mediaElementID');
+const sourceNode = context.createMediaElementSource(mediaElement);
+sourceNode.connect(filterNode);
+        </pre>
+        <pre>
+[Exposed=Window]
+interface MediaElementAudioSourceNode : AudioNode {
+  constructor (AudioContext context, MediaElementAudioSourceOptions options);
+  [SameObject] readonly attribute HTMLMediaElement mediaElement;
+};
+        </pre>
     </div>
     </main>
   </body>
