@@ -1727,6 +1727,18 @@ interface MediaElementAudioSourceNode : AudioNode {
   [SameObject] readonly attribute HTMLMediaElement mediaElement;
 };
         </pre>
+        <h2>1.23. MediaStreamAudioDestinationNode 인터페이스</h2>
+        <p>이 인터페이스는 kind가 "audio"인 하나의 MediaStreamTrack을 가진 MediaStream을 나타내는 오디오 목적지입니다. 이 MediaStream은 노드가 생성될 때 생성되고 stream 어트리뷰트를 통해 접근 가능합니다. 이 스트림은 getUserMedia()를 통해 얻어진 MediaStream과 비슷한 방식으로 사용될 수 있고, 예를 들자면 RTCPeerConnection ([webrtc]에서 기술됨) addStream() 메서드를 사용해 원격 peer에게 전송될 수 있습니다.</p>
+        <p>표는 추후 번역</p>
+        <p>입력 채널의 수는 기본적으로 2 입니다 (스테레오).</p>
+        <pre>
+[Exposed=Window]
+interface MediaStreamAudioDestinationNode : AudioNode {
+  constructor (AudioContext context, optional AudioNodeOptions options = {});
+  readonly attribute MediaStream stream;
+};
+        </pre>
+        <br>
     </div>
     </main>
   </body>
