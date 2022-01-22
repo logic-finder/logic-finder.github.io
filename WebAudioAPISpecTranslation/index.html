@@ -1741,7 +1741,6 @@ interface MediaStreamAudioDestinationNode : AudioNode {
         <br>
         <h2>1.24. MediaStreamAudioSourceNode 인터페이스</h2>
         <p>이 인터페이스는 MediaStream으로부터의 오디오 소스를 나타냅니다.</p>
-        <p>표는 추후 번역</p>
         <table>
           <tr>
             <td>프로퍼티</td>
@@ -1775,6 +1774,39 @@ interface MediaStreamAudioSourceNode : AudioNode {
 };
         </pre>
         <br>
+        <h2>1.25. MediaStreamTrackAudioSourceNode 인터페이스</h2>
+        <p>이 인터페이스는 MediaStreamTrack으로부터의 오디오 소스를 나타냅니다.</p>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>0</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time 참조</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <p>출력 채널의 수는 mediaStreamTrack의 채널의 수와 일치합니다.</p>
+        <p>만약 MediaStreamTrack의 샘플 레이트가 연관된 AudioContext의 샘플 레이트와 다르다면, mediaStreamTrack의 출력은 컨텍스트의 샘플 레이트와 일치되도록 리샘플링될 것입니다.</p>
+        <pre>
+[Exposed=Window]
+interface MediaStreamTrackAudioSourceNode : AudioNode {
+  constructor (AudioContext context, MediaStreamTrackAudioSourceOptions options);
+};
+        </pre>
     </div>
     </main>
   </body>
