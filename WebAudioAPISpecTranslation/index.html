@@ -1807,6 +1807,106 @@ interface MediaStreamTrackAudioSourceNode : AudioNode {
   constructor (AudioContext context, MediaStreamTrackAudioSourceOptions options);
 };
         </pre>
+        <br>
+        <h2>1.26. OscillatorNode 인터페이스</h2>
+        <p>OscillatorNode는 주기적인 파형을 생성하는 오디오 소스를 나타냅니다. 이것은 몇 가지의 일반적으로 사용되는 파형으로 설정될 수 있습니다. 추가적으로, PeriodicWave 객체의 사용을 통해 이것은 임의의 주기적인 파형으로 설정될 수 있습니다.</p>
+        <p>오실레이터는 오디오 합성에서 일반적인 기본 구성 요소입니다. OscillatorNode는 start() 메서드에 의해 명시된 시간에 소리를 발산하기 시작할 것입니다.</p>
+        <p>수학적으로 말해서, 연속 시간 주기 파형은 주파수 영역에서 고려되었을 때 아주 높은 (혹은 무한히 높은) 주파수 정보를 가질 수 있습니다. 이 파형이 특정한 샘플 레이트에서 이산 시간 디지털 오디오 신호로 샘플링되었을 때, 파형을 디지털 형태로 변환하기 전에 나이퀴스트 주파수보다 높은 고주파 정보를 폐기하기 (거르기) 위해 관심이 반드시 기울여져야 합니다. 만약 이러한 작업이 이루어지지 않는다면, (나이퀴스트 주파수보다) 높은 주파수의 에일리어싱이 나이퀴스트 주파수보다 낮은 주파수로 mirror image로서 fold back될 것입니다. 많은 경우에서 이것은 청각적으로 불쾌한 결과를 초래할 것입니다. 이것은 오디오 디지털 신호 처리의 기본적이고 잘 이해된 원칙입니다.</p>
+        <p>구현이 이 에일리어싱을 방지하기 위해 취할 수 있는 몇 가지 실용적인 접근이 있습니다. 접근에 상관없이, 이상적인 이산 시간 디지털 오디오 신호는 수학적으로 잘 정의됩니다. 이 구현에 대한 trade-off는 이 이상을 달성하는 것에 대한 충실도(fidelity)에 대한 (CPU 사용의 측면에서의) 구현 비용의 문제입니다.</p>
+        <p>구현이 이 이상을 달성함에 있어 얼마간의 주의를 취할 것이 기대되지만, lower-end 하드웨어에서 낮은 품질과 덜 비용이 드는 접근을 고려하는 것은 타당합니다.</p>
+        <p>frequency와 detune이 둘 다 a-rate 파라미터이고, 복합적인 파라미터를 형성합니다. 이것들은 함께 사용되어 computedOscFrequency 값을 결정합니다.</p>
+        <pre>computedOscFrequency(t) = frequency(t) * pow(2, detune(t) / 1200)</pre>
+        <br>
+        <p>각 시간에서의 OscillatorNode의 instantaneous 단계는 computedOscFrequency의 definite time integral이며, 노드의 정확한 시작 시간에서 0의 phase angle을 상정합니다. 이것의 명목상의 범위는 [-Nyquist 주파수, Nyquist 주파수] 입니다.</p>
+        <p>이 노드의 하나의 출력은 하나의 채널로 이루어져 있습니다 (모노).</p>
+        <table>
+          <tr>
+            <td>프로퍼티</td>
+            <td>값</td>
+            <td>참고</td>
+          </tr>
+          <tr>
+            <td>numberOfInputs</td>
+            <td>0</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>numberOfOutputs</td>
+            <td>1</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCount</td>
+            <td>2</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelCountMode</td>
+            <td>"max"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>channelInterpretation</td>
+            <td>"speakers"</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>tail-time</td>
+            <td>없음</td>
+            <td></td>
+          </tr>
+        </table>
+        <br>
+        <pre>
+enum OscillatorType {
+  "sine",
+  "square",
+  "sawtooth",
+  "triangle",
+  "custom"
+};
+        </pre>
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">열거형 설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"<i>sine</i>"</td>
+              <td>사인파</td>
+            </tr>
+            <tr>
+              <td>"<i>square</i>"</td>
+              <td>duty period 0.5의 사각파</td>
+            </tr>
+            <tr>
+              <td>"<i>sawtooth</i>"</td>
+              <td>톱니파</td>
+            </tr>
+            <tr>
+              <td>"<i>triangle</i>"</td>
+              <td>삼각파</td>
+            </tr>
+            <tr>
+              <td>"<i>custom</i>"</td>
+              <td>사용자 정의 주기파</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <pre>
+[Exposed=Window]
+interface OscillatorNode : AudioScheduledSourceNode {
+  constructor (BaseAudioContext context, optional OscillatorOptions options = {});
+  attribute OscillatorType type;
+  readonly attribute AudioParam frequency;
+  readonly attribute AudioParam detune;
+  undefined setPeriodicWave (PeriodicWave periodicWave);
+};
+        </pre>
+        <br>
     </div>
     </main>
   </body>
