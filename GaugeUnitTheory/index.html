@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>게이지 유닛 이론</title>
+    <style>
+      div#content {
+        border: 1px solid black;
+        width: 400px;
+      }
+
+      div#content p#title {
+        text-align: center;
+      }
+
+      pre {
+        background-color: lightgray;
+      }
+
+      table {
+        border: 1px solid black;
+      }
+
+      table td {
+        border: 1px solid black;
+      }
+
+      span.cryo {
+        color: lightskyblue;
+      }
+
+      span.dendro {
+        color: greenyellow;
+      }
+
+      span.electro {
+        color: violet;
+      }
+
+      span.hydro {
+        color: blue;
+      }
+
+      span.pyro {
+        color: red;
+      }
+
+      span.anemo {
+        color: rgb(0, 255, 179);
+      }
+
+      span.geo {
+        color: rgb(255, 196, 0);
+      }
+    </style>
+  </head>
+  <body>
+    <a href="../index.html">return to home</a>
+    <p>원신 고수가 되고자 번역하였다. 원신 초보에 영어를 못해서 번역에 잘못이 있을 수 있으니 넓은 아량으로 양해 바람.</p>
+    <p>원 글 출처(original document): <a href="https://genshin-impact.fandom.com/wiki/Gauge_Unit_Theory">영어 원신 임팩트 팬덤 Gauge Unit Theory 문서</a></p>
+    <p>번역일: 2022년 1월 26일</p>
+    <p>※ 이 번역은 비공식입니다. 개인 공부용입니다. / This translation is unofficial; for the sake of personal study.</p>
+    <hr>
+    <p>관련 문서</p>
+    <p><a href="https://genshin-impact.fandom.com/wiki/Gauge_Unit_Theory/Auras">게이지 유닛 이론/원소 aura</a></p>
+    <p><a href="https://genshin-impact.fandom.com/wiki/Gauge_Unit_Theory/Talents">게이지 유닛 이론/특성</a></p>
+    <p><a href="https://genshin-impact.fandom.com/wiki/Element_Durability">원소 내구력</a></p>
+    <p><a href="https://genshin-impact.fandom.com/wiki/Internal_Cooldown">내부 쿨다운</a></p>
+    <hr>
+    <section>
+      <h1>게이지 유닛 이론</h1>
+      <p><strong>게이지 유닛 이론</strong> (비공식적 이름) 이란 어떻게 원소가 게임 내에서 다뤄지는지에 대한 커뮤니티에 의해 만들어진 프레임워크이다.</p>
+      <p>이 이론은 다음의 현상을 설명하고자 한다:</p>
+      <ul>
+        <li>원소 반응</li>
+        <li>원소 aura, 원소 지속 시간, 원소 감소(decay) (게이지 유닛과 원소 shield/armor를 부수는 것 포함)</li>
+        <li>원소 적용(application)의 내부 쿨다운</li>
+      </ul>
+      <div id="content">
+        <p id="title">목차</p>
+        <ol>
+          <li>소개</li>
+          <li>원소 적용
+            <ol>
+              <li>얼음, 풀, 전기, 물, 불</li>
+              <li>바람, 바위</li>
+            </ol>
+          </li>
+          <li>원소 반응
+            <ol>
+              <li>융해, 증발, 과부하, 초전도, 결정, 확산</li>
+              <li>감전</li>
+              <li>빙결, 쇄빙</li>
+            </ol>
+          </li>
+          <li>감소율 상속</li>
+          <li>원소 shield</li>
+          <li>원소 적용의 내부 쿨다운</li>
+          <li>변경 역사</li>
+          <li>참고</li>
+          <li>내비게이션</li>
+        </ol>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <h2>소개</h2>
+      <p>게이지 유닛 이론의 기본 개념은 원소 공격으로부터의 aura (역자주: 원소가 부착된 상태) 와 원소 작용의 게이지 코스트이다.</p>
+      <p><strong>원소 게이지</strong> — 캐릭터의 ability 또는 공격이 적용하는 원소의 양을 측정하는 유닛. 이 게이지의 값은 원소 aura가 지속하는 <u>시간</u>과 그 원소가 생성할 수 있는 <u>반응</u> 모두에 영향을 준다. 어떤 면에서는, 이 이론은 반응에서의 aura 혹은 trigger의 원소 적용의 비교적인 강함을 기술한다. (역자주: trigger는 aura에 더해져 원소반응을 유발하는 것을 의미하는 듯) aura에서의 높은 게이지는 반응을 생성할 더 높은 가능성을 암시하지만, trigger에서의 높은 게이지는 특히 비싸고 보통 원소들을 즉시 소모한다.</p>
+      <p><strong>원소 aura</strong> — 원소 게이지를 적용하는 것에 더해, 캐릭터의 ability는 원소 aura를 적용할 수 있는데, 원소 aura란 원소가 대상(target)에서 지속 시간동안 지속되는 상태이다. 대표적으로는 다음과 같은 것들이 있다:</p>
+      <ul>
+        <li><span class="cryo"><strong>얼음</strong></span>, <span class="dendro"><strong>풀</strong></span>, <span class="electro"><strong>전기</strong></span>, <span class="hydro"><strong>물</strong></span>, <span class="pyro"><strong>불</strong></span>은 aura를 적용할 수 있다.</li>
+        <li><span class="anemo"><strong>바람</strong></span>과 <span class="geo"><strong>바위</strong></span>는 aura를 적용할 수 없다.</li>
+      </ul>
+      <p><strong>감소</strong> — 원소 게이지의 값에 따라, 원소 aura는 특정한 비율로 감소한다.</p>
+    </section>
+    <hr>
+    <section>
+      <h2>원소 적용</h2>
+      <p>같이 보기: 게이지 유닛 이론/특성</p>
+      <p>다음은 캐릭터의 원소 공격의 게이지 유닛 적용을 기술하기 위해 사용되는 표기법에 대해 다룬다.</p>
+      <h3><span class="cryo"><strong>얼음</strong></span>, <span class="dendro"><strong>풀</strong></span>, <span class="electro"><strong>전기</strong></span>, <span class="hydro"><strong>물</strong></span>, <span class="pyro"><strong>불</strong></span></h3>
+      <p>aura를 적용할 수 있는 원소에 대한 표기법은 두 개의 값을 사용해 캐릭터 ability의 원소 property를 전달한다.</p>
+      <ul>
+        <li><strong>원소 게이지 값</strong> — 이 값은 캐릭터의 ability가 적용하는 원소의 양을 나타낸다.
+          <ul>
+            <li>캐릭터의 ability는 기초 원소 게이지 값 <strong>1</strong>, <strong>2</strong>, 또는 <strong>4</strong> <strong>유닛</strong>을 적용할 수 있다.</li>
+          </ul>
+        </li>
+        <li><strong>지속 시간 값</strong> — 이 값은 결과로 초래된 원소 aura의 지속 시간을 나타낸다.
+          <ul>
+            <li>생성된 원소 aura는 기초 감소율 <strong>9.5</strong>, <strong>6</strong>, 또는 <strong>4.25</strong> 초/유닛 을 가질 수 있는데, 이 값들은 편의와 구별을 위해 <strong>A</strong>, <strong>B</strong>, <strong>C</strong>으로 언급된다.</li>
+          </ul>
+        </li>
+        <li><strong>캐릭터 ability 게이지 값</strong> — 원소 게이지와 지속 시간 값으로부터 합쳐진 최종 표기법이다.
+          <ul>
+            <li><strong><u>모든</u></strong> 캐릭터 ability의 게이지 값은 초기적으로 <u>오직</u> 다음의 조합만을 적용한다는 것에 주목된다: <strong>1A</strong>, <strong>2B</strong>, 또는 <strong>4C</strong>. 이 값들이 동적으로 변화하는 것은 오직 특정한 지속 시간 혹은 반응 이후이다.</li>
+            <li>캐릭터의 특성에 대한 완전한 데이터셋에 대해서는, 게이지 유닛 이론/특성 을 참고하라.</li>
+          </ul>
+        </li>
+      </ul>
+      <h3>aura 지속 시간 방정식</h3>
+      <p>아래의 방정식에 원소 게이지 값 1, 2, 4를 설정하는 것은 각각 9.5, 12.0, 17.0 초의 aura 지속 시간을 산출해 낸다.</p>
+      <pre>
+
+  aura 지속 시간 = 2.5E + 7 [초], E = 원소 게이지 값
+      </pre>
+      <p>이 지속 시간을 지속시간별 게이지로 나누는 것은 <strong>A</strong>, <strong>B</strong>, <strong>C</strong>에 대한 값을 산출해 낸다. 이 표기법은 원소 게이지 뿐만 아니라 감소 지속 시간 또한 고려하는데, 이는 반응 계산에서 특히 유용하다.</p>
+      <p><u>예제</u>: <span class="hydro"><strong>0.75B</strong></span>라고 적혀진 원소 aura는 <strong>0.75 유닛</strong>의 <span class="hydro"><strong>물</strong> </span>게이지를 가진다고 정의된다. 이 <span class="hydro"><strong>물</strong></span> aura는, 어떠한 반응 없이, <strong>4.5초</strong>의 감소 지속 시간을 가진다 (0.75 * 6.0).</p>
+      <h3><span class="anemo"><strong>바람</strong></span>과 <span class="geo"><strong>바위</strong></span></h3>
+      <p>aura를 적용할 수 없는, 따라서 감소할 수 없는, 원소에 대한 표기법은 오직 원소 게이지 값만을 사용한다. 바람/바위 상태는 즉시 사라지기 이전에 때때로 아주 잠시 대상에서 존재한다 (확산 또는 결정 반응에서).</p>
+      <ul>
+        <li><strong>원소 게이지 값</strong> — 이것은 캐릭터의 ability가 적용하는 원소의 양을 나타낸다.
+          <ul>
+            <li>캐릭터의 ability는 기초 원소 게이지 값 <strong>1</strong>, <strong>2</strong>, <strong>4 유닛</strong>을 적용할 수 있다.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+    <hr>
+    <section>
+      <h2>원소 반응</h2>
+      <p>원소 반응은 두 가지의 다른 원소의 조합으로부터 생성된다. 원소 aura와 촉발시키는 원소의 게이지는 반응의 코스트를 나타낸다 — 특히, 각 반응에서, 이것은 다음과 같이 표현되어진다:</p>
+      <h3><span class="pyro"><strong>융해</strong></span>, <span class="hydro"><strong>증발</strong></span>, <span class="pyro"><strong>과부하</strong></span>, <span class="electro"><strong>초전도</strong></span>, <span class="geo"><strong>결정</strong></span>, <span class="anemo"><strong>확산</strong></span></h3>
+      <pre>
+
+  E result = E aura - R * E trigger
+    E = 원소 게이지 값
+    R = 반응 수정자
+      </pre>
+      <ul>
+        <li><code>E result > 0</code>일 때, 원소 게이지는 반응에 의해 감소되지만, aura는 여전히 남아있다.</li>
+        <li><code>E result < 0 => E result = 0</code>일 때, 원소 aura는 지워진다.</li>
+      </ul>
+      <table>
+        <tr>
+          <td>반응 유형</td>
+          <td>반응 수정자 R</td>
+        </tr>
+        <tr>
+          <td>강한 융해와 강한 증발</td>
+          <td>2.5</td>
+        </tr>
+        <tr>
+          <td>약한 융해와 약한 증발</td>
+          <td>0.625</td>
+        </tr>
+        <tr>
+          <td>과부하와 초전도</td>
+          <td>1.25</td>
+        </tr>
+        <tr>
+          <td>결정과 확산</td>
+          <td>0.625</td>
+        </tr>
+      </table>
+      <p><span class="pyro"><strong>강한 융해</strong></span>는 <span class="pyro"><strong>불</strong></span>을 <span class="cryo"><strong>얼음 aura</strong></span>에 적용함에 의해 촉발되는 한편, <span class="hydro"><strong>강한 증발</strong></span>은 <span class="hydro"><strong>물</strong></span>을 <span class="pyro"><strong>불 aura</strong></span>에 적용함에 의해 촉발된다. 역으로, <span class="cryo"><strong>약한 융해</strong></span>는 <span class="cryo"><strong>얼음</strong></span>을 <span class="pyro"><strong>불 aura</strong></span>에 적용함에 의해 촉발되는 한편, <span class="hydro"><strong>약한 증발</strong></span>은 <span class="pyro"><strong>불</strong></span>을 <span class="hydro"><strong>물 aura</strong></span>에 적용함에 의해 촉발된다.</p>
+      <p><u>예제</u>: <span class="pyro"><strong>2 유닛</strong></span>의 <span class="pyro"><strong>불 aura</strong></span>을 가진 대상은 <span class="cryo"><strong>1 유닛</strong></span>의 <span class="cryo"><strong>얼음</strong></span>을 사용함으로써 <span class="cryo"><strong>약한 융해</strong></span>를 <u>4번</u> 촉발시킬 수 있다. 왜냐하면 <code>[2 - (0.625 * 1) * (4번) => 0]</code> 이기 때문이다. 그러나, <span class="cryo"><strong>2 유닛</strong></span>의 <span class="cryo"><strong>얼음</strong></span>을 가진 대상은 <span class="pyro"><strong>1 유닛</strong></span>의 <span class="pyro"><strong>불</strong></span>을 사용함으로써 <span class="pyro"><strong>강한 융해</strong></span>를 오직 <u>한 번만</u> 촉발시킬 수 있다. 왜냐하면 <code>[2 - (2.5 * 1) * (1번) => 0]</code> 이기 때문이다.</p>
+      <p>실제로는, 원소 aura의 감소와 원소 적용의 내부 쿨다운이 반응을 반복적으로 촉발할 수 있는 능력에 부정적으로 영향을 미칠 수도 있다. 그러나, 근본적인 원칙은 같다 - 약한 반응은 다수의 데미지 instance에 대해 반복적으로 촉발되는 것으로 여겨지는 반면 강한 반응은 큰 데미지에 대해 한 번만 촉발되는 것으로 여겨진다.</p>
+      <h3><span class="electro"><strong>감전</strong></span></h3>
+      <p>같은 방정식이 몇 가지의 추가된 기법과 함께 적용된다.</p>
+      <ul>
+        <li><strong>반응 수정자</strong>는 <code>R = 0.400</code>이다.</li>
+        <li><span class="electro"><strong>전기</strong></span>와 <span class="hydro"><strong>물</strong></span>이 초기적으로 aura 또는 trigger로서 행동한 원소에 관계없이 aura로 반응 중에 동시에 존재한다.</li>
+        <li><span class="electro"><strong>감전</strong></span>에 대한 소모는 매 틱마다 발생하고, 각 원소의 게이지를 <strong>0.4 유닛</strong>만큼 원소 둘 중 하나의 게이지가 0에 도달할 때까지 감소시킨다.</li>
+        <li>대상은 <span class="electro"><strong>전기</strong></span>와 <span class="hydro"><strong>물</strong></span> aura 둘 다를 <span class="electro"><strong>감전</strong></span>의 지속 시간 동안 가지고 있으므로 이 원소들을 포함하는 반응들은 여전히 <strong>감전</strong>의 지속 시간 동안 가능하다 (예: <span class="pyro"><strong>불</strong></span> 공격은 <span class="electro"><strong>감전</strong></span>을 입고 있는 대상에서 동시에 <span class="pyro"><strong>증발</strong></span>과 <span class="pyro"><strong>과부하</strong></span> 모두를 일으킬 수 있다).</li>
+      </ul>
+      <h3><span class="cryo"><strong>빙결</strong></span>과 <strong>쇄빙</strong></h3>
+      <p>메인 문서: 게이지 유닛 이론/auras</p>
+      <p>이 반응들에 대해, 게이지 이론의 적용은 복잡하며 분명하지 않다. 그러나, 몇 가지 중요한 노트가 여전히 만들어질 수 있다:</p>
+      <ul>
+        <li><span class="cryo"><strong>빙결</strong></span> 지속 시간은 <span class="hydro"><strong>물</strong></span>의 반복된 적용에 의해 연장되지 않는다.</li>
+        <li><span class="cryo"><strong>빙결</strong></span>은 <span class="cryo"><strong>얼음</strong></span> aura와 공존할 수 있는 근본적인 <span class="hydro"><strong>물</strong></span> aura를 가질 수 있다.</li>
+        <li><strong>쇄빙</strong>은 무거운 공격 (예: 대검, 바위, 낙하 공격, 폭발) 의 적용을 같은 공격의 원소보다 먼저 처리한다. 이것은 <span class="cryo"><strong>빙결</strong></span> 효과를 없애고 오직 원소 aura만을 그 뒤에 적용한다.</li>
+      </ul>
+    </section>
+    <hr>
+    <section>
+      <h2>감소율 상속</h2>
+      <p><strong>동일한 원소</strong>에 대해서: 원소 게이지 값은, aura나 trigger중 무엇이 높든 간에, aura 혹은 trigger의 원소 게이지를 상속하지만, 초기 원소 aura의 감소율이 상속된다.</p>
+      <ul>
+        <li><u>예제</u>: <span class="cryo"><strong>1A</strong></span>를 <span class="cryo"><strong>2B</strong></span> aura에 적용하는 것은 효율적이지 않다. 왜냐하면 결과로 초래되는 게이지는 여전히 <span class="cryo"><strong>2B</strong></span>일 것이기 때문이며, 이는 여전히 <strong>12.0초</strong>의 감소 지속 시간을 가지고 있다. 그러나, 역으로, <span class="cryo"><strong>2B</strong></span>를 <span class="cryo"><strong>1A</strong></span> aura에 적용하는 것은 더 낫다. 왜냐하면 결과로 초래되는 게이지는 <span class="cryo"><strong>2A</strong></span>일 것이기 때문이며, 이는 이제 <strong>19.0초</strong>의 지속 시간을 가진다.</li>
+      </ul>
+      <p><strong>반응</strong>에 대해서: 초기 원소 aura의 감소율은 또한 이것이 반응에 의해 없어질 때까지 상속된다.</p>
+      <ul>
+        <li><u>예제</u>: <span class="cryo"><strong>1A</strong></span>을 <span class="electro"><strong>2B</strong></span> aura에 적용하는 것은 여전히 <span class="electro"><strong>0.75B</strong></span>의 원소 aura를 남기는 <span class="cryo"><strong>초전도</strong></span> 반응을 유발할 것이다.</li>
+      </ul>
+      <p>이것은 특정한 반응에 그 반응들의 성격에 기인해 적용되거나 적용되지 않을 수 있다: <span class="electro"><strong>감전</strong></span>, <span class="cryo"><strong>빙결</strong></span>, <strong>쇄빙</strong>.</p>
+    </section>
+    <hr>
+    <section>
+      <h2>원소 shield</h2>
+      <p>메인 문서: Shields/Shield Gauge Data</p>
+    </section>
+    <hr>
+    <section>
+      <h2>원소 적용의 내부 쿨다운</h2>
+      <p>메인 문서: Internal Cooldown</p>
+      <p>반응을 촉발시키는 것은 쿨다운이 없지만, 캐릭터의 스킬은 스킬의 원소 효과를 재적용할 수 있기 전에 내부 쿨다운을 가진다.</p>
+      <p>공격으로 원소를 적용할 때, 같은 유형의 공격에 대한 순차적인 적용에 대한 내부 쿨다운 (ICD) 이 있다.</p>
+      <p>연속 공격(역자주: 이어지는 평타?를 얘기하는 듯; attack strings)은 3의 시리즈로 카운트되는데, 오직 공격의 첫번째 히트만이 보통 원소를 적용한다.</p>
+      <p>추가적으로, 연속 공격을 시작한 순간에, 2.5초의 타이머가 작동을 시작하고, 연속 공격의 어디에 있는지에 관계없이, 2.5초 타이머가 초과한 이후의 다음 공격은 원소 적용이 될 것이다. 이 타이머는 연속 공격의 진행을 초기화할 것이다.</p>
+      <p>각기 다른 캐릭터들은 내부 쿨다운을 공유하지 않는다.</p>
+      <ul>
+        <li>예를 들어, 클레가 적에게 평타를 쳤을 때, 이 공격은 불 상태를 적용할 것이다. 그리고 나서, 빠르게 모나로 변경하고 평타를 치면, 증발 반응을 촉발시킬 수 있다.</li>
+      </ul>
+      <p>내부 쿨다운은 각 적에 대해 개별적이다.</p>
+      <ul>
+        <li>예를 들어, 클레가 적 A에게 평타를 쳤을 때, 이 공격은 적 A에게 불 상태를 적용할 것이다. 그리고 나서, 빠르게 클레가 적 B에게 평타를 쳤을 때, 이 공격은 적 B에게 불 상태를 적용할 것이다.</li>
+      </ul>
+    </section>
+    <hr>
+    <section>
+      <h2>변경 역사</h2>
+      <p>원 문서 참고</p>
+    </section>
+    <hr>
+    <section>
+      <h2>참고</h2>
+      <p>원 문서 참고</p>
+    </section>
+    <hr>
+    <section>
+      <h2>내비게이션</h2>
+      <p>원 문서 참고</p>
+    </section>
+    <hr>
+  </body>
+</html>
