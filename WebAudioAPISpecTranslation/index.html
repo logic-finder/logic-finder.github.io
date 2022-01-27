@@ -1814,7 +1814,7 @@ interface MediaStreamTrackAudioSourceNode : AudioNode {
         <p>수학적으로 말해서, 연속 시간 주기 파형은 주파수 영역에서 고려되었을 때 아주 높은 (혹은 무한히 높은) 주파수 정보를 가질 수 있습니다. 이 파형이 특정한 샘플 레이트에서 이산 시간 디지털 오디오 신호로 샘플링되었을 때, 파형을 디지털 형태로 변환하기 전에 나이퀴스트 주파수보다 높은 고주파 정보를 폐기하기 (거르기) 위해 관심이 반드시 기울여져야 합니다. 만약 이러한 작업이 이루어지지 않는다면, (나이퀴스트 주파수보다) 높은 주파수의 에일리어싱이 나이퀴스트 주파수보다 낮은 주파수로 mirror image로서 fold back될 것입니다. 많은 경우에서 이것은 청각적으로 불쾌한 결과를 초래할 것입니다. 이것은 오디오 디지털 신호 처리의 기본적이고 잘 이해된 원칙입니다.</p>
         <p>구현이 이 에일리어싱을 방지하기 위해 취할 수 있는 몇 가지 실용적인 접근이 있습니다. 접근에 상관없이, 이상적인 이산 시간 디지털 오디오 신호는 수학적으로 잘 정의됩니다. 이 구현에 대한 trade-off는 이 이상을 달성하는 것에 대한 충실도(fidelity)에 대한 (CPU 사용의 측면에서의) 구현 비용의 문제입니다.</p>
         <p>구현이 이 이상을 달성함에 있어 얼마간의 주의를 취할 것이 기대되지만, lower-end 하드웨어에서 낮은 품질과 덜 비용이 드는 접근을 고려하는 것은 타당합니다.</p>
-        <p>frequency와 detune이 둘 다 a-rate 파라미터이고, 복합적인 파라미터를 형성합니다. 이것들은 함께 사용되어 computedOscFrequency 값을 결정합니다.</p>
+        <p>frequency와 detune은 둘 다 a-rate 파라미터이고, 복합적인 파라미터를 형성합니다. 이것들은 함께 사용되어 computedOscFrequency 값을 결정합니다.</p>
         <pre>computedOscFrequency(t) = frequency(t) * pow(2, detune(t) / 1200)</pre>
         <br>
         <p>각 시간에서의 OscillatorNode의 instantaneous 단계는 computedOscFrequency의 definite time integral이며, 노드의 정확한 시작 시간에서 0의 phase angle을 상정합니다. 이것의 명목상의 범위는 [-Nyquist 주파수, Nyquist 주파수] 입니다.</p>
@@ -1907,7 +1907,14 @@ interface OscillatorNode : AudioScheduledSourceNode {
 };
         </pre>
         <br>
-    </div>
+        <h2>1.27. PannerNode 인터페이스</h2>
+        <p>이 인터페이스는 들어오는 오디오 스트림을 3차원 공간에 위치시키는 / 공간화시키는 프로세싱 노드를 나타냅니다. 공간화는 BaseAudioContext의 AudioListener (listener 어트리뷰트) 에 관련이 있습니다.</p>
+        <p>표는 추후 번역</p>
+        <p>이 노드의 입력은 모노 (1 채널) 이거나 스테레오 (2 채널) 이고 증가될 수 없습니다. 더 적거나 많은 채널을 가진 노드로부터의 연결은 적절하게 다운믹스되거나 업믹스될 것입니다.</p>
+        <p>만약 노드가 활발히 처리 중이라면, 이 노드의 출력은 스테레오 (2 채널) 로 hard-coded되고 설정될 수 없습니다. 만약 이 노드가 활발히 처리 중이 아니라면, 출력은 한 채널의 무음입니다.</p>
+        <p>PanningModelType 열거형은 어떤 공간화 알고리즘이 사용되어 3D 공간에서의 오디오를 위치시킬지 결정합니다. 기본값은 "equalpower" 입니다.</p>
+        <br>
+      </div>
     </main>
   </body>
 </html>
