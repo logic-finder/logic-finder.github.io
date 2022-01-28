@@ -1914,6 +1914,16 @@ interface OscillatorNode : AudioScheduledSourceNode {
         <p>만약 노드가 활발히 처리 중이라면, 이 노드의 출력은 스테레오 (2 채널) 로 hard-coded되고 설정될 수 없습니다. 만약 이 노드가 활발히 처리 중이 아니라면, 출력은 한 채널의 무음입니다.</p>
         <p>PanningModelType 열거형은 어떤 공간화 알고리즘이 사용되어 3D 공간에서의 오디오를 위치시킬지 결정합니다. 기본값은 "equalpower" 입니다.</p>
         <br>
+        <h2>1.28. PeriodicWave 인터페이스</h2>
+        <p>PeriodicWave는 OscillatorNode와 함께 쓰일 임의의 주기 파형을 나타냅니다.</p>
+        <p>(명세를?) 따르는 구현은 반드시 적어도 8192 요소까지의 PeriodicWave를 지원해야만 합니다.</p>
+        <pre>
+[Exposed=Window]
+interface PeriodicWave {
+  constructor (BaseAudioContext context, optional PeriodicWaveOptions options = {});
+};
+        </pre>
+        <br>
       </div>
     </main>
   </body>
