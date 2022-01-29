@@ -1924,6 +1924,18 @@ interface PeriodicWave {
 };
         </pre>
         <br>
+        <h2>1.29. ScriptProcessorNode 인터페이스 - 폐기됨</h2>
+        <p>이 인터페이스는 스크립트를 사용해 오디오를 직접적으로 생성하거나, 처리하거나, 분석할 수 있는 AudioNode입니다. 이 노드 유형은 폐기되었고, AudioWorkletNode에 의해 대체됩니다. 이 글은 오직 정보를 주는 목적으로 남아있으며 구현이 이 노드 유형을 제거할 때까지 여기 있을 것입니다.</p>
+        <p>표는 추후 번역</p>
+        <p>ScriptProcessorNode는 반드시 다음의 값 중 하나인 bufferSize와 함께 생성됩니다: 256, 512, 1024, 2048, 4096, 8192, 16384. 이 값은 얼마나 자주 onaudioprocess 이벤트가 전파되고 얼마나 많은 샘플 프레임이 각 호출당 처리될 필요가 있는지를 제어합니다. onaudiorprocess 이벤트는 오직 ScriptProcessorNode가 적어도 한 개의 입력 혹은 한 개의 연결된 출력을 가지고 있을 때만 전파됩니다. bufferSize가 적은 숫자를 가지는 것은 낮은 (더 좋은) 레이턴시의 결과를 낳습니다. 높은 숫자는 오디오 breakup 혹은 glitch를 방지하기 위해 필수적일 것입니다. 이 값은 만약 createScriptProcessor()로의 bufferSize 인자가 전달되지 않았거나, 0으로 설정되었다면 구현에 의해 선택될 것입니다.</p>
+        <p>numberOfInputChannels와 numberOfOutputChannels는 입력과 출력 채널의 수를 결정합니다. numberOfInputChannels와 numberOfOutputChannels 모두 0의 값을 가지는 것은 유효하지 않습니다.</p>
+        <pre>
+[Exposed=Window]
+interface ScriptProcessorNode : AudioNode {
+  attribute EventHandler onaudioprocess;
+  readonly attribute long bufferSize;
+};
+        </pre>
       </div>
     </main>
   </body>
