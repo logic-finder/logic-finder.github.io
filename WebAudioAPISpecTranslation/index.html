@@ -1936,6 +1936,20 @@ interface ScriptProcessorNode : AudioNode {
   readonly attribute long bufferSize;
 };
         </pre>
+        <br>
+        <h2>1.30. StereoPannerNode 인터페이스</h2>
+        <p>이 인터페이스는 low-cost 패닝 알고리즘을 사용하여 스테레오 이미지에서, 들어오는 오디오 스트림을 위치시키는 프로세싱 노드를 나타냅니다. 이 패닝 효과는 스테레오 스트림에서 오디오 컴포넌트를 위치시킴에 있어 일반적입니다.</p>
+        <p>표는 추후 번역</p>
+        <p>이 노드의 입력은 스테레오 (2 채널) 이고 증가될 수 없습니다. 더 적거나 더 많은 채널을 가진 노드로부터의 연결은 적절하게 업믹스되거나 다운믹스될 것입니다.</p>
+        <p>이 노드의 출력은 스테레오 (2 채널) 로 hard-coded되고 설정될 수 없습니다.</p>
+        <pre>
+[Exposed=Window]
+interface StereoPannerNode : AudioNode {
+  constructor (BaseAudioContext context, optional StereoPannerOptions options = {});
+  readonly attribute AudioParam pan;
+};
+        </pre>
+        <br>
       </div>
     </main>
   </body>
