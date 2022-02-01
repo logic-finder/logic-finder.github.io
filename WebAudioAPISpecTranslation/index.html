@@ -1954,6 +1954,25 @@ interface StereoPannerNode : AudioNode {
         <p>WaveShaperNode는 비선형 왜곡 효과를 구현하는 AudioNode 프로세서입니다.</p>
         <p>비선형 waveshaping 왜곡은 미묘한 비선형 warming 혹은 더욱 분명한 왜곡 효과 둘 다에 보통 사용됩니다. 임의 비선형 shaping curve는 명시될 수 있습니다.</p>
         <br>
+        <h2>1.32. AudioWorklet 인터페이스</h2>
+        <br>
+        <pre>
+[Exposed=Window, SecureContext]
+interface AudioWorklet : Worklet {
+};
+        </pre>
+        <h3>1.32.1. 개념</h3>
+        <p>AudioWorklet 객체는 개발자로 하여금 (JavaScript나 WebAssembly 코드와 같은) 스크립트를 제공하여 렌더링 스레드에서 오디오를 처리할 수 있게 해 주며, 사용자 정의 AudioNode를 지원합니다. 이 프로세싱 메커니즘은 오디오 그래프의 다른 내장 AudioNode와 스크립트 코드의 동기적인 실행을 보장합니다.</p>
+        <p>연관된 쌍의 객체는 반드시 정의되어 이 메커니즘을 실현시켜야만 합니다. 연관된 쌍의 객체란 AudioWorkletNode와 AudioWorkletProcessor입니다. AudioWorkletNode (전자) 는 다른 AudioNode 객체와 유사한 메인 글로벌 스코프에 대한 인터페이스를 나타내고 AudioWorkletProcessor (후자) 는 AudioWorkletGlobalScope라는 특별한 스코프 내에서의 내부적인 오디오 처리를 구현합니다.</p>
+        <figure>
+          <img src="img/audioworklet-concept.png" width="756" height="144">
+          <figcaption><strong>도식 16</strong> AudioWorkletNode와 AudioWorkletProcessor</figcaption>
+        </figure>
+        <p>각 BaseAudioContext는 정확히 하나의 AudioWorklet을 소유합니다.</p>
+        <p>AudioWorklet의 worklet 글로벌 스코프 자료형은 AudioWorkletGlobalScope입니다.</p>
+        <p>AudioWorklet의 worklet 목적지 유형은 "audioworklet" 입니다.</p>
+        <p>스크립트를 addModule(moduleUrl) 메서드를 통해 스크립트를 import하는 것은 AudioWorkletGlobalScope 하에서 AudioWorkletProcessor의 클래스 정의를 등록합니다. imported된 클래스 생성자와 이 생성자로부터 실제 생성된 인스턴스에 대한 두 개의 내부 저장 영역이 있습니다.</p>
+        <br>
       </div>
     </main>
   </body>
