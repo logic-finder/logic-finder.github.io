@@ -2033,6 +2033,14 @@ interface AudioWorklet : Worklet {
         <p><strong>오디오 블럭을 계산한다는 것</strong>은 이 AudioNode에 대해 알고리즘을 실행하여 128 샘플 프레임을 생성하는 것을 의미합니다.</p>
         <p><strong>입력 버퍼를 처리한다는 것</strong>은 AudioNode에 대해 알고리즘을 실행하는 것을 의미하는데, 입력 버퍼와 이 AudioNode의 AudioParam(들)의 값(들)을 이 알고리즘에 대한 입력으로서 사용합니다.</p>
         <br>
+        <h2>2.5. 문서 unload하기</h2>
+        <p>추가적인 document 언로딩 cleanup 단계가 BaseAudioContext를 사용하는 문서에 대해 정의됩니다:</p>
+        <ul>
+          <li>관련 있는 global object가 document의 연관된 Window와 같은 각 AudioContext와 OfflineAudioContext에 대해 InvalidStateError와 함께 [[pending promises]]의 모든 프로미스를 reject시킵니다.</li>
+          <li>모든 decoding 스레드를 정지시킵니다.</li>
+          <li>AudioContext 또는 OfflineAudioContext를 close()하기 위한 컨트롤 메시지를 queue시킵니다.</li>
+        </ul>
+        <br>
       </div>
     </main>
   </body>
