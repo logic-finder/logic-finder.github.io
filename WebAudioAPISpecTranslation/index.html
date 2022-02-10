@@ -2063,36 +2063,40 @@ let context = 0;
 let compressor = 0;
 let gainNode1 = 0;
 let streamingAudioSource = 0;
-// Initial setup of the "long-lived" part of the routing graph
+// 라우팅 그래프의 "길게 사는" 부분에 대한 초기 설정
 function setupAudioContext() {
     context = new AudioContext();
     compressor = context.createDynamicsCompressor();
     gainNode1 = context.createGain();
-    // Create a streaming audio source.
+    // 스트리밍 오디오 소스를 생성합니다.
     const audioElement = document.getElementById('audioTagID');
     streamingAudioSource = context.createMediaElementSource(audioElement);
     streamingAudioSource.connect(gainNode1);
     gainNode1.connect(compressor);
     compressor.connect(context.destination);
 }
-// Later in response to some user action (typically mouse or key event)
-// a one-shot sound can be played.
+// 나중에 유저 액션에 응답하여 (보통 마우스나 키 이벤트)
+// 한 번의 소리가 재생될 수 있습니다.
 function playSound() {
     const oneShotSound = context.createBufferSource();
     oneShotSound.buffer = dogBarkingBuffer;
-    // Create a filter, panner, and gain node.
+    // 필터, 패너, 게인 노드를 생성합니다.
     const lowpass = context.createBiquadFilter();
     const panner = context.createPanner();
     const gainNode2 = context.createGain();
-    // Make connections
+    // 연결을 만듭니다
     oneShotSound.connect(lowpass);
     lowpass.connect(panner);
     panner.connect(gainNode2);
     gainNode2.connect(compressor);
-    // Play 0.75 seconds from now (to play immediately pass in 0)
+    // 지금으로부터 0.75초 후에 재생합니다 (즉시 재생하려면 0을 전달하십시오)
     oneShotSound.start(context.currentTime + 0.75);
 }
         </pre>
+        <br>
+        <h1>4. 채널 업믹싱과 다운믹싱</h1>
+        <p><i>이 섹션은 규범적입니다.</i></p>
+        <p>AudioNode 입력은 자신에게 연결된 모든 입력들로부터 채널들을 결합하는 믹싱 규칙을 가지고 있습니다. 단순한 예제로, 만약 입력이 모노 출력과 스테레오 출력으로부터 연결되어 있다면 보통 모노 입력이 스테레오로 업믹스되고 스테레오 연결로 합쳐질 것입니다. 하지만, 물론, 모든 입력에 대해 모든 AudioNode에 정확한 믹싱 규칙을 정의하는 것은 중요합니다. 모든 입력에 대한 기본 믹싱 규칙은 선택되어 있어 일들은 "그냥 작동" 합니다. 세부 사항에 대해 너무 걱정할 필요 없이 말이죠. 특히 모노와 스테레오 스트림의 아주 일반적인 경우에서 말입니다. 물론, 특히 멀티 채널처럼, 규칙은 고급의 사용 경우에 대해 변경될 수 있습니다.</p>
         <br>
       </div>
     </main>
