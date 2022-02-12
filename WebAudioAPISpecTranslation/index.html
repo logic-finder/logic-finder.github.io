@@ -2100,6 +2100,18 @@ function playSound() {
         <br>
         <p>몇가지 용어를 정의하자면, 업믹싱이란 더 적은 채널의 수를 가진 스트림을 취하고 그것을 더 큰 수의 채널을 가진 스트림으로 변환하는 과정을 의미합니다. 다운믹싱이란 더 큰 채널의 수를 가진 스트림을 취하고 그것을 더 적은 수의 채널을 가진 스트림으로 변환하는 과정을 의미합니다.</p>
         <br>
+        <p>AudioNode 입력은 이 입력에 연결된 모든 출력을 믹스할 필요가 있습니다. 이 과정의 일부로 이것은 내부 값인 computedNumberOfChannels를 계산하는데 이는 주어진 시간에서의 입력 채널의 실제 수를 나타냅니다.</p>
+        <p>AudioNode의 각 입력에 대해, 구현은 반드시 아래를 수행해야 합니다:</p>
+        <ol>
+          <li>computedNumberOfChannels를 계산합니다.</li>
+          <li>입력의 각 연결에 대해서:
+            <ol>
+              <li>노드의 channelInterpretation 어트리뷰트에 의해 주어진 ChannelInterpretation 값에 따른 computedNumberOfChannels에의 연결을 업믹스 또는 다운믹스합니다.</li>
+              <li>(다른 연결로부터의) 모든 다른 믹스된 스트림과 함께 모두 믹스합니다. 이것은 각 연결에 대해 윗 단계에서 업믹스나 다운믹스된 해당하는 각 채널을 함께 간단하게 합치는 것입니다.</li>
+            </ol>
+          </li>
+        </ol>
+        <br>
       </div>
     </main>
   </body>
