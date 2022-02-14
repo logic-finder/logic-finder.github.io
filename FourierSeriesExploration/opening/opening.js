@@ -13,4 +13,4 @@ const $exampleText = new Proxy($et, {
     
     return true;
   }
-})
+});

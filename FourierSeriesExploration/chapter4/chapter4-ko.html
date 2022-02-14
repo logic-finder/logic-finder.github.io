@@ -468,12 +468,12 @@ function populate(coords, n) {
  * @returns {Number} 적분값
  */
 function integrate(start, end, division, f) {
-  if (division < 1) throw new Error('분할 갯수는 1 미만일 수 없습니다.');
+  if (division &lt; 1) throw new Error('분할 갯수는 1 미만일 수 없습니다.');
 
   let sum = 0;
   const STEP = 1 / division;
 
-  for (let t = start; t < end; t += STEP) {
+  for (let t = start; t &lt; end; t += STEP) {
     sum += f(t) * STEP;
   }
 
@@ -511,7 +511,7 @@ class Cn {
     const half = this._num / 2;
     const w = 2 * Math.PI / period;
 
-    for (let n = -half; n <= half; n++) {
+    for (let n = -half; n &lt;= half; n++) {
       const reValue = (1 / period) * integrate(0, period, division, (t) => fr(t) * Math.cos(n * w * t) + fi(t) * Math.sin(n * w * t));
       const imValue = (1 / period) * integrate(0, period, division, (t) => fi(t) * Math.cos(n * w * t) - fr(t) * Math.sin(n * w * t));
       
