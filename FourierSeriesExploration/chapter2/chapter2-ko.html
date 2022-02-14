@@ -89,8 +89,8 @@ if (navigator.mediaDevices) {
       <p>다음으로, 한 주기가 대충 어디부터 어디까지 위치해 있는지 눈어림으로 읽고, 콘솔창에 다음과 같이 입력합니다.</p>
       <pre>
         
-const sliceFrom = 0; // ← 이 숫자를 지우고 주기의 시작을 입력
-const sliceTo = 256; // ← 이 숫자를 지우고 주기의 끝을 입력
+sliceFrom = 0; // ← 이 숫자를 지우고 주기의 시작을 입력
+sliceTo = 256; // ← 이 숫자를 지우고 주기의 끝을 입력
 const sliced = takenAudioData.slice(sliceFrom, sliceTo);
 const refined = [];
 
