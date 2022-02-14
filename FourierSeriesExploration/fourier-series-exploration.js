@@ -1,11 +1,12 @@
 const $toTheTopBtn = document.getElementById('to-the-top');
-const height = document.querySelector('html').scrollTop;
+let height;
 
 const upwardEasingInOut = (initial, t) => {
   return initial - height / (1 + Math.E ** (-t + 10));
 }
 
 $toTheTopBtn.addEventListener('click', (e) => {
+  height = document.querySelector('html').scrollTop;
   const current = window.scrollY;
 
   let count = 0;
