@@ -40,7 +40,7 @@ function showVoice() {
   let x = 0;
 
   for (let i = 0; i < dataSize; i++) {
-    const y = (vsch / 2) - ((audioData[i] / 128) - 1);
+    const y = (vsch / 2) - 100 * ((audioData[i] / 128) - 1);
 
     if (i === 0) vscctx.moveTo(x, y);
     else vscctx.lineTo(x, y);
