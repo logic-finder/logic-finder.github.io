@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chapter 2: Waveform Approximation and Reproducing</title>
+    <link rel="stylesheet" href="../fourier-series-exploration.css">
+  </head>
+  <body>
+    <div>
+      <a href="../../index.html">Return to home</a>
+    </div>
+    <hr>
+    <div>
+      <p>※ This article is written by a newbie; There are a lot of errors.</p>
+      <p>※ I use Chrome browser; I'm not sure whether this website / codes work in other browsers.</p>
+      <h2>Legend</h2>
+      <ul>
+        <li>Opening <a href="../opening/opening-ko.html">Kor</a> <a href="../opening/opening-en.html">Eng</a></li>
+        <li>Chapter 1: Creation of Waveform <a href="../chapter1/chapter1-ko.html">Kor</a> <a href="../chapter1/chapter1-en.html">Eng</a></li>
+        <li>Chapter 2: Waveform Approximation and Reproducing <a href="../chapter2/chapter2-ko.html">Kor</a> <a href="../chapter2/chapter2-en.html">Eng</a></li>
+        <li>Chapter 3: Shape Approximation (at xy plane) <a href="../chapter3/chapter3-ko.html">Kor</a> <a href="../chapter3/chapter3-en.html">Eng</a></li>
+        <li>Chapter 4: Shape Approximation (at complex plane) <a href="../chapter4/chapter4-ko.html">Kor</a> <a href="../chapter4/chapter4-en.html">Eng</a></li>
+        <li>Ending <a href="../ending/ending-ko.html">Kor</a> <a href="../ending/ending-en.html">Eng</a></li>
+      </ul>
+    </div>
+    <hr>
+    <div>
+      <h1>Chapter 2: Waveform Approximation and Reproducing</h1>
+      <img src="../src/chapter_two_title_picture.png">
+      <p>In this chapter, we'll going to explore the way of approximating actual waveform and the process of reproducing the approximated waveform into sound.</p>
+      <div class="conversation-cor">
+        <div class="img"></div>
+        <p class="name">Me</p>
+        <div class="text">
+          <p>It is highly wonderful! Then is it possible to approximate actual wave?</p>
+        </div>
+      </div>
+      <div class="conversation-fourier">
+        <div class="img"></div>
+        <p class="name">Fourier</p>
+        <div class="text">
+          <p>Yes indeed. This time let's approximate the wave of voice.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p>(If you don't have a microphone, please skip this step) write the below to the console. (no problem with just copying and pasting it)</p>
+      <pre>
+
+if (navigator.mediaDevices) {
+  console.log('possible to use getUserMedia);
+
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then((stream) => {
+      getUserMediaFlag = true;
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      actx = new AudioContext({ sampleRate: 44100 });
+      const source = new MediaStreamAudioSourceNode(actx, { mediaStream: stream });
+      analyser = new AnalyserNode(actx, { fftSize: 1024, maxDecibels: -30, minDecibels: -100, smoothingTimeConstant: 0.8 });
+
+      source.connect(analyser);
+
+      dataSize = analyser.frequencyBinCount;
+      audioData = new Uint8Array(dataSize);
+
+      window.requestAnimationFrame(showVoice);
+    })
+    .catch((err) => {
+      console.log('error occurred during getUserMedia');
+    });
+} else {
+  console.log('getUserMedia not supported');
+}
+      </pre>
+      <details>
+        <summary>code explanation (see if you are interested)</summary>
+        <p>It is a code that gets microphone authorization and in case of success, send the microphone data to sound analyser.</p>
+      </details>
+      <p>Then a popup window will show up. We need to take voice wave, so you have to accept it.</p>
+      <img src="../src/chapter_two_microphone_auth.png">
+      <p>...Then a waveform will appear to the below canvas element.</p>
+      <canvas id="voice-shower" width="512" height="200"></canvas>
+      <button id="take-voice">get data and check</button>
+      <button id="take-default-voice">For those who do not have a microphone, get my voice data</button>
+      <p>Choose one vowel among a, e, i, o, u. Keep pronouncing it, click the 'get data and check' button above. Try this process until you can see an exact 'one period of the waveform' at the below canvas element.</p>
+      <p>※ Note: You can see the voice data by typing <code>console.log(takenAudioData)</code> to the console window.</p>
+      <canvas id="data-shower" width="512" height="200"></canvas>
+      <p>After that, eye-estimate where is the starting point of a waveform and where is the end point, and type the below to the console window.</p>
+      <pre>
+        
+sliceFrom = 0; // ← delete this number and input the staring point of period
+sliceTo = 256; // ← delete this number and input the end point of period
+const sliced = takenAudioData.slice(sliceFrom, sliceTo);
+const refined = [];
+
+for (let i = 0; i &lt; sliced.length; i++) {
+  refined[i] = (sliced[i] / 128) - 1;
+}
+      </pre>
+      <details>
+        <summary>code explanation (see if you are interested)</summary>
+        <p>This code slices a part where we need from the whole waveform data, and let the data be in range of [-1, 1).</p>
+      </details>
+      <p>By this processes, we finally get the data we are going to approximate.</p>
+      <p>Now type the below to the console window and find Fourier coefficients. You'll see codes which calculate Fourier coefficients in the next chapter, so please look forward to!</p>
+      <pre>
+
+const coef = new Coef(99);
+
+coef.getA0((t) => refined[Math.floor(t)], refined.length, 10);
+coef.getAn((t) => refined[Math.floor(t)], refined.length, 10);
+coef.getBn((t) => refined[Math.floor(t)], refined.length, 10);
+      </pre>
+      <p>Now everything is done. Type the below command to the console window and check how will the approximated wave be.</p>
+      <pre>
+
+approxWave(coef);
+      </pre>
+      <canvas id="approx-wave-shower" width="512" height="200"></canvas>
+    </div>
+    <div class="conversation-cor">
+      <div class="img"></div>
+      <p class="name">Me</p>
+      <div class="text">
+        <p>How that can be! It is so similar with the original waveform!</p>
+      </div>
+    </div>
+    <div class="conversation-fourier">
+      <div class="img"></div>
+      <p class="name">푸리에</p>
+      <div class="text">
+        <p>Haha this is the power of Fourier series.</p>
+      </div>
+    </div>
+    <div>
+      <p>Now type the below to the console window...</p>
+      <canvas id="approx-voice-shower" width="512" height="200"></canvas>
+      <pre>
+
+const audioBuffer = new AudioBuffer({ numberOfChannels: 1, length: 1000 * refined.length, sampleRate: actx.sampleRate });
+
+const buffering = audioBuffer.getChannelData(0);
+let count = 0;
+
+for (let i = 0; i &lt; audioBuffer.length; i++) {
+  buffering[i] = refined[count];
+
+  if (count === refined.length - 1) {
+    count = 0;
+  } else {
+    count++;
+  }
+}
+
+function play() {
+  const absn = new AudioBufferSourceNode(actx, { buffer: audioBuffer });
+  
+  absn.connect(analyser)
+      .connect(actx.destination);
+  
+  absn.start();
+}
+
+play();
+window.requestAnimationFrame(showReproducedVoice);
+      </pre>
+      <p>... Are you surprised by the sudden sound? This is the reproduced wave of the approximated wave (the sound that you pronounced at the above).</p>
+      <p>Meanwhile somehow the reproduced sound sounds like a musical tone! I think the reason is as follows:</p>
+      <p>Actually the taken data is a waveform having length of (data length) * 1 / 44100 (sec.). Since that length is one period, divide 1 with that length results in frequency. For example, 256 * 1 / 44100 is 0.0058. The reciprocal of it is 172.4138 (Hz).</p>
+      <p>Meanwhile the frequenct of A4 (octave 4 la) is 440Hz. Since one scale consists of 12 notes and every one octave, frequency doubles, so A3 is 220Hz. 4 notes below la is fa. Therefore the frequency of this fa is 220 * 2^(-4 / 12) = 174.6141 (Hz).</p>
+      <p>172 and 174 is quite close! Isn't it the reason that the taken waveform sounds like a musical tone?</p>
+      <p>Anyway, so far so interesting. But the following chapters are more fun. Let's step forward, saying 「Fourier series 'expansion'」.</p>
+      <img src="../src/expansion.png">
+    </div>
+    <hr>
+    <div>
+      <span id="to-the-top">to the top</span>
+    </div>
+    <script src="../fourier-series-exploration.js"></script>
+    <script src="chapter2.js"></script>
+  </body>
+</html>

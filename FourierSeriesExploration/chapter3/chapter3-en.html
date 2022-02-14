@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chapter 3: Shape Approximation (at xy plane)</title>
+    <link rel="stylesheet" href="../fourier-series-exploration.css">
+  </head>
+  <body>
+    <div>
+      <a href="../../index.html">Return to home</a>
+    </div>
+    <hr>
+    <div>
+      <p>※ This article is written by a newbie; There are a lot of errors.</p>
+      <p>※ I use Chrome browser; I'm not sure whether this website / codes work in other browsers.</p>
+      <h2>Legend</h2>
+      <ul>
+        <li>Opening <a href="../opening/opening-ko.html">Kor</a> <a href="../opening/opening-en.html">Eng</a></li>
+        <li>Chapter 1: Creation of Waveform <a href="../chapter1/chapter1-ko.html">Kor</a> <a href="../chapter1/chapter1-en.html">Eng</a></li>
+        <li>Chapter 2: Waveform Approximation and Reproducing <a href="../chapter2/chapter2-ko.html">Kor</a> <a href="../chapter2/chapter2-en.html">Eng</a></li>
+        <li>Chapter 3: Shape Approximation (at xy plane) <a href="../chapter3/chapter3-ko.html">Kor</a> <a href="../chapter3/chapter3-en.html">Eng</a></li>
+        <li>Chapter 4: Shape Approximation (at complex plane) <a href="../chapter4/chapter4-ko.html">Kor</a> <a href="../chapter4/chapter4-en.html">Eng</a></li>
+        <li>Ending <a href="../ending/ending-ko.html">Kor</a> <a href="../ending/ending-en.html">Eng</a></li>
+      </ul>
+    </div>
+    <hr>
+    <div>
+      <h1>Chapter 3: Shape Approximation (at xy plane)</h1>
+      <img src="../src/chapter_three_title_picture.png">
+      <p>In this chapter we'll going to explore the way of approximating a shape drawn at xy plane.</p>
+      <div class="conversation-cor">
+        <div class="img"></div>
+        <p class="name">Me</p>
+        <div class="text">
+          <p>It was a little bit weird sound, but anyhow amazing! Now what is waiting for me?</p>
+        </div>
+      </div>
+      <div class="conversation-fourier">
+        <div class="img"></div>
+        <p class="name">Fourier</p>
+        <div class="text">
+          <p>This time, we are going to approximate a shape drawn at xy plane with Fourier series.</p><p>As you already know, a circle is defined at xy plane by r^2 = x^2 + y^2. But if it is expressed as parametric, it also can be defined by x = r * cos(t), y = r * sin(t).</p>
+          <p>Same idea here. Let's suppose there is a trace drawn at xy plane and let x and y coordinates of that trace be x(t) and y(t), respectively.</p>
+          <p>Then, if we approximate x(t) and y(t) with Fourier series, we'll be able to approximate the original trace.</p>
+        </div>
+      </div>
+      <div>
+        <p>As we did at chapter 1, create an .html file and .js file, and type same thing to html file.</p>
+        <p>Now choose a picture you would like to approximate with Fourier series... except too much complex thing.</p>
+        <p>I chose this picture. <s>Argh are you otaku</s></p>
+        <img src="../src/chapter_three_paimon_picture.png">
+        <p>Now open Inkscape and paste that picture into it.</p>
+        <img src="../src/chapter_three_layer_add.png">
+        <p>After that, add a layer.</p>
+        <img src="../src/chapter_three_tool.png">
+        <p>Next, choose 「drawing tool for Bezier line and curve」 and outline(?) the trace of the picture like the below (I don't know the word for this work). You can do Eulerian trail (one line drawing) or take each part's line, but at last all dots will be connected together at the approximating process, so it will look like Eulerian trail. Also, because of the limit of the below code, curve and arc will be treated as a line, so please be noticed that.</p>
+        <img src="../src/chapter_three_line.png">
+        <p>If you are finished, copy only lines and paste it into a new file and save it.</p>
+        <img src="../src/chapter_three_line_finish.png">
+        <p>After open the saved file in notepad, from every place where is written as &lt;path&gt;, copy the value following d=, paste that into js file like the below.</p>
+        <img src="../src/chapter_three_path.png">
+        <pre>
+
+// In case of Eulerian trail, there will be only one path.
+// In case of taking each part's line, there will be several paths.
+// It is your choice to name the variables★
+const path1 = "m 0 0 l 10 10 ...";
+const path2 = "m 10 10 h 20 v 20 ...";
+
+// In case of Eulerian trail, you don't need this code.
+const paimon = [path1, path2, ..., pathn].join(' ');
+        </pre>
+        <p>Now, let's paste the long, long code (it's too long to type manually). Also, this code is irrevelant with this article, so you don't need to understand it.</p>
+        <p>The first code to paste is a code that processes the above path data and extract x and y coordinates from it.</p>
+        <pre>
+
+const refined = refineData(variable name you've named★);
+const coords = extractCoords(refined);
+const normalized = normalize(coords);
+const populated = populate(normalized, 8);
+const X = populated.x;
+const Y = populated.y;
+
+/**
+ * It is a function that refines the path data into a form of we need
+ * @param {String} path_data path data
+ * @returns {Array} an array of objects having drawing commands(String) and its values(String)
+ */
+function refineData(path_data) {
+  const pathSplitter = /([a-df-z])([^a-df-z]+)?/g;
+  const matches = path_data.matchAll(pathSplitter);
+  const result = [];
+  const paramSplitter = /[\s,]|\b(?=-)/;
+
+  for (const match of matches) {
+    const command = match[1];
+    const params = (match[2] ?? '').split(paramSplitter).filter(Boolean);
+
+    result.push({ command, params });
+  }
+
+  return result;
+}
+
+/**
+ * It is a function that extracts coordinates from the refined data
+ * ※ quadratic and cubic bezier curve and arc is processed as a line
+ * @param {Array} refined an array of objects having drawing commands(String) and its values(String)
+ * @returns {{ x: Array, y: Array }} an object having coordinates information
+ */
+function extractCoords(refined) {
+  if (refined[0].command !== 'm' && refined[0].command !== 'M') {
+    throw new Error('Invalid first drawing command: first command must start with m or M.')
+  }
+
+  const x = [];
+  const y = [];
+
+  const originPoint = { x: Number(refined[0].params[0]), y: Number(refined[0].params[1]) };
+  const initialPoint = { x: undefined, y: undefined };
+  
+  for (let i = 0; i &lt; refined.length; i++) {
+    switch (refined[i].command) {
+      case 'M': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: M`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const xIdx = j;
+          const yIdx = j + 1;
+
+          re.push(Number(refined[i].params[xIdx]) - originPoint.x);
+          im.push(Number(refined[i].params[yIdx]) - originPoint.y);
+        }
+
+        initialPoint.x = x.at(-paramLen / 2);
+        initialPoint.y = y.at(-paramLen / 2);
+
+        break;
+      }
+
+      case 'm': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: m`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const xIdx = j;
+          const yIdx = j + 1;
+
+          if (j === 0) {
+            x.push(Number(refined[i].params[xIdx]) - originPoint.x);
+            y.push(Number(refined[i].params[yIdx]) - originPoint.y);
+          } else {
+            x.push(x.at(-1) + Number(refined[i].params[xIdx]));
+            y.push(y.at(-1) + Number(refined[i].params[yIdx]));
+          }
+        }
+
+        initialPoint.x = x.at(-paramLen / 2);
+        initialPoint.y = y.at(-paramLen / 2);
+
+        break;
+      }
+
+      case 'L': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: L`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const xIdx = j;
+          const yIdx = j + 1;
+
+          x.push(Number(refined[i].params[xIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[yIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 'l': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: l`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const xIdx = j;
+          const yIdx = j + 1;
+
+          x.push(x.at(-1) + Number(refined[i].params[xIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[yIdx]));
+        }
+
+        break;
+      }
+
+      case 'H': {
+        for (let j = 0; j &lt; refined[i].params.length; j++) {
+          x.push(Number(refined[i].params[j]) - originPoint.x);
+          y.push(y.at(-1));
+        }
+
+        break;
+      }
+
+      case 'h': {
+        for (let j = 0; j &lt; refined[i].params.length; j++) {
+          x.push(x.at(-1) + Number(refined[i].params[j]));
+          y.push(y.at(-1));
+        }
+
+        break;
+      }
+
+      case 'V': {
+        for (let j = 0; j &lt; refined[i].params.length; j++) {
+          x.push(x.at(-1));
+          y.push(Number(refined[i].params[j]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 'v': {
+        for (let j = 0; j &lt; refined[i].params.length; j++) {
+          x.push(x.at(-1));
+          y.push(y.at(-1) + Number(refined[i].params[j]));
+        }
+
+        break;
+      }
+
+      case 'C': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 6 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: C`);
+
+        for (let j = 0; j &lt; paramLen; j += 6) {
+          const endXIdx = j + 4;
+          const endYIdx = j + 5;
+
+          x.push(Number(refined[i].params[endXIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[endYIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 'c': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 6 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: c`);
+
+        for (let j = 0; j &lt; paramLen; j += 6) {
+          const endXIdx = j + 4;
+          const endYIdx = j + 5;
+
+          x.push(x.at(-1) + Number(refined[i].params[endXIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[endYIdx]));
+        }
+
+        break;
+      }
+
+      case 'S': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 4 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: S`);
+
+        for (let j = 0; j &lt; paramLen; j += 4) {
+          const endXIdx = j + 2;
+          const endYIdx = j + 3;
+
+          x.push(Number(refined[i].params[endXIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[endYIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 's': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 4 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: s`);
+
+        for (let j = 0; j &lt; paramLen; j += 4) {
+          const endXIdx = j + 2;
+          const endYIdx = j + 3;
+
+          x.push(x.at(-1) + Number(refined[i].params[endXIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[endYIdx]));
+        }
+
+        break;
+      }
+
+      case 'Q': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 4 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: Q`);
+
+        for (let j = 0; j &lt; paramLen; j += 4) {
+          const endXIdx = j + 2;
+          const endYIdx = j + 3;
+
+          x.push(Number(refined[i].params[endXIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[endYIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 'q': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 4 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: q`);
+
+        for (let j = 0; j &lt; paramLen; j += 4) {
+          const endXIdx = j + 2;
+          const endYIdx = j + 3;
+
+          x.push(x.at(-1) + Number(refined[i].params[endXIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[endYIdx]));
+        }
+
+        break;
+      }
+
+      case 'T': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: T`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const endXIdx = j;
+          const endYIdx = j + 1;
+
+          x.push(Number(refined[i].params[endXIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[endYIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+
+      case 't': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 2 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: t`);
+
+        for (let j = 0; j &lt; paramLen; j += 2) {
+          const endXIdx = j;
+          const endYIdx = j + 1;
+
+          x.push(x.at(-1) + Number(refined[i].params[endXIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[endYIdx]));
+        }
+
+        break;
+      }
+
+      case 'A': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 7 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: A`);
+
+        for (let j = 0; j &lt; paramLen; j += 7) {
+          const xIdx = j + 5;
+          const yIdx = j + 6;
+
+          x.push(Number(refined[i].params[xIdx]) - originPoint.x);
+          y.push(Number(refined[i].params[yIdx]) - originPoint.y);
+        }
+
+        break;
+      }
+      
+      case 'a': {
+        const paramLen = refined[i].params.length;
+
+        if (paramLen % 7 !== 0) throw new Error(`Invalid parameter number: ${i}th command; type: a`);
+
+        for (let j = 0; j &lt; paramLen; j += 7) {
+          const xIdx = j + 5;
+          const yIdx = j + 6;
+
+          x.push(x.at(-1) + Number(refined[i].params[xIdx]));
+          y.push(y.at(-1) + Number(refined[i].params[yIdx]));
+        }
+
+        break;
+      }
+
+      case 'Z': {
+        x.push(initialPoint.x);
+        y.push(initialPoint.y);
+        break;
+      }
+
+      case 'z': {
+        x.push(initialPoint.x);
+        y.push(initialPoint.y);
+        break;
+      }
+      
+      default: throw new Error('Exception occurred during extracting coordinates: There is a possibility of the path having wrong drawing command.');
+    }
+  }
+
+  return { x, y };
+}
+
+/**
+ * It is a function that makes all coordinates values be in the range of [-1, 1].
+ * It is for avoiding different magitude of number depending on data,
+ * for avoiding a case of big number inputting.
+ * @param {{ x: Array, y: Array }} coords coordinates information
+ * @returns {{ x: Array, y: Array }} adjusted coordinates information
+ */
+function normalize(coords) {
+  const x = [];
+  const y = [];
+
+  const maxX = Math.max(...coords.x);
+  const minX = Math.min(...coords.x);
+  const biggestX = Math.max(Math.abs(maxX), Math.abs(minX));
+
+  const maxY = Math.max(...coords.y);
+  const minY = Math.min(...coords.y);
+  const biggestY = Math.max(Math.abs(maxY), Math.abs(minY));
+
+  for (let t = 0; t < coords.x.length; t++) {
+    x[t] = coords.x[t] / biggestX;
+    y[t] = coords.y[t] / biggestY;
+  }
+
+  return { x, y };
+}
+
+/**
+ * It is a function that makes the data dense by putting values between a value and another value.
+ * It makes the resulting picture look smooth.
+ * @param {{ x: Array, y: Array}} coords coordinates information
+ * @param {Number} n How many values are to be filled between a value and another value?
+ * @returns {{ x: Array, y: Array }} densely composed coordinates information
+ */
+function populate(coords, n) {
+  if (coords.x.length &lt;= 1) throw new Error('Not enough data to fill values. It at least has a length of 2 or more.');
+  if (n &lt; 1) throw new Error('The number of values to be filled into values are not proper. It at least is a positive number of 1 or more.');
+
+  const x = new Array(coords.x.length + (coords.x.length - 1) * n);
+  const y = new Array(coords.y.length + (coords.y.length - 1) * n);
+
+  for (let t = 0; t &lt; coords.x.length; t++) {
+    x[t * (n + 1)] = coords.x[t];
+    y[t * (n + 1)] = coords.y[t];
+  }
+
+  for (let t = 0; t &lt;= (x.length - n - 2); t += (n + 1)) {
+    const reInterpolation = (x[t + n + 1] - x[t]) / (n + 1);
+    const imInterpolation = (y[t + n + 1] - y[t]) / (n + 1);
+
+    for (let u = 1; u <= n; u++) {
+      x[t + u] = x[t] + reInterpolation * u;
+      y[t + u] = y[t] + imInterpolation * u;
+    }
+  }
+
+  return { x, y };
+}
+        </pre>
+        <p>Next, write a code about math. This part is important, so please see carefully.</p>
+        <pre>
+ 
+/**
+ * A function that calculates Riemann sum (numerical integration; area approximation using rectangles)
+ * @param {Number} start integration starting point
+ * @param {Number} end integration end point
+ * @param {Number} division How many times [step, step + 1) is divided?
+ * @param {Function} f function to be integrated
+ * @returns {Number} result value
+ */
+ function integrate(start, end, division, f) {
+  if (division &lt; 1) throw new Error('division number can't be under 1.');
+
+  let sum = 0;
+  const STEP = 1 / division;
+
+  for (let t = start; t &lt; end; t += STEP) {
+    sum += f(t) * STEP;
+  }
+
+  return sum;
+}
+
+// a0, an, bn
+class Coef {
+  // constructor function of Coef
+  constructor(num = 99) {
+    this.num = num;
+    this.a0 = undefined;
+    this.an = [];
+    this.bn = [];
+  }
+
+  /**
+   * It is a function that calculates a0.
+   * @param {Function} f 
+   * @param {Number} period 
+   * @param {Number} division 
+   */
+   getA0(f, period, division) {
+    this.a0 = (1 / period) * integrate(0, period, division, (t) => f(t));
+  }
+
+  /**
+   * It is a function that calculates an.
+   * @param {Function} f 
+   * @param {Number} period 
+   * @param {Number} division 
+   */
+  getAn(f, period, division) {
+    const w = 2 * Math.PI / period;
+
+    for (let n = 1; n &lt;= this.num; n++) {
+      const anValue = (2 / period) * integrate(0, period, division, (t) => f(t) * Math.cos(n * w * t));
+      
+      this.an.push(anValue);
+    }
+  }
+
+  /**
+   * It is a function that calculates bn.
+   * @param {Function} f 
+   * @param {Number} period 
+   * @param {Number} division 
+   */
+  getBn(f, period, division) {
+    const w = 2 * Math.PI / period;
+
+    for (let n = 1; n &lt;= this.num; n++) {
+      const bnValue = (2 / period) * integrate(0, period, division, (t) => f(t) * Math.sin(n * w * t));
+
+      this.bn.push(bnValue);
+    }
+  }
+}
+        </pre>
+        <p>As you can see, method getA0, getAn, getBn use same formula that we saw at chapter 1. This methods calculates Fourier coefficients.</p>
+        <p>Next, we get Fourier coefficients.</p>
+        <pre>
+
+// We treat the number of x coordinates as one period
+// Naturally the number of x coordinates and y coordinates are same
+// The reason we do Math.floor when we read array's value is since array is discrete, there is no value between a value and another value.
+const xCoef = new Coef(999);
+xCoef.getA0((t) => X[Math.floor(t)], X.length, 10);
+xCoef.getAn((t) => X[Math.floor(t)], X.length, 10);
+xCoef.getBn((t) => X[Math.floor(t)], X.length, 10);
+
+const yCoef = new Coef(999);
+yCoef.getA0((t) => Y[Math.floor(t)], Y.length, 10);
+yCoef.getAn((t) => Y[Math.floor(t)], Y.length, 10);
+yCoef.getBn((t) => Y[Math.floor(t)], Y.length, 10);
+        </pre>
+        <p>"Why there are two Fourier coefficients?" It's because, as Mr.Fourier mentioned at the above, we execute Fourier series expansion for each x(t) and y(t).</p>
+        <p>Your computer may feel tired because of heavy operation.</p>
+        <p>Next, write a code that draws a shape at canvas element. Since there are x component and y component, let's draw the shape with two group.</p>
+        <pre>
+
+const $cvs = document.getElementById('cvs');
+const cctx = $cvs.getContext('2d');
+
+const scaler = 200;
+const xOffset = { x: 200, y: 600 };
+const yOffset = { x: 600, y: 200 };
+const path = [];
+let t = 0;
+
+window.requestAnimationFrame(drawShape);
+
+function drawShape() {
+  const rAF = window.requestAnimationFrame(drawShape);
+
+  cctx.clearRect(0, 0, $cvs.width, $cvs.height);
+
+  // x component
+  let x = 0;
+
+  cctx.beginPath();
+  cctx.strokeStyle = 'black';
+
+  cctx.moveTo(xOffset.x + x, xOffset.y + 0);
+
+  x += scaler * xCoef.a0;
+  
+  cctx.lineTo(xOffset.x + x, xOffset.y + 0);
+  cctx.stroke();
+  
+  for (let i = 0; i &lt; xCoef.an.length; i++) {
+    cctx.beginPath();
+    cctx.strokeStyle = 'black';
+
+    cctx.moveTo(xOffset.x + x, xOffset.y + 0);
+
+    x += scaler * xCoef.an[i] * Math.cos((i + 1) * 2 * Math.PI * t / X.length);
+
+    cctx.lineTo(xOffset.x + x, xOffset.y + 0);
+    cctx.stroke();
+  }
+
+  for (let i = 0; i &lt; xCoef.bn.length; i++) {
+    cctx.beginPath();
+    cctx.strokeStyle = 'black';
+
+    cctx.moveTo(xOffset.x + x, xOffset.y + 0);
+
+    x += scaler * xCoef.bn[i] * Math.sin((i + 1) * 2 * Math.PI * t / X.length);
+    
+    cctx.lineTo(xOffset.x + x, xOffset.y + 0);
+    cctx.stroke();
+  }
+  
+  // y component
+  let y = 0;
+
+  cctx.beginPath();
+  cctx.strokeStyle = 'black';
+
+  cctx.moveTo(yOffset.x + 0, yOffset.y + y);
+
+  y += scaler * yCoef.a0;
+
+  cctx.lineTo(yOffset.x + 0, yOffset.y + y);
+  cctx.stroke();
+  
+  for (let i = 0; i &lt; yCoef.an.length; i++) {
+    cctx.beginPath();
+    cctx.strokeStyle = 'black';
+
+    cctx.moveTo(yOffset.x + 0, yOffset.y + y);
+
+    y += scaler * yCoef.an[i] * Math.cos((i + 1) * 2 * Math.PI * t / Y.length);
+    cctx.lineTo(yOffset.x + 0, yOffset.y + y);
+    cctx.stroke();
+  }
+  
+  for (let i = 0; i &lt; yCoef.bn.length; i++) {
+    cctx.beginPath();
+    cctx.strokeStyle = 'black';
+    cctx.moveTo(yOffset.x + 0, yOffset.y + y);
+
+    y += scaler * yCoef.bn[i] * Math.sin((i + 1) * 2 * Math.PI * t / Y.length);
+
+    cctx.lineTo(yOffset.x + 0, yOffset.y + y);
+    cctx.stroke();
+  }
+
+  // meeting point of x component and y component
+  cctx.strokeStyle = 'black';
+  cctx.beginPath();
+
+  cctx.moveTo(yOffset.x + 0, yOffset.y + y);
+  cctx.lineTo(xOffset.x + x, yOffset.y + y);
+
+  cctx.stroke();
+
+  cctx.strokeStyle = 'black';
+  cctx.beginPath();
+
+  cctx.moveTo(xOffset.x + x, xOffset.y + 0);
+  cctx.lineTo(xOffset.x + x, yOffset.y + y);
+
+  cctx.stroke();
+
+  // the meeting point is coordinates of trace
+  path.push({ x, y });
+
+  cctx.beginPath();
+  cctx.strokeStyle = 'black';
+  
+  cctx.moveTo(xOffset.x + path[0].x, yOffset.y + path[0].y);
+
+  for (let i = 0; i &lt; path.length; i++) {
+    cctx.lineTo(xOffset.x + path[i].x, yOffset.y + path[i].y);
+  }
+
+  cctx.stroke();
+
+  if (t === X.length) {
+    window.cancelAnimationFrame(rAF);
+  } else {
+    t++;
+  }
+}
+        </pre>
+        <p>The result is as same as the following gif.</p>
+        <img src="../src/chapter_three_paimon_xy.gif">
+        <p>You can combine x component and y component together. Delete the code you've just added at the above and paste the below code.</p>
+        <pre>
+
+const $cvs = document.getElementById('cvs');
+const cctx = $cvs.getContext('2d');
+
+const offset = { x: 600, y: 300 };
+const shapeOffset = 300;
+const scaler = 200;
+let t = 0;
+const path = [];
+
+window.requestAnimationFrame(drawShape);
+
+function drawShape() {
+  rAF = window.requestAnimationFrame(drawShape);
+
+  cctx.clearRect(0, 0, $cvs.width, $cvs.height);
+
+  const v = { x: xCoef.a0, y: yCoef.a0 };
+
+  for (let n = 0; n &lt; xCoef.num; n++) {
+    cctx.beginPath();
+    cctx.strokeStyle = 'black';
+    cctx.moveTo(offset.x + v.x, offset.y + v.y);
+    // ★ IMPORTANT! What we are doing here is adding the computed result of Fourier series of x(t) and y(t) to v.x and v.y.
+    v.x += scaler * xCoef.an[n] * Math.cos((n + 1) * 2 * Math.PI * t / X.length);
+    v.x += scaler * xCoef.bn[n] * Math.sin((n + 1) * 2 * Math.PI * t / X.length);
+    v.y += scaler * yCoef.an[n] * Math.cos((n + 1) * 2 * Math.PI * t / X.length);
+    v.y += scaler * yCoef.bn[n] * Math.sin((n + 1) * 2 * Math.PI * t / X.length);
+    cctx.lineTo(offset.x + v.x, offset.y + v.y);
+    cctx.stroke();
+  }
+
+  cctx.beginPath();
+  cctx.strokeStyle = 'black';
+  cctx.moveTo(offset.x + v.x, offset.y + v.y);
+  cctx.lineTo(offset.x + v.x - shapeOffset, offset.y + v.y);
+  cctx.stroke();
+
+  path.push({ x: v.x - shapeOffset, y: v.y });
+  
+  cctx.beginPath();
+  cctx.strokeStyle = 'brown';
+
+  for (let i = 0; i &lt; path.length; i++) {
+    if (i === 0) {
+      cctx.moveTo(offset.x + path[0].x, offset.y + path[0].y);
+    } else {
+      cctx.lineTo(offset.x + path[i].x, offset.y + path[i].y);
+    }
+  }
+
+  cctx.stroke();
+
+  if (t === X.length - 1) {
+    window.cancelAnimationFrame(rAF);
+  } else {
+    t++;
+  }
+}
+        </pre>
+        <p>The result is as same as the below gif.</p>
+        <img src="../src/chapter_three_paimon_xy2.gif">
+      </div>
+      <div class="conversation-cor">
+        <div class="img"></div>
+        <p class="name">Me</p>
+        <div class="text">
+          <p>Wow! Paimon is so cute! As expected, the beatifulness does not go somewhere even we approximated it!</p>
+        </div>
+      </div>
+      <div class="conversation-fourier">
+        <div class="img"></div>
+        <p class="name">Fourier</p>
+        <div class="text">
+          <p>It really does haha</p>
+        </div>
+      </div>
+      <div>
+        <p>One more fun thing is to compare original x(t), y(t) development with approximated Fourier series development.</p>
+        <p>The below is development of x(t) and approximated x(t) when number of coefficients is 99 (except a0).</p>
+        <img src="../src/chapter_three_xchanges.png">
+        <pre>
+
+function f(t) {
+  let anSum = 0;
+  let bnSum = 0;
+
+  for (let n = 0; n < xCoef.an.length; n++) {
+    anSum += xCoef.an[n] * Math.cos((n + 1) * 2 * Math.PI * t / X.length);
+    bnSum += xCoef.bn[n] * Math.sin((n + 1) * 2 * Math.PI * t / X.length);
+  }
+
+  return xCoef.a0 + anSum + bnSum;
+}
+
+function xChanges() {
+  const rAF = window.requestAnimationFrame(xChanges);
+
+  // line 1
+  cctx.beginPath();
+  
+  cctx.moveTo(0, 300);
+  cctx.lineTo($cvs.width, 300);
+
+  cctx.stroke();
+
+  // line 2
+  cctx.beginPath();
+
+  cctx.moveTo(0, 600);
+  cctx.lineTo($cvs.width, 600);
+
+  cctx.stroke();
+
+  // x(t)
+  cctx.beginPath();
+
+  for (let x = 0; x < X.length; x++) {
+    if (x === 0) cctx.moveTo(x * 0.2, 300 - scaler * X[x]);
+    else cctx.lineTo(x * 0.2, 300 - scaler * X[x]);
+  }
+
+  cctx.stroke();
+
+  // approximated x(t)
+  cctx.beginPath();
+
+  for (let x = 0; x < X.length; x++) {
+    if (x === 0) cctx.moveTo(x * 0.2, 600 - scaler * f(x));
+    else cctx.lineTo(x * 0.2, 600 - scaler * f(x));
+  }
+
+  cctx.stroke();
+
+  if (t === X.length - 1) {
+    window.cancelAnimationFrame(rAF);
+  } else {
+    t++;
+  }
+}
+        </pre>
+        <p>If you would like to draw it yourself, copy the above code and change the below.</p>
+        <pre>
+
+          // from this
+          window.requestAnimationFrame(draw_shape);
+          
+          // to this
+          window.requestAnimationFrame(xChanges);
+        </pre>
+      </div>
+    </div>
+    <hr>
+    <div>
+      <span id="to-the-top">to the top</span>
+    </div>
+    <script src="../fourier-series-exploration.js"></script>
+  </body>
+</html>
