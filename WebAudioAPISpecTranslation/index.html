@@ -2291,6 +2291,58 @@ function playSound() {
           <p>직감적으로, 이것은 프로세싱의 부분으로서 스테레오 정보를 잃지 않게 해 줍니다: 다른 채널 카운트의 다수의 입력 render quantum들이 출력 render quantum에 공헌할 때 출력 render quantum의 채널 카운트는 입력 render quantum들의 입력 채널 카운트의 상위 집합입니다.</p>
         </div>
         <br>
+        <h2>4.4. 업믹싱 스피커 레이아웃</h2>
+        <p></p>
+        <p></p>
+        <pre>
+
+모노 업믹스:
+
+  1 -> 2 : 모노에서 스테레오로 업믹스
+    output.L = input;
+    output.R = input;
+
+  1 -> 4 : 모노에서 쿼드로 업믹스
+  output.L = input;
+  output.R = input;
+  output.SL = 0;
+  output.SR = 0;
+
+  1 -> 5.1 : 모노에서 5.1로 업믹스
+    output.L = 0;
+    output.R = 0;
+    output.C = input; // put in center channel
+    output.LFE = 0;
+    output.SL = 0;
+    output.SR = 0;
+
+스테레오 업믹스:
+
+  2 -> 4 : 스테레오에서 쿼드로 업믹스
+    output.L = input.L;
+    output.R = input.R;
+    output.SL = 0;
+    output.SR = 0;
+
+  2 -> 5.1 : 스테레오에서 5.1로 업믹스
+    output.L = input.L;
+    output.R = input.R;
+    output.C = 0;
+    output.LFE = 0;
+    output.SL = 0;
+    output.SR = 0;
+
+쿼드 업믹스:
+
+4 -> 5.1 : 쿼드에서 5.1로 업믹스
+  output.L = input.L;
+  output.R = input.R;
+  output.C = 0;
+  output.LFE = 0;
+  output.SL = input.SL;
+  output.SR = input.SR;
+        </pre>
+        <br>
       </div>
     </main>
   </body>
