@@ -2292,8 +2292,6 @@ function playSound() {
         </div>
         <br>
         <h2>4.4. 업믹싱 스피커 레이아웃</h2>
-        <p></p>
-        <p></p>
         <pre>
 
 모노 업믹스:
@@ -2341,6 +2339,40 @@ function playSound() {
   output.LFE = 0;
   output.SL = input.SL;
   output.SR = input.SR;
+        </pre>
+        <br>
+        <h2>4.5. 다운믹싱 스피커 레이아웃</h2>
+        <p>예를 들어, 5.1 소스 material을 프로세싱했지만, 스테레오로 재생할 때 다운믹스가 필요할 것입니다.</p>
+        <pre>
+
+모노 다운믹스:
+
+  2 -> 1 : 스테레오에서 모노로
+    output = 0.5 * (input.L + input.R);
+
+  4 -> 1 : 쿼드에서 모노로
+    output = 0.25 * (input.L + input.R + input.SL + input.SR);
+
+  5.1 -> 1 : 5.1에서 모노로
+    output = sqrt(0.5) * (input.L + input.R) + input.C + 0.5 * (input.SL + input.SR)
+
+스테레오 다운믹스:
+
+  4 -> 2 : 쿼드에서 스테레오로
+    output.L = 0.5 * (input.L + input.SL);
+    output.R = 0.5 * (input.R + input.SR);
+
+  5.1 -> 2 : 5.1에서 스테레오로
+    output.L = L + sqrt(0.5) * (input.C + input.SL)
+    output.R = R + sqrt(0.5) * (input.C + input.SR)
+
+쿼드 다운믹스:
+
+  5.1 -> 4 : 5.1에서 쿼드로
+    output.L = L + sqrt(0.5) * input.C
+    output.R = R + sqrt(0.5) * input.C
+    output.SL = input.SL
+    output.SR = input.SR
         </pre>
         <br>
       </div>
