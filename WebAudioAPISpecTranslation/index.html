@@ -2375,6 +2375,32 @@ function playSound() {
     output.SR = input.SR
         </pre>
         <br>
+        <h2>4.6. 채널 규칙 예제</h2>
+        <pre>
+
+// gain 노드를 explicit 2채널 (스테레오) 로 설정합니다.
+gain.channelCount = 2;
+gain.channelCountMode = "explicit";
+gain.channelInterpretation = "speakers";
+// 2개의 스테레오 출력 버스를 가진 DJ 앱을 위해 "하드웨어 출력"을 4채널로 설정합니다.
+context.destination.channelCount = 4;
+context.destination.channelCountMode = "explicit";
+context.destination.channelInterpretation = "discrete";
+// 사용자 정의 다채널 스피커 배열을 위해 "하드웨어 출력"을 8채널로 설정합니다,
+// 사용자 정의 매트릭스 믹싱과 함께.
+context.destination.channelCount = 8;
+context.destination.channelCountMode = "explicit";
+context.destination.channelInterpretation = "discrete";
+// HTMLAudioElement를 재생하기 위해 "하드뒈어 출력"을 5.1로 설정합니다.
+context.destination.channelCount = 6;
+context.destination.channelCountMode = "explicit";
+context.destination.channelInterpretation = "speakers";
+// 명시적으로 모노로 다운믹스합니다.
+gain.channelCount = 1;
+gain.channelCountMode = "explicit";
+gain.channelInterpretation = "speakers";
+        </pre>
+        <br>
       </div>
     </main>
   </body>
