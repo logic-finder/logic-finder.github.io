@@ -2391,7 +2391,7 @@ context.destination.channelInterpretation = "discrete";
 context.destination.channelCount = 8;
 context.destination.channelCountMode = "explicit";
 context.destination.channelInterpretation = "discrete";
-// HTMLAudioElement를 재생하기 위해 "하드뒈어 출력"을 5.1로 설정합니다.
+// HTMLAudioElement를 재생하기 위해 "하드웨어 출력"을 5.1로 설정합니다.
 context.destination.channelCount = 6;
 context.destination.channelCountMode = "explicit";
 context.destination.channelInterpretation = "speakers";
@@ -2400,6 +2400,11 @@ gain.channelCount = 1;
 gain.channelCountMode = "explicit";
 gain.channelInterpretation = "speakers";
         </pre>
+        <br>
+        <h1>5. 오디오 신호 값</h1>
+        <h2>5.1. 오디오 샘플 포맷</h2>
+        <p><strong>선형 펄스 부호 변조</strong>(linear pulse code modulation; linear PCM) 은 하나의 포맷인데, 이 포맷에서는 오디오 값들이 정기적인 구간에서 샘플링되며, 두 개의 연이은 값 사이의 양자화 레벨이 선형적으로 균일합니다.</p>
+        <p>이 명세에서 신호 값들이 스크립트에 노출될 때는 언제든지, 그 값들은 선형 32비트 부동 소수점 펄스 부호 변조 포맷 (선형 32비트 부동 소수점 PCM) 이며, 종종 Float32Array 객체의 형태로 존재합니다.</p>
         <br>
       </div>
     </main>
