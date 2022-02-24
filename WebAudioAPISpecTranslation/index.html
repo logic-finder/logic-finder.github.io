@@ -2419,6 +2419,63 @@ gain.channelInterpretation = "speakers";
           <figcaption><strong>도식 19</strong> AudioListener와 PannerNode 어트리뷰트가 보이는 좌표계를 나타내는 도식</figcaption>
         </figure>
         <p>렌더링 중에, PannerNode는 방위각(azimuth)과 고도(elevation)를 계산합니다. 이 값들은 구현에 의해 나부적으로 사용되어 공간화 효과를 렌더링합니다. 이 값들이 어떻게 쓰이는지에 대한 자세한 사항에 대해서는 Panning Algorithm 섹션을 참고하세요.</p>
+        <br>
+        <h2>6.2. 방위각과 고도</h2>
+        <p>다음의 알고리즘은 PannerNode에서 방위각과 고도를 계산하기 위해 반드시 사용되어야만 합니다. 구현은 반드시 적절하게 아래의 다양한 AudioParam들이 "a-rate" 인지 "k-rate" 인지 고려해야만 합니다.</p>
+        <pre>
+
+// |context|를 BaseAudioContext, |panner|를
+// |context|내에서 생성된 PannerNode라고 합시다
+// 소스-리스너 벡터를 계산합니다.
+const listener = context.listener;
+const sourcePosition = new Vec3(panner.positionX.value, panner.positionY.value,
+                                panner.positionZ.value);
+const listenerPosition =
+    new Vec3(listener.positionX.value, listener.positionY.value,
+              listener.positionZ.value);
+const sourceListener = sourcePosition.diff(listenerPosition).normalize();
+if (sourceListener.magnitude == 0) {
+  // 소스와 리스너가 같은 지점에 있는 degenerate 경우를 다룹니다.
+  azimuth = 0;
+  elevation = 0;
+  return;
+}
+// 축들을 정렬합니다.
+const listenerForward = new Vec3(listener.forwardX.value, listener.forwardY.value,
+                                  listener.forwardZ.value);
+const listenerUp =
+    new Vec3(listener.upX.value, listener.upY.value, listener.upZ.value);
+const listenerRight = listenerForward.cross(listenerUp);
+if (listenerRight.magnitude == 0) {
+  // 리스너의 '위' 와 '앞' 벡터가 선형적으로 독립적이어서,
+  // '오른쪽' 이 결정될 수 없는 경우를 다룹니다
+  azimuth = 0;
+  elevation = 0;
+  return;
+}
+// 리스너의 오른쪽, 앞에 직교하는 단위벡터를 결정합니다
+const listenerRightNorm = listenerRight.normalize();
+const listenerForwardNorm = listenerForward.normalize();
+const up = listenerRightNorm.cross(listenerForwardNorm);
+const upProjection = sourceListener.dot(up);
+const projectedSource = sourceListener.diff(up.scale(upProjection)).normalize();
+azimuth = 180 * Math.acos(projectedSource.dot(listenerRightNorm)) / Math.PI;
+// 리스너의 앞 또는 뒤의 소스.
+const frontBack = projectedSource.dot(listenerForwardNorm);
+if (frontBack < 0)
+  azimuth = 360 - azimuth;
+// 방위각을 "오른쪽" 리스너 벡터가 아니라 "앞" 벡터에 관계되게 만듭니다.
+if ((azimuth >= 0) && (azimuth <= 270))
+  azimuth = 90 - azimuth;
+else
+  azimuth = 450 - azimuth;
+elevation = 90 - 180 * Math.acos(sourceListener.dot(up)) / Math.PI;
+if (elevation > 90)
+  elevation = 180 - elevation;
+else if (elevation < -90)
+  elevation = -180 - elevation;
+        </pre>
+        <br>
       </div>
     </main>
   </body>
