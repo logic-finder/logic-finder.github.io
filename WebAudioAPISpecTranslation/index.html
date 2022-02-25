@@ -2476,6 +2476,77 @@ else if (elevation < -90)
   elevation = -180 - elevation;
         </pre>
         <br>
+        <h2>6.3. 패닝 알고리즘</h2>
+        <p>모노→스테레오 그리고 스테레오→스테레오 패닝이 반드시 지원되어야만 합니다. 모노→스테레오 프로세싱은 입력에의 모든 연결이 모노일 때 사용됩니다. 그렇지 않으면 스테레오→스테레오 프로세싱이 사용됩니다.</p>
+        <h3>6.3.1. PannerNode "equalpower" 패닝</h3>
+        <p>이것은 기본적이나, 합리적인 결과를 제공하는 단순하고 비교적 저렴한 알고리즘입니다. 이것은 panningModel 어트리뷰트가 "equalpower" 로 설정되어 있어, 고도 값이 무시되는 상황에 PannerNode가 사용합니다. 이 알고리즘은 automationRate에 의해 명시된 것과 같은 적절한 비율을 사용해 구현되어야만 합니다. 만약 PannerNode의 AudioParam이나 AudioListener의 AudioParam 중 하나라도 "a-rate"라면, a-rate 프로세싱이 반드시 사용되어야만 합니다.</p>
+        <ul>
+          <li>이 AudioNode에 의해 계산될 각 샘플에 대해:
+            <ul>
+              <li>azimuth가 방위각과 고도 섹션에서 계산된 값이라고 합시다.</li>
+              <li>방위각 값은 우선 다음에 따라 범위 [-90, 90] 내에 포함됩니다:
+                <pre>
+// 우선, azimuth를 [-180, 180]의 허용된 범위 내로 조정합니다.
+azimuth = max(-180, azimuth);
+azimuth = min(180, azimuth);
+
+// 그리고 나서 범위 [-90, 90] 으로 조정합니다.
+if (azimuth < -90)
+  azimuth = -180 - azimuth;
+else if (azimuth > 90)
+  azimuth = 180 - azimuth;
+                </pre>
+              </li>
+              <li>정규화된 값 x는 모노 입력에 대해 azimuth로부터 다음과 같이 계산됩니다:
+                <pre>
+x = (azimuth + 90) / 180;
+                </pre>
+                또는 스테레오 입력에 대해서 다음과 같이 계산됩니다:
+                <pre>
+if (azimuth <= 0) { // -90 -> 0
+  // [-90, 0] 각도 내의 azimuth 값을 [-90, 90] 범위 내로 변환합니다.
+  x = (azimuth + 90) / 90;
+} else { // 0 -> 90
+  // [0, 90] 각도 내의 azimuth 값을 [-90, 90] 범위 내로 변환합니다.
+  x = azimuth / 90;
+}
+                </pre>
+              </li>
+              <li>좌측과 우측 gain 값은 다음과 같이 계산됩니다:
+                <pre>
+gainL = cos(x * Math.PI / 2);
+gainR = sin(x * Math.PI / 2);
+                </pre>
+              </li>
+              <li>모노 입력에 대해, 스테레오 출력은 다음과 같이 계산됩니다:
+                <pre>
+outputL = input * gainL;
+outputR = input * gainR;
+                </pre>
+                또는 스테레오 입력에 대해, 출력은 다음과 같이 계산됩니다:
+                <pre>
+if (azimuth <= 0) {
+  outputL = inputL + inputR * gainL;
+  outputR = inputR * gainR;
+} else {
+  outputL = inputL * gainL;
+  outputR = inputR + inputL * gainR;
+}
+                </pre>
+              </li>
+              <li>거리의 계산이 6.4. 거리 효과에서 기술되었고 cone gain이 6.5. 소리 cone에서 기술된 거리 gain과 cone gain을 적용합니다.
+                <pre>
+let distance = distance();
+let distanceGain = distanceModel(distance);
+let totalGain = coneGain() * distanceGain();
+outputL = totalGain * outputL;
+outputR = totalGain * outputR;
+                </pre>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <br>
       </div>
     </main>
   </body>
