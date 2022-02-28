@@ -2604,6 +2604,23 @@ if (pan <= 0) {
           </li>
         </ol>
         <br>
+        <h2>6.4. 거리 효과</h2>
+        <p>가까운 소리는 더 큰 반면, 멀리 떨어진 소리는 조용합니다. 소리의 음량이 리스너로부터의 거리에 따라 바뀌는 방법은 정확히 distanceModel 어트리뷰트에 달려 있습니다.</p>
+        <p>오디오 렌더링 동안, 거리 값은 다음에 따른 패너와 리스너 위치에 기반해 계산될 것입니다.</p>
+        <pre>
+function distance(panner) {
+  const pannerPosition = new Vec3(panner.positionX.value, panner.positionY.value,
+                                  panner.positionZ.value);
+  const listener = context.listener;
+  const listenerPosition =
+      new Vec3(listener.positionX.value, listener.positionY.value,
+               listener.positionZ.value);
+  return pannerPosition.diff(listenerPosition).magnitude;
+}
+        </pre>
+        <p>거리는 그리고 나서 distanceGain을 계산하기 위해 사용되는데 distanceGain은 distanceModel 어트리뷰트에 좌우됩니다. 각 거리 모델이 계산되는 방법에 대한 자세한 자상은 DistanceModelType 섹션을 참고하세요.</p>
+        <p>이것의 프로세싱의 일부로서, PannerNode는 입력 오디오 신호를 distanceGain만큼 크기를 조정/곱해서 멀리 있는 소리를 조용하게 하고 가까운 소리를 크게 만듭니다.</p>
+        <br>
       </div>
     </main>
   </body>
