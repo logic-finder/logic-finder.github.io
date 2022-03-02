@@ -2462,17 +2462,17 @@ const projectedSource = sourceListener.diff(up.scale(upProjection)).normalize();
 azimuth = 180 * Math.acos(projectedSource.dot(listenerRightNorm)) / Math.PI;
 // 리스너의 앞 또는 뒤의 소스.
 const frontBack = projectedSource.dot(listenerForwardNorm);
-if (frontBack < 0)
+if (frontBack &lt; 0)
   azimuth = 360 - azimuth;
 // 방위각을 "오른쪽" 리스너 벡터가 아니라 "앞" 벡터에 관계되게 만듭니다.
-if ((azimuth >= 0) && (azimuth <= 270))
+if ((azimuth >= 0) && (azimuth &lt;= 270))
   azimuth = 90 - azimuth;
 else
   azimuth = 450 - azimuth;
 elevation = 90 - 180 * Math.acos(sourceListener.dot(up)) / Math.PI;
 if (elevation > 90)
   elevation = 180 - elevation;
-else if (elevation < -90)
+else if (elevation &lt; -90)
   elevation = -180 - elevation;
         </pre>
         <br>
@@ -2503,7 +2503,7 @@ x = (azimuth + 90) / 180;
                 </pre>
                 또는 스테레오 입력에 대해서 다음과 같이 계산됩니다:
                 <pre>
-if (azimuth <= 0) { // -90 -> 0
+if (azimuth &lt;= 0) { // -90 -> 0
   // [-90, 0] 각도 내의 azimuth 값을 [-90, 90] 범위 내로 변환합니다.
   x = (azimuth + 90) / 90;
 } else { // 0 -> 90
@@ -2572,7 +2572,7 @@ x = (pan + 1) / 2;
                 </pre>
                 스테레오 입력에 대해:
                 <pre>
-if (pan <= 0)
+if (pan &lt;= 0)
   x = pan + 1;
 else
   x = pan;
@@ -2591,7 +2591,7 @@ outputR = input * gainR;
                 </pre>
                 혹은 스테레오 입력에 대해, 출력은 다음과 같이 계산됩니다.
                 <pre>
-if (pan <= 0) {
+if (pan &lt;= 0) {
   outputL = inputL + inputR * gainL;
   outputR = inputR * gainR;
 } else {
@@ -2623,6 +2623,11 @@ function distance(panner) {
         <br>
         <h2>6.5. 소리 cone</h2>
         <p>리스너와 각 음원은 어떤 방향으로 자신이 향하고 있는지를 기술하는 방향 벡터를 가지고 있습니다. 각 음원의 소리 사영 특징은 음원의 방향 벡터로부터의 음원/리스너 각도의 함수로서 소리 강도를 기술하는 안 그리고 바깥 "cone"에 의해 기술됩니다. 따라서, 리스너를 직접적으로 가리키는 음원은 off-axis를 가리킬 때보다 더 큽니다. 음원은 또한 전방향일 수 있습니다.</p>
+        <p>다음의 도식은 리스너에 대한 음원의 cone 사이의 관계를 나타냅니다. 이 도식에서, coneInnerAngle = 50이고 coneOuterAngle = 120입니다. 즉, 내부 cone은 방향 벡터의 각 측면에서 25도 확장됩니다. 유사하게, 외부 cone은 각 측면에서 60도 확장됩니다.</p>
+        <figure>
+          <image src="img/cone-diagram.svg" width="50%"></image>
+          <figcaption><strong>도식 21</strong> 음원 방향과 리스너의 위치와 방향에 관한 음원의 cone 각도</figcaption>
+        </figure>
       </div>
     </main>
   </body>
