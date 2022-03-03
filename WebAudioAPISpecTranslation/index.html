@@ -2628,6 +2628,47 @@ function distance(panner) {
           <image src="img/cone-diagram.svg" width="50%"></image>
           <figcaption><strong>도식 21</strong> 음원 방향과 리스너의 위치와 방향에 관한 음원의 cone 각도</figcaption>
         </figure>
+        <p>음원 (PannerNode) 과 리스너가 주어졌을 때 cone 효과에 기인한 gain 기여를 계산하기 위해 다음의 알고리즘이 반드시 사용되어야만 합니다.</p>
+        <pre>
+function coneGain() {
+  const sourceOrientation =
+      new Vec3(source.orientationX, source.orientationY, source.orientationZ);
+  if (sourceOrientation.magnitude == 0 ||
+      ((source.coneInnerAngle == 360) && (source.coneOuterAngle == 360)))
+    return 1; // cone이 명시되지 않음 - unity gain
+  // 정규화된 음원-리스너 벡터
+  const sourcePosition = new Vec3(panner.positionX.value, panner.positionY.value,
+                                  panner.positionZ.value);
+  const listenerPosition =
+      new Vec3(listener.positionX.value, listener.positionY.value,
+                listener.positionZ.value);
+  const sourceToListener = sourcePosition.diff(listenerPosition).normalize();
+  const normalizedSourceOrientation = sourceOrientation.normalize();
+  // 음원 방향 벡터와 음원-리스너 벡터 사이의 각도
+  const angle = 180 *
+                Math.acos(sourceToListener.dot(normalizedSourceOrientation)) /
+                Math.PI;
+  const absAngle = Math.abs(angle);
+  // API는 전체 각도이므로 (반각이 아님) 여기서 2로 나눔
+  const absInnerAngle = Math.abs(source.coneInnerAngle) / 2;
+  const absOuterAngle = Math.abs(source.coneOuterAngle) / 2;
+  let gain = 1;
+  if (absAngle &lt;= absInnerAngle) {
+    // 감쇠 없음
+    gain = 1;
+  } else if (absAngle &gt;= absOuterAngle) {
+    // 최대 감쇠
+    gain = source.coneOuterGain;
+  } else {
+    // 내부와 외부 cone 사이
+    // 내부 -&gt; 외부, x는 0에서 1로 감
+    const x = (absAngle - absInnerAngle) / (absOuterAngle - absInnerAngle);
+    gain = (1 - x) + source.coneOuterGain * x;
+  }
+  return gain;
+}
+        </pre>
+        <br>
       </div>
     </main>
   </body>
