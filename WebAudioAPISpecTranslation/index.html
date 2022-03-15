@@ -366,7 +366,7 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: BiquadFilterNode</dd>
           <br>
           <dt><i>createBuffer(numOfChannels, length, sampleRate)</i></dt>
-          <dd>주어진 크기의 AudioBuffer를 생성합니다. 버퍼 내의 오디오 데이터는 0으로 초기화될 것입니다 (silent). 만약 인자가 어느 하나라도 음수거나, 0이거나, 명목상의 범위 바깥에 있다면 NotSupportedError가 반드시 발생되어야 합니다.</dd>
+          <dd>주어진 크기의 AudioBuffer를 생성합니다. 버퍼 내의 오디오 데이터는 0으로 초기화될 것입니다 (silent). ⌛ 만약 인자가 어느 하나라도 음수거나, 0이거나, 명목상의 범위 바깥에 있다면 NotSupportedError가 반드시 발생되어야 합니다.</dd>
           <table>
             <caption>BaseAudioContext.createBuffer() 메서드의 인자</caption>
             <tr>
@@ -406,7 +406,7 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: AudioBufferSourceNode</dd>
           <br>
           <dt><i>createChannelMerger(numberOfInputs)</i></dt>
-          <dd>channel merger를 나타내는 ChannelMergerNode의 팩토리 메서드. 만약 numberOfInputs가 1보다 작거나 지원되는 채널의 수보다 크다면 IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
+          <dd>channel merger를 나타내는 ChannelMergerNode의 팩토리 메서드. ⌛ 만약 numberOfInputs가 1보다 작거나 지원되는 채널의 수보다 크다면 IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
           <table>
             <caption>BaseAudioContext.createChannelMerger(numberOfInputs) 메서드의 인자</caption>
             <tr>
@@ -427,7 +427,7 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: ChannelMergerNode</dd>
           <br>
           <dt><i>channelSplitterNode(numberOfOutputs)</i></dt>
-          <dd>channel splitter를 나타내는 ChannelSplitterNode의 팩토리 메서드. 만약 numberOfOutputs가 1보다 작거나 지원되는 채널의 수보다 크다면 IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
+          <dd>channel splitter를 나타내는 ChannelSplitterNode의 팩토리 메서드. ⌛ 만약 numberOfOutputs가 1보다 작거나 지원되는 채널의 수보다 크다면 IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
           <table>
             <caption>BaseAudioContext.createChannelSplitter(numberOfOutputs) 메서드의 인자</caption>
             <tr>
@@ -473,7 +473,7 @@ interface BaseAudioContext : EventTarget {
               <td>double</td>
               <td>x</td>
               <td>v</td>
-              <td>지연선(delay line)을 고려하는 최대 delay time (초) 를 명시합니다. 만약 명시되었다면, 이 값은 반드시 0보다 크고 3분보다 작아야 하며 그렇지 않다면 NotSupportedError 예외가 반드시 발생되어야 합니다. 만약 명시되지 않았다면, 1이 사용될 것입니다.</td>
+              <td>지연선(delay line)을 고려하는 최대 delay time (초) 를 명시합니다. ⌛ 만약 명시되었다면, 이 값은 반드시 0보다 크고 3분보다 작아야 하며 그렇지 않다면 NotSupportedError 예외가 반드시 발생되어야 합니다. 만약 명시되지 않았다면, 1이 사용될 것입니다.</td>
             </tr>
           </table>
           <dd>반환 유형: DelayNode</dd>
@@ -503,14 +503,14 @@ interface BaseAudioContext : EventTarget {
               <td>sequence&lt;double&gt;</td>
               <td>x</td>
               <td>x</td>
-              <td>IIR 필터의 transfer 함수의 feedforward (분자) 계수의 배열입니다. 이 배열의 최대 길이는 20입니다. 만약 모든 값들이 0이라면, InvalidStateError가 반드시 발생되어야 합니다. 만약 배열의 길이가 0이거나 20보다 크다면 NotSupportedError가 반드시 발생되어야 합니다.</td>
+              <td>IIR 필터의 transfer 함수의 feedforward (분자) 계수의 배열입니다. 이 배열의 최대 길이는 20입니다. 만약 모든 값들이 0이라면, ⌛ InvalidStateError가 반드시 발생되어야 합니다. ⌛ 만약 배열의 길이가 0이거나 20보다 크다면 NotSupportedError가 반드시 발생되어야 합니다.</td>
             </tr>
             <tr>
               <td>feedback</td>
               <td>sequence&lt;double&gt;</td>
               <td>x</td>
               <td>x</td>
-              <td>IIR 필터의 transfer 함수의 feedback (분모) 계수의 배열입니다. 이 배열의 최대 길이는 20입니다. 만약 이 배열의 첫번째 요소가 0이라면, InvalidStateError가 반드시 발생되어야 합니다. 만약 배열의 길이가 0이거나 20보다 크다면 NotSupportedError가 반드시 발생되어야 합니다.</td>
+              <td>IIR 필터의 transfer 함수의 feedback (분모) 계수의 배열입니다. 이 배열의 최대 길이는 20입니다. 만약 이 배열의 첫번째 요소가 0이라면, ⌛ InvalidStateError가 반드시 발생되어야 합니다. ⌛ 만약 배열의 길이가 0이거나 20보다 크다면 NotSupportedError가 반드시 발생되어야 합니다.</td>
             </tr>
           </table>
           <dd>반환 유형: IIRFilterNode</dd>
@@ -529,7 +529,7 @@ interface BaseAudioContext : EventTarget {
           <dd>PeriodicWave를 생성하기 위한 팩토리 메서드</dd>
           <dd>이 메서드를 호출할 때, 다음의 단계를 실행합니다:</dd>
           <ol>
-            <li>만약 real과 imag가 같은 길이가 아니면, IndexSizeError가 반드시 발생되어야 합니다.</li>
+            <li>⌛ 만약 real과 imag가 같은 길이가 아니면, IndexSizeError가 반드시 발생되어야 합니다.</li>
             <li>o가 PeriodicWaveOptions 유형의 새로운 객체이게 합니다.</li>
             <li>이 팩토리 메서드에 전달된 real과 imag 파라미터를 각각 o에 같은 이름의 어트리뷰트로 설정합니다.</li>
             <li>o에 disableNormalization 어트리뷰트를 이 팩토리 메서드에 전달된 constraints 어트리뷰트의 disableNormalization 어트리뷰트의 값으로 설정합니다.</li>
@@ -570,8 +570,40 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: PeriodicWave</dd>
           <br>
           <dt><i>createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels)</i></dt>
-          <dd>ScriptProcessorNode의 팩토리 메서드. 이 메서드는 폐기되었습니다. 왜냐하면 이 메서드는 AudioWorkletNode에 의해 대체되는 것이 의도되었기 때문입니다.</dd>
-          <dd>추후 번역</dd>
+          <dd>ScriptProcessorNode의 팩토리 메서드. 이 메서드는 폐기되었습니다. 왜냐하면 이 메서드는 AudioWorkletNode에 의해 대체되는 것이 의도되었기 때문입니다. 스크립트를 사용하는 직접적인 오디오 프로세싱을 위해 ScriptProcessorNode를 생성합니다. ⌛ 만약 bufferSize 또는 numberOfInputChannels 또는 numberOfOutputChannels가 유효한 범위 바깥이면 IndexSizeError가 반드시 발생되어야만 합니다.</dd>
+          <dd>numberOfInputChannels와 numberOfOutputChannels 모두에 대해 값이 0인 것은 유효하지 않습니다. ⌛ 이 경우 IndexSizeError가 반드시 발생되어야만 합니다.</dd>
+          <table>
+            <caption>BaseAudioContext.createScriptProcessor(bufferSize, numberOfInputChannels, numberOfOutputChannels) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>bufferSize</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>bufferSize 파라미터는 샘플 프레임의 단위에서의 버퍼 크기를 결정합니다. 만약 이것이 전달되지 않았거나, 그 값이 0이라면, 구현은 주어진 환경에 가장 최선인 버퍼 크기를 선택할 것이고, 그 크기는 노드의 생명 주기 내내 2의 상수 제곱일 것입니다. 그렇지 않고 만약 코드 작성자가 명시적으로 bufferSize를 명시했다면, 이것은 반드시 다음의 값들 중 하나여야만 합니다: 256, 512, 1024, 2048, 4096, 8192, 16384. 이 값은 얼마나 자주 onaudioprocess 이벤트가 전파되고 얼마나 많은 샘플 프레임이 각 호출당 처리될 필요가 있는지를 제어합니다. 낮은 bufferSize 값은 낮은 (더 좋은) 레이턴시를 결과로 낳을 것입니다. 높은 값은 오디오 깨짐(breakup)과 glitch를 방지하기 위해 필수적일 것입니다. 코드 작성자가 이 버퍼 크기를 명시하지 않고 구현이 레이턴시와 오디오 품질을 균형잡는 좋은 버퍼 크기를 선택하도록 하는 것이 권장됩니다. ⌛ 만약 이 파라미터의 값이 위에서 나열된 2의 제곱 값들 중 하나가 아니라면, IndexSizeError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>numberOfInputChannels</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>이 파라미터는 이 노드의 입력에 대한 채널의 수를 결정합니다. 기본값은 2입니다. 32까지의 값이 반드시 지원되어야만 합니다. ⌛ 만약 채널의 수가 지원되지 않는다면 NotSupportedError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>numberOfOutputChannels</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>이 파라미터는 이 노드의 출력에 대한 채널의 수를 결정합니다. 기본값은 2입니다. 32까지의 값이 반드시 지원되어야만 합니다. ⌛ 만약 채널의 수가 지원되지 않는다면 NotSupportedError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: ScriptProcessorNode</dd>
           <br>
           <dt><i>createStereoPanner()</i></dt>
           <dd>StereoPannerNode의 팩토리 메서드</dd>
