@@ -2780,6 +2780,70 @@ function coneGain() {
           </li>
         </ol>
         <br>
+        <h1>9. 필요 조건 및 사용 경우</h1>
+        <p>[webaudio-usecases]를 참고하십시오.</p>
+        <br>
+        <h1>10. 예제 코드에서 쓰이는 코드 정의</h1>
+        <p>이 섹션은 이 명세에서 쓰이는, 자바스크립트로 구현된 공통적인 함수와 클래스를 기술합니다.</p>
+        <pre>
+// 삼차원 벡터 클래스
+class Vec3 {
+  // 3개의 좌표를 가지고 생성
+  constructor(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+  // 다른 벡터와이 dot product
+  dot(v) {
+    return (this.x * v.x) + (this.y * v.y) + (this.z * v.z);
+  }
+  // 다른 벡터와의 cross product
+  cross(v) {
+    return new Vec3((this.y * v.z) - (this.z * v.y),
+      (this.z * v.x) - (this.x * v.z),
+      (this.x * v.y) - (this.y * v.x));
+  }
+  // 다른 벡터와의 차
+  diff(v) {
+    return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
+  }
+  // 이 벡터의 magnitude를 획득
+  get magnitude() {
+    return Math.sqrt(dot(this));
+  }
+  // 스칼라만큼 곱해진 이 벡터의 복제를 획득
+  scale(s) {
+    return new Vec3(this.x * s, this.y * s, this.z * s);
+  }
+  // 이 벡터의 normalized된 복제를 획득
+  normalize() {
+    const m = magnitude;
+    if (m == 0) {
+      return new Vec3(0, 0, 0);
+    }
+    return scale(1 / m);
+  }
+}
+        </pre>
+        <br>
+        <h1>11. 변경 역사</h1>
+        <p>생략</p>
+        <br>
+        <h1>12. 감사의 글</h1>
+        <p>생략</p>
+        <br>
+        <h1>Conformance</h1>
+        <p>생략</p>
+        <br>
+        <h1>색인</h1>
+        <p>생략</p>
+        <br>
+        <h1>참고 목록</h1>
+        <p>생략</p>
+        <br>
+        <h1>IDL 색인</h1>
+        <p>생략</p>
       </div>
     </main>
   </body>
