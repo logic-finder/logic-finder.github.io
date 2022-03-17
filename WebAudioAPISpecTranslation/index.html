@@ -616,8 +616,89 @@ interface BaseAudioContext : EventTarget {
           <dd>반환 유형: WaveShaperNode</dd>
           <br>
           <dt><i>decodeAudioData(audioData, successCallback, errorCallback)</i></dt>
-          <dd>ArrayBuffer에 포함된 오디오 파일 데이터를 비동기적으로 디코드합니다.</dd>
-          <dd>추후 번역</dd>
+          <dd>ArrayBuffer에 포함된 오디오 파일 데이터를 비동기적으로 디코드합니다. 예를 들어 ArrayBuffer는 XMLHttpRequest의 responseType을 "arraybuffer"로 설정한 후에 response 어트리뷰트로부터 로딩될 수 있습니다. 오디오 파일 데이터는 &lt;audio&gt; 요소에 의해 지원되는 포맷입니다. decodeAudioData()에 전달된 버퍼는 sniffing에 의해 결정된 content-type을 가지며, 이는 [mimesniff]에 기술되어 있습니다. </dd>
+          <dd>비록 이 함수의 interfacing의 주된 방법은 이것의 promise 반환 값을 통한 것이지만, callback 파라미터가 레거시 이유에 의해 제공됩니다.</dd>
+          <dd>⌛ decodeAudioData가 호출되었을 때, 다음의 과정이 반드시 컨트롤 스레드에서 수행되어야만 합니다.</dd>
+          <ol>
+            <li>만약 이것의 관련된 global object의 연관된 Document가 완전히 active하지 않다면 "InvalidStateError" DOMException과 함께 rejected된 promise를 반환합니다.</li>
+            <li>promise를 새로운 Promise라고 합시다.</li>
+            <li>audioData에서의 IsDatachedBuffer 동작이 false라면 ([ECMASCRIPT]에 기술되어 있음), 다음의 과정을 수행합니다.
+              <ol>
+                <li>promise에 [[pending promises]]를 append합니다.</li>
+                <li>audioData ArrayBuffer를 detach합니다. 이 동작은 [ECMASCRIPT]에 기술되어 있습니다. 만약 이 동작이 발생한다면, 단계 3으로 건너뜁니다.</li>
+                <li>다른 스레드에서 수행될 decoding 동작을 queue합니다.</li>
+              </ol>
+            </li>
+            <li>그렇지 않다면, 다음의 error 단계를 수행합니다.
+              <ol>
+                <li>error를 DataCloneError라고 합시다.</li>
+                <li>promise를 error와 함께 reject하고, 이것을 [[pending promises]]로부터 제거합니다.</li>
+                <li>errorCallback을 error와 함께 호출하는 media element task를 queue합니다.</li>
+              </ol>
+            </li>
+            <li>promise를 반환합니다.</li>
+          </ol>
+          <dd>다른 스레드에서 수행될 decoding 동작을 queue할 때, 다음의 단계가 반드시 컨트롤 스레드도 아니고 렌더링 스레드도 아닌 스레드에서 발생되어야만 하고, 이것을 <strong><i>decoding 스레드</i></strong>라고 합니다.</dd>
+          <div class="note"><p>알림: 다수의 decodeAudioData 호출을 제공하기 위해, 다수의 decoding 스레드는 병렬적으로 실행될 수 있습니다.</p></div>
+          <ol>
+            <li>can decode를 boolean 플래그라고 하고, 이는 초기적으로 true로 설정되어 있습니다.</li>
+            <li>MIME Sniffing §6.2 오디오 또는 비디오 타입 패턴 매칭하기 를 사용하여, audioData의 MIME 유형 결정을 시도합니다. 만약 오디오 혹은 video 타입 패턴 매칭 알고리즘이 undefined를 반환한다면, can decode를 false로 설정합니다.</li>
+            <li>만약 can decode가 true라면, 인코딩된 audioData를 linear PCM로 디코드 시도합니다. 실패의 경우에, can decode를 false로 설정합니다.</li>
+            <li>만약 can decode가 false라면, 다음의 단계를 수행하는 media element task를 queue합니다.
+              <ol>
+                <li>error를 이름이 EncodingError인 DOMException이라고 합시다.
+                  <ol>
+                    <li>promise를 error와 함께 reject하고, 이것을 [[pending promises]]로부터 remove합니다.</li>
+                  </ol>
+                </li>
+                <li>만약 errorCallback이 missing이 아니라면, errorCallback을 error와 함께 호출합니다.</li>
+              </ol>
+              <li>그렇지 않다면,
+                <ol>
+                  <li>디코드된 linear PCM 오디오 데이터를 나타내는 결과를 취하고, 이것을 BaseAudioContext의 샘플 레이트로 리샘플링합니다 (만약 이것이 audioData의 샘플 레이트와 다르다면).</li>
+                  <li>다음의 단계를 수행하는 media element task를 queue합니다.
+                    <ol>
+                      <li>buffer를 최종 결과를 담고 있는 AudioBuffer라고 합시다 (아마 샘플 레이트 변환을 수행한 이후에).</li>
+                      <li>promise를 buffer와 함께 resolve합니다.</li>
+                      <li>만약 successCallback이 missing이 아니라면, successCallback을 buffer와 함께 호출합니다.</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+            </li>
+          </ol>
+          <table>
+            <caption>BaseAudioContext.decodeAudioData() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>audioData</td>
+              <td>ArrayBuffer</td>
+              <td>x</td>
+              <td>x</td>
+              <td>압축된 audio 데이터를 포함하고 있는 ArrayBuffer</td>
+            </tr>
+            <tr>
+              <td>successCallback</td>
+              <td>DecodeSuccessCallback?</td>
+              <td>v</td>
+              <td>v</td>
+              <td>디코딩이 완료되었을 때 호출될 콜백 함수. 이 콜백에 대한 하나의 인자는 디코딩된 PCM 오디오 데이터를 나타내는 AudioBuffer입니다.</td>
+            </tr>
+            <tr>
+              <td>errorCallback</td>
+              <td>DecodeErrorCallback?</td>
+              <td>v</td>
+              <td>v</td>
+              <td>만약 오디오 파일을 디코딩하는 중 오류가 있으면 호출될 콜백 함수</td>
+            </tr>
+          </table>
+          <dd>반환 유형: Promise&lt;AudioBuffer&gt;</dd>
           <br>
           <h3>1.1.3. 콜백 DecodeSuccessCallback() 파라미터</h3>
           <dl>
