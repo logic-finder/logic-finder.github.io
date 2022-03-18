@@ -1258,7 +1258,7 @@ interface AudioBuffer {
           <dt><i>copyFromChannel(destination, channelNumber, bufferOffset)</i></dt>
           <dd>copyFromChannel() 메서드는 AudioBuffer의 명시된 채널로부터 destination 배열로 샘플들을 복제합니다.</dd>
           <br>
-          <dd>buffer를 Nb 프레임을 가진 AudioBuffer라고 하고, Nf를 destination 배열의 원소의 수라고 하고, k를 bufferOffset의 값이라고 합시다. 그럼 buffer로부터 destination으로 복제된 프레임의 수는 max(0, min(Nb-k, Nf))입니다. 만약 이것이 Nf보다 작다면, destination의 잔여 원소는 수정되지 않습니다.</dd>
+          <dd>buffer를 N<sub>b</sub> 프레임을 가진 AudioBuffer라고 하고, N<sub>f</sub>를 destination 배열의 원소의 수라고 하고, k를 bufferOffset의 값이라고 합시다. 그럼 buffer로부터 destination으로 복제된 프레임의 수는 max(0, min(N<sub>b</sub>-k, N<sub>f</sub>))입니다. 만약 이것이 N<sub>f</sub>보다 작다면, destination의 잔여 원소는 수정되지 않습니다.</dd>
           <table>
             <caption>AudioBuffer.copyFromChannel() 메서드의 인자</caption>
             <tr>
@@ -1273,7 +1273,7 @@ interface AudioBuffer {
               <td>Float32Array</td>
               <td>x</td>
               <td>x</td>
-              <td>채널 데이터가 복제될 배열</td>
+              <td>채널 데이터가 복제되어 들어갈 배열</td>
             </tr>
             <tr>
               <td>channelNumber</td>
@@ -1290,6 +1290,47 @@ interface AudioBuffer {
               <td>선택적인 offset으로, 기본값은 0입니다. 이 offset에서 시작하는 AudioBuffer로부터의 데이터가 destination에 복제됩니다.</td>
             </tr>
           </table>
+          <br>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>copyToChannel(source, channelNumber, bufferOffset)</i></dt>
+          <dd>copyToChannel() 메서드는 source 배열로부터 AudioBuffer의 명시된 채널로 샘플을 복제합니다.</dd>
+          <br>
+          <dd>만약 source가 버퍼로 복제될 수 없다면 UnknownError가 발생될 수 있습니다.</dd>
+          <br>
+          <dd>buffer가 N<sub>b</sub> 프레임을 가진 AudioBuffer라고 하고, N<sub>f</sub>가 source 배열의 원소의 수라고 하고, k가 bufferOffset의 값이라고 합시다. 그럼 source로부터 buffer에 복제되는 프레임의 수는 max(0, min(N<sub>b</sub>-k, N<sub>f</sub>))입니다. 만약 이것이 N<sub>f</sub>보다 작다면, buffer의 잔여 원소는 수정되지 않습니다.</dd>
+          <table>
+            <caption>AudioBuffer.copyToChannel() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>source</td>
+              <td>Float32Array</td>
+              <td>x</td>
+              <td>x</td>
+              <td>채널 데이터가 복제될 배열</td>
+            </tr>
+            <tr>
+              <td>channelNumber</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>데이터를 복제해 넣을 채널의 인덱스. 만약 channelNumber가 AudioBuffer의 채널의 수보다 크거나 같다면, ⌛ IndexSizeError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>bufferOffset</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>선택적인 offset으로, 기본값은 0입니다. source로부터의 데이터가 이 offset에서 시작하는 AudioBuffer에 복제됩니다.</td>
+            </tr>
+          </table>
+          <br>
           <dd>반환 유형: undefined</dd>
           <br>
         </dl>
