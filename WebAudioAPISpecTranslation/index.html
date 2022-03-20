@@ -1333,6 +1333,58 @@ interface AudioBuffer {
           <br>
           <dd>반환 유형: undefined</dd>
           <br>
+          <dt><i>getChannelData(channel)</i></dt>
+          <dd>acquire the content에 기술된 규칙에 따라, 참조를 얻거나 [[internal data]]에 저장된 바이트의 복제본을 새로운 Float32Array에 얻습니다.</dd>
+          <br>
+          <dd>만약 [[internal data]] 또는 새로운 Float32Array가 생성될 수 없다면 UnknownError가 발생될 수 있습니다.</dd>
+          <br>
+          <table>
+            <caption>AudioBuffer.getChannelData() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>channel</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>이 매개변수는 데이터를 얻을 특정한 채널을 나타내는 인덱스입니다. 0의 인덱스 값은 첫번째 채널을 나타냅니다. ⌛ 인덱스 값은 반드시 [[number of channels]]보다 작아야만 하며 그렇지 않을 경우 IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <br>
+          <dd>반환 유형: Float32Array</dd>
+          <br>
+          <div class="note">
+            <p>알림: copyToChannel() 메서드와 copyFromChannel() 메서드는 더 큰 배열의 view인 Float32Array를 전달함으로써 배열의 부분을 채우기 위해 사용될 수 있습니다. AudioBuffer의 채널로부터 데이터를 읽고, 데이터가 청크로 처리될 수 있을 때, copyFromChannel()이 getChannelData()를 호출하고 결과 배열에 접근하는 것에 비해 선호되어야 합니다. 왜냐하면 이것은 불필요한 메모리 할당과 복제를 방지할 수 있기 때문입니다.</p>
+          </div>
+          <br>
+          <dd>내부 동작 acquire the contents of an AudioBuffer는 AudioBuffer의 내용이 몇몇 API 구현에 의해 필요되어질 때 호출됩니다. 이 동작은 호출자에게 불변하는 채널 데이터를 반환합니다.</dd>
+          <dd><strong>acquire the content</strong> 동작이 AudioBuffer에서 발생되었을 때, 다음의 과정을 실행합니다.</dd>
+          <ol>
+            <li>만약 AudioBuffer의 ArrayBuffer중 어느 것에서든 동작 IsDetachedBuffer가 true를 반환한다면, 이 과정들을 중단하고, 호출자에게 길이 0의 채널 데이터 버퍼를 반환합니다.</li>
+            <li>이 AudioBuffer에서 이전에 getChannelData()에 의해 반환된 배열들에 대해 모든 ArrayBuffer를 분리합니다.
+              <div class="note">
+                <p>알림: AudioBuffer는 오직 createBuffer() 또는 AudioBuffer 생성자를 통해서만 생성될 수 있기 때문에, 이것은 throw할 수 없습니다.</p>
+              </div>
+            </li>
+            <li>저 ArrayBuffer들로부터의 근본적인 [[internal data]]를 유지하고 그것들에 대한 참조를 호출자에게 반환합니다.</li>
+            <li>데이터의 복제본을 가지고 있는 ArrayBuffer들을 AudioBuffer에 부착하고, 이는 다음 getChannelData() 호출에 의해 반환될 것입니다.</li>
+          </ol>
+          <dd>acquire the contents of an AudioBuffer 동작은 다음의 경우에 호출됩니다.</dd>
+          <ul>
+            <li>AudioBufferSourceNode.start가 호출되었을 때, 이것은 노드의 버퍼의 내용을 획득합니다. 만약 이 동작이 실패한다면, 아무것도 재생되지 않습니다.</li>
+            <li>AudioBufferSourceNode의 버퍼가 설정되었고 AudioBufferSourceNode.start가 이전에 호출되었을 때, setter는 AudioBuffer의 내용을 획득합니다. 만약 이 동작이 실패한다면, 아무것도 재생되지 않습니다.</li>
+            <li>ConvolverNode의 buffer가 AudioBuffer로 설정되었을 때 이것은 AudioBuffer의 내용을 획득합니다.</li>
+            <li>AudioProcessingEvent의 전파가 완료되었을 때, 이것은 이것의 outputBuffer의 내용을 획득합니다.
+            </li>
+          </ul>
+          <div class="note">
+            <p>알림: 이는 copyToChannel()이 AudioBuffer의 내용을 획득한 AudioNode에 의해 현재 사용되고 있는 AudioBuffer의 내용을 변경하기 위해 사용될 수 없음을 의미합니다. 왜냐하면 AudioNode는 이전에 획득된 데이터를 계속 사용할 것이기 때문입니다.</p>
+          </div>
         </dl>
         <br>
         <h3>1.4.4. AudioBufferOptions</h3>
