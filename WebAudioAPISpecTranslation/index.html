@@ -1453,9 +1453,30 @@ interface AudioNode : EventTarget {
         <br>
         <p>AudioNode의 생성자의 첫번째 인자로써 전달되는 BaseAudioContext는 생성될 AudioNode의 <strong>연관된 BaseAudioContext</strong>라고 불려집니다. 유사하게, 팩토리 메서드를 사용할 때, AudioNode의 연관된 BaseAudioContext는 이 팩토리 메서드가 호출된 BaseAudioContext입니다.</p>
         <br>
-        <p>추후 번역</p>
+        <p>팩토리 메서드를 사용하여, BaseAudioContext c에서 호출된, 특정한 유형 n의 새로운 AudioNode를 생성하기 위해서는, 다음의 절차를 수행합니다.</p>
         <br>
-        <p>팩토리 메서드의 연관된 인터페이스란 이 메서드로부터 반환된 객체의 인터페이스입니다. 인터페이스의 연관된 옵션 객체란 이 인터페이스의 생성자에 전달될 수 있는 옵션 객체입니다.</p>
+        <ol>
+          <li>node를 유형 n의 새로운 객체라고 합시다.</li>
+          <li>option을 이 팩토리 메서드에 연관된 인터페이스에 대한 연관된 유형의 딕셔너리라고 합시다.</li>
+          <li>이 팩토리 메서드에 전달된 각 매개변수에 대해, option에 있는 같은 이름의 딕셔너리 멤버를 이 매개변수의 값으로 설정합니다.</li>
+          <li>인자로서 c와 option과 함께 node상에서 n에 대한 생성자를 호출합니다.</li>
+          <li>node를 반환합니다</li>
+        </ol>
+        <br>
+        <p>AudioNode를 상속받는 객체 o를 <strong>초기화</strong>한다는 것은, 이 인터페이스의 생성자에 전달된 context와 dict 인자가 주어졌을 때 다음의 절차를 수행한다는 것을 의미합니다.</p>
+        <br>
+        <ol>
+          <li>o의 연관된 BaseAudioContext를 context로 설정합니다.</li>
+          <li>numberOfInputs, numberOfOutputs, channelCount, channelCountMode, channelInterpretation의 값을 기본값으로 설정하는데, 이 기본값은 각 AudioNode의 섹션에 기술된 이 특정한 인터페이스의 기본값입니다.</li>
+          <li>전달된 dict의 각 멤버에 대해 다음의 절차를 수행하는데, k가 멤버의 키고, v가 멤버의 값입니다. 만약 이 절차를 수행하는 중에 어떠한 예외가 발생된다면, 반복을 중단하고 예외를 알고리즘의 호출자(생성자 또는 팩토리 메서드)에게 전파합니다.
+            <ol>
+              <li>만약 k가 이 인터페이스의 AudioParam의 이름이라면, 이 AudioParam의 value 어트리뷰트를 v로 설정합니다.</li>
+              <li>위가 아니고, 만약 k가 이 인터페이스의 어트리뷰트의 이름이라면, 이 어트리뷰트에 연관된 객체를 v로 설정합니다.</li>
+            </ol>
+          </li>
+        </ol>
+        <br>
+        <p>팩토리 메서드의 <strong>연관된 인터페이스</strong>란 이 메서드로부터 반환된 객체의 인터페이스입니다. 인터페이스의 <strong>연관된 option 객체</strong>란 이 인터페이스의 생성자에 전달될 수 있는 option 객체입니다.</p>
         <br>
         <p>AudioNode는 [DOM]에 기술된 대로, EventTarget입니다. 이것이 의미하는 바는 다른 EventTarget들이 이벤트를 받아들이는 것과 같은 방식으로 AudioNode에 이벤트를 전파할 수 있다는 것입니다.</p>
         <br>
@@ -1467,7 +1488,25 @@ enum ChannelCountMode {
 };
         </pre>
         <br>
-        <p>추후 번역</p>
+        <p>노드의 channelCount와 channelInterpretation 값과 함께, ChannelCountMode는, 어떻게 노드에의 입력이 믹스될 지를 제어하는 <strong><i>computedNumberOfChannels</i></strong>를 결정하기 위해 사용됩니다. computedNumberOfChannels는 아래에서 보여지는 것과 같이 결정됩니다. 어떻게 믹싱이 이루어지는지에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
+        <br>
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">열거형 설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"<i>speakers</i>"</td>
+              <td>업믹스 방정식 또는 다운믹스 방정식을 사용합니다. 채널의 수가 기본 스피커 레이아웃의 어느 것과도 일치하지 않는 경우에는, "discrete"로 되돌아갑니다.</td>
+            </tr>
+            <tr>
+              <td>"<i>discrete</i>"</td>
+              <td>채널이 다 떨어질 때까지 채널을 채움으로써 업믹스하고, 그리고 나서 남은 채널들을 0으로 맞춥니다. 가능한 한 많은 채널을 채움으로써 다운믹스하고, 그리고 나서 남은 채널들을 탈락시킵니다.</td>
+            </tr>
+          </tbody>
+        </table>
         <br>
         <pre>
 enum ChannelInterpretation {
@@ -1476,7 +1515,27 @@ enum ChannelInterpretation {
 };
         </pre>
         <br>
-        <p>추후 번역</p>
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">열거형 설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"<i>max</i>"</td>
+              <td>computedNumberOfChannels는 입력의 모든 연결의 채널의 수의 최대입니다. 이 모드에서 channelCount는 무시됩니다.</td>
+            </tr>
+            <tr>
+              <td>"<i>clamped-max</i>"</td>
+              <td>computedNumberOfChannels는 "max"에서처럼 결정되고 주어진 channelCount의 최대 값으로 clamp됩니다.</td>
+            </tr>
+            <tr>
+              <td>"<i>explicit</i>"</td>
+              <td>computedNumberOfChannels는 channelCount에 의해 명시된 값입니다.</td>
+            </tr>
+          </tbody>
+        </table>
         <br>
         <h3>1.5.2. AudioNode 꼬리 시간(tail-time)</h3>
         <p>AudioNode는 꼬리 시간을 가질 수 있습니다. 이는 AudioNode에 아무 소리도 입력되지 않았을 지라도(fed silence), 출력은 소리가 있을 수 있다(non-silent)는 것입니다.</p>
