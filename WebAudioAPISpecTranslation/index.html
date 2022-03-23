@@ -1561,7 +1561,41 @@ enum ChannelInterpretation {
         <p>활발히 처리 중이 아닌 AudioNode는 무음을 내는 채널 하나를 출력합니다.</p>
         <br>
         <h3>1.5.4. 어트리뷰트</h3>
-        <p>추후 번역</p>
+        <dl>
+          <dt><i>channelCount</i> / 자료형: unsigned long</dt>
+          <dd>channelCount는 노드의 입력에 대한 연결을 업믹싱하거나 다운믹싱할 때 사용되는 채널의 수입니다. 특정 노드를 제외하고 기본값은 2이며, 특정 노드의 경우 이 값은 특별히 결정되어 있습니다. 이 어트리뷰트는 입력이 없는 노드에 대해서는 효과를 가지지 않습니다. ⌛ 만약 이 값이 0이나 구현의 최대 채널 수보다 큰 값으로 설정되었다면 구현은 반드시 NotSupportedError 예외를 발생시켜야만 합니다.</dd>
+          <br>
+          <dd>추가적으로, 몇몇 노드는 채널 카운트의 가능한 값에 대해 추가적인 <strong>channelCount 제약 사항</strong>를 가지고 있습니다.
+            <dl>
+              <dt>AudioDestinationNode</dt>
+              <dd>목적지 노드가 AudioContext의 목적지인지 OfflineAudioContext의 목적지인지에 따라 동작이 다릅니다.
+                <dl>
+                  <dt>AudioContext</dt>
+                  <dd>채널 카운트는 반드시 1과 maxChannelCount 사이여야만 합니다. ⌛ 이 범위 바깥의 값을 설정하려는 시도에 대해서는 IndexSizeError가 반드시 발생되어야만 합니다.</dd>
+                  <dt>OfflineAudioContext</dt>
+                  <dd>채널 카운트는 변경될 수 없습니다. ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+                </dl>
+              </dd>
+              <dt>AudioWorkletNode</dt>
+              <dd>§ 1.32.3.3.2 AudioWorkletNodeOptions로 채널 설정하기를 참고하십시오.</dd>
+              <dt>ChannelMergerNode</dt>
+              <dd>채널 카운트는 변경될 수 없고, ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ChannelSplitterNode</dt>
+              <dd>채널 카운트는 변경될 수 없고, ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ConvolverNode</dt>
+              <dd>채널 카운트는 2보다 클 수 없으며, ⌛ 2보다 큰 값으로 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>DynamicsCompressorNode</dt>
+              <dd>채널 카운트는 2보다 클 수 없으며, ⌛ 2보다 큰 값으로 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>PannerNode</dt>
+              <dd>채널 카운트는 2보다 클 수 없으며, ⌛ 2보다 큰 값으로 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ScriptProcessorNode</dt>
+              <dd>채널 카운트는 변경될 수 없고, ⌛ 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>StereoPannerNode</dt>
+              <dd>채널 카운트는 2보다 클 수 없으며, ⌛ 2보다 큰 값으로 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+            </dl>
+            <p>이 어트리뷰트에 대한 더 많은 정보에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
+          </dd>
+        </dl>
         <br>
         <h3>1.5.5. 메서드</h3>
         <p>추후 번역</p>
