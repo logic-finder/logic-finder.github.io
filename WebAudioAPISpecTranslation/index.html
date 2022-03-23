@@ -1544,7 +1544,20 @@ enum ChannelInterpretation {
         <br>
         <h3>1.5.3. AudioNode 생명 주기</h3>
         <p>만약 다음의 조건 중 어느 하나라도 부합한다면, AudioNode는 render quantum 도중에 활발히 처리 중(actively processing)일 수 있습니다.</p>
-        <p>추후 번역</p>
+        <ul>
+          <li>AudioScheduledSourceNode는 적어도 현재 렌더링되는 quantum의 부분을 재생하고 있을 때에만 actively processing입니다.</li>
+          <li>MediaElementAudioSourceNode는 이것의 mediaElement가 적어도 현재 렌더링되는 quantum의 부분을 재생하고 있을 때에만 actively processing입니다.</li>
+          <li>MediaStreamAudioSourceNode 또는 MediaStreamTrackAudioSourceNode는 연관된 MediaStreamTrack 객체가 "live"인 readyState 어트리뷰트, false인 muted 어트리뷰트, 그리고 true인 enabled 어트리뷰트를 가지고 있을 때 actively processing입니다.</li>
+          <li>사이클 안에 있는 DelayNode는 오직 현재 render quantum의 출력 샘플의 절댓값이 2^-126보다 같거나 클 때에만 actively processing입니다.</li>
+          <li>ScriptProcessorNode는 입력 또는 출력이 연결되어 있을 때 actively processing입니다.</li>
+          <li>AudioWorkletNode는 AudioWorkletProcessor의 [[callable process]]가 true를 반환하고 이것의 active source flag가 true이거나 이것의 입력 중 하나에 연결된 AudioNode가 actively processing일 때 actively processing입니다.</li>
+          <li>모든 다른 AudioNode는 이것의 입력 중 하나에 연결된 AudioNode가 actively processing일 때 actively processing을 시작하고, 다른 actively processing인 AudioNode로부터 전달받은 입력이 더 이상 출력에 영향을 미치지 않을 때 actively processing을 멈춥니다.</li>
+        </ul>
+        <br>
+        <div class="note">
+          <p>알림: 이것은 꼬리 시간을 가진 AudioNode를 고려합니다.</p>
+        </div>
+        <br>
         <p>활발히 처리 중이 아닌 AudioNode는 무음을 내는 채널 하나를 출력합니다.</p>
         <br>
         <h3>1.5.4. 어트리뷰트</h3>
