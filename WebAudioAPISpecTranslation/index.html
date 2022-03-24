@@ -1595,6 +1595,30 @@ enum ChannelInterpretation {
             </dl>
             <p>이 어트리뷰트에 대한 더 많은 정보에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
           </dd>
+          <dt><i>channelCountMode</i> / 자료형: ChannelCountMode</dt>
+          <dd>channelCountMode는 노드의 입력에 대한 연결을 업믹싱하거나 다운믹싱할 때 채널들이 카운트되는 방법을 결정합니다. 기본값은 "max"입니다. 이 어트리뷰트는 입력이 없는 노드에 대해서는 효과를 가지지 않습니다.</dd>
+          <br>
+          <dd>추가적으로, 몇몇 노드는 채널 카운트 모드의 가능한 값에 대한 추가적인 <strong>channelCountMode 제약 사항</strong>을 가지고 있습니다.
+            <dl>
+              <dt>AudioDestinationNode</dt>
+              <dd>만약 AudioDestinationNode가 OfflineAudioContext의 목적지 노드라면, 채널 카운트 모드는 변경될 수 없습니다. ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ChannelMergerNode</dt>
+              <dd>채널 카운트 모드는 "explicit"에서 변경될 수 없으며 ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ChannelSplitterNode</dt>
+              <dd>채널 카운트 모드는 "explicit"에서 변경될 수 없으며 ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ConvolverNode</dt>
+              <dd>채널 카운트 모드는 "max"로 설정될 수 없으며, ⌛ 이 값을 "max"로 설정하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>DynamicsCompressorNode</dt>
+              <dd>채널 카운트 모드는 "max"로 설정될 수 없으며, ⌛ 이 값을 "max"로 설정하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>PannerNode</dt>
+              <dd>채널 카운트 모드는 "max"로 설정될 수 없으며, ⌛ 이 값을 "max"로 설정하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>ScriptProcessorNode</dt>
+              <dd>채널 카운트 모드는 "explicit"에서 변경될 수 없으며 ⌛ 이 값을 변경하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+              <dt>StereoPannerNode</dt>
+              <dd>채널 카운트 모드는 "max"로 설정될 수 없으며, ⌛ 이 값을 "max"로 설정하려는 시도에 대해서는 NotSupportedError가 반드시 발생되어야만 합니다.</dd>
+            </dl>
+            <p>이 어트리뷰트에 대한 더 많은 정보에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
+          </dd>
         </dl>
         <br>
         <h3>1.5.5. 메서드</h3>
@@ -2785,7 +2809,7 @@ gain.channelInterpretation = "speakers";
           <img src="img/panner-coord.svg">
           <figcaption><strong>도식 19</strong> AudioListener와 PannerNode 어트리뷰트가 보이는 좌표계를 나타내는 도식</figcaption>
         </figure>
-        <p>렌더링 중에, PannerNode는 방위각(azimuth)과 고도(elevation)를 계산합니다. 이 값들은 구현에 의해 나부적으로 사용되어 공간화 효과를 렌더링합니다. 이 값들이 어떻게 쓰이는지에 대한 자세한 사항에 대해서는 Panning Algorithm 섹션을 참고하세요.</p>
+        <p>렌더링 중에, PannerNode는 방위각(azimuth)과 고도(elevation)를 계산합니다. 이 값들은 구현에 의해 내부적으로 사용되어 공간화 효과를 렌더링합니다. 이 값들이 어떻게 쓰이는지에 대한 자세한 사항에 대해서는 Panning Algorithm 섹션을 참고하세요.</p>
         <br>
         <h2>6.2. 방위각과 고도</h2>
         <p>다음의 알고리즘은 PannerNode에서 방위각과 고도를 계산하기 위해 반드시 사용되어야만 합니다. 구현은 반드시 적절하게 아래의 다양한 AudioParam들이 "a-rate" 인지 "k-rate" 인지 고려해야만 합니다.</p>
