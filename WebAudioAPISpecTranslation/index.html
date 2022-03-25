@@ -330,7 +330,7 @@ interface BaseAudioContext : EventTarget {
           <dt></i>currentTime</i> / 자료형: double / 읽기 전용</dt>
           <dd>currentTime은 컨텍스트의 렌더링 그래프에 의해 가장 최근에 처리된 오디오 블럭의 마지막 sample frame 바로 다음의 샘플 프레임의 시간 (초) 입니다. 만약 컨텍스트의 렌더링 그래프가 아직 오디오 블럭을 처리하지 않았다면, currentTime은 0의 값을 갖습니다.</dd>
           <br>
-          <dd>currentTime의 시간 좌표계에서, 0의 값은 그래프에 의해 처리되는 첫번째 블럭의 첫번째 샘플 프레임과 일치합니다. 이 계(system)에서 경과된 시간은 BaseAudioContext에 의해 생성된 오디오 스트림에서의 경과된 시간과 일치하는데, 이 시간은 이 계의 다른 시계와 동기화되지 않았을 수 있습니다. (OfflineAudioContext의 경우, 스트림이 어떠한 장치에서도 현재 재생되고 있지 않으므로, 실제 시간에 대한 근사치조차도 존재하지 않습니다.</dd>
+          <dd>currentTime의 시간 좌표계에서, 0의 값은 그래프에 의해 처리되는 첫번째 블럭의 첫번째 샘플 프레임과 일치합니다. 이 계(system)에서 경과된 시간은 BaseAudioContext에 의해 생성된 오디오 스트림에서의 경과된 시간과 일치하는데, 이 시간은 이 계의 다른 시계와 동기화되지 않았을 수 있습니다. (OfflineAudioContext의 경우, 스트림이 어떠한 장치에서도 현재 재생되고 있지 않으므로, 실제 시간에 대한 근사치조차도 존재하지 않습니다.)</dd>
           <br>
           <dd>Web Audio API에서의 모든 예정된 시간들은 currentTime의 값에 관련이 있습니다.</dd>
           <br>
@@ -1619,6 +1619,22 @@ enum ChannelInterpretation {
             </dl>
             <p>이 어트리뷰트에 대한 더 많은 정보에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
           </dd>
+          <dt><i>channelInterpretation</i> / 자료형: ChannelInterpretation</dt>
+          <dd>channelInterpretation은 노드의 입력에 연결을 업믹싱하거나 다운믹싱할 때 개개의 채널들이 어떻게 다루어질 것인지를 결정합니다. 기본값은 "speakers"입니다. 이 어트리뷰트는 입력이 없는 노드에 대해서는 효과를 가지지 않습니다.</dd>
+          <br>
+          <dd>추가적으로, 몇몇 노드는 채널 해석의 가능한 값들에 대한 추가적인 <strong>channelInterpretation 제약 사항</strong>을 가지고 있습니다.
+            <dl>
+              <dt>ChannelSplitterNode</dt>
+              <dd>채널 해석은 "discrete"에서 변경될 수 없고 ⌛ 이 값을 변경하려는 시도에 대해서는 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+            </dl>
+            <p>이 어트리뷰트에 대한 더 많은 정보에 대해서는 § 4 채널 업믹싱과 다운믹싱을 참고하십시오.</p>
+          </dd>
+          <dt><i>context</i> / 자료형: BaseAudioContext / 읽기 전용</dt>
+          <dd>이 AudioNode를 소유하고 있는 BaseAudioContext.</dd>
+          <dt><i>numberOfInputs</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>이 AudioNode에 입력되는 입력의 수. <strong>소스 노드</strong>에 대해서, 이 값은 0입니다. 이 어트리뷰트는 많은 AudioNode 유형에 대해 미리 결정되어 있지만, ChannelMergerNode와 AudioWorkletNode같은 몇몇 AudioNode는 가변적인 입력의 수를 가집니다.</dd>
+          <dt><i>numberOfOutputs</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>이 AudioNode에서 나오는 출력의 수. 이 어트리뷰트는 몇몇 AudioNode 유형에 대해 미리 결정되어 있지만, ChannelSplitterNode와 AudioWorkletNode 같은 노드에 대해서 가변적일 수 있습니다.</dd>
         </dl>
         <br>
         <h3>1.5.5. 메서드</h3>
