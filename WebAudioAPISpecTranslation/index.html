@@ -1638,7 +1638,51 @@ enum ChannelInterpretation {
         </dl>
         <br>
         <h3>1.5.5. 메서드</h3>
-        <p>추후 번역</p>
+        <dl>
+          <dt><i>connect(destinationNode, output, input)</i></dt>
+          <dd>하나의 특정한 노드의 주어진 출력과 다른 특정한 노드의 주어진 입력 사이에 오직 하나의 연결만이 있을 수 있습니다. 같은 종점에 대한 다수의 연결은 무시됩니다.</dd>
+          <pre>
+예제 5
+예를 들어,
+nodeA.connect(nodeB);
+nodeA.connect(nodeB);
+위 코드는 아래와 같은 효과를 가집니다.
+nodeA.connect(nodeB);
+          </pre>
+          <dd>이 메서드는 destination AudioNode 객체를 반환합니다.</dd>
+          <table>
+            <caption>AudioNode.connect(destinationNode, output, input) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationNode</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>destination 매개변수는 연결할 AudioNode입니다. 만약 destination 매개변수가 다른 AudioContext를 사용하여 생성된 AudioNode라면, ⌛ InvalidAccessError가 반드시 발생되어야만 합니다. 즉, AudioNode는 AudioContext간에 공유될 수 없습니다. 다수의 AudioNode는 같은 AudioNode에 연결될 수 있으며, 이는 채널 업믹싱과 다운믹싱 섹션에 기술되어 있습니다.</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>output 매개변수는 어떤 AudioNode 출력이 연결될지를 기술하는 인덱스입니다. 만약 이 매개변수가 out-of-bounds라면, ⌛ IndexSizeError 예외가 반드시 발생되어야만 합니다. 하나의 AudioNode 출력을 다수의 connect() 호출과 함께 하나 이상의 입력에 연결하는 것은 가능합니다. 따라서, "fan-out"이 지원됩니다.</td>
+            </tr>
+            <tr>
+              <td>input</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>input 매개변수는 destination AudioNode의 어떤 입력에 연결될지를 기술하는 인덱스입니다. 만약 이 매개변수가 out-of-bounds라면, ⌛ IndexSizeError 예외가 반드시 발생되어야만 합니다. cycle을 생성하는 다른 AudioNode에 AudioNode를 연결하는 것은 가능합니다. 즉, AudioNode는 다른 AudioNode에 연결될 수 있는데, 이는 차례로 연결되어 결국 첫번째 AudioNode의 입력 혹은 AudioParam에 연결됩니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: AudioNode</dd>
+        </dl>
         <br>
         <h3>1.5.6. AudioNodeOptions</h3>
         <p>추후 번역</p>
