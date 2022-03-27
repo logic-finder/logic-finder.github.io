@@ -1682,6 +1682,94 @@ nodeA.connect(nodeB);
             </tr>
           </table>
           <dd>반환 유형: AudioNode</dd>
+          <br>
+          <dt><i>connect(destinationParam, output)</i></dt>
+          <dd>AudioNode를 AudioParam에 연결하고, a-rate 시그널로 파라미터 값을 제어합니다.</dd>
+          <dd>다수의 connect() 호출과 함께 하나 이상의 AudioParam에 AudioNode 출력을 연결하는 것은 가능합니다. 따라서, "fan-out"이 지원됩니다.</dd>
+          <dd>다수의 connect() 호출과 함께 하나의 AudioParam에 하나 이상의 AudioNode 출력을 연결하는 것은 가능합니다. 따라서, "fan-in"이 지원됩니다.</dd>
+          <dd>AudioParam은 이것에 연결된 AudioNode 출력으로부터의 렌더링된 오디오 데이터를 취해 이것이 이미 모노가 아니라면 다운믹싱함으로써 이것을 모노로 변환하고, 그러한 다른 출력과 함께 믹스하고 최종적으로 내재적인 파라미터 값으로 믹스할 것이며 (AudioParam이 통상적으로 오디오 연결 없이 가지는 값), 이는 이 파라미터에 예정된 타임라인 변화를 포함합니다.</dd>
+          <dd>모노로 다운믹싱하는 것은 channelCount = 1, channelCountMode = "explicit", channelInterpretation = "speakers"를 가진 AudioNode을 위해 다운믹싱하는 것과 같습니다.</dd>
+          <dd>하나의 특정한 노드의 주어진 출력과 특정한 AudioParam 사이에는 오직 하나의 연결만이 있을 수 있습니다. 같은 종점을 가진 다수의 연결은 무시됩니다.</dd>
+          <pre>
+예제 6
+예를 들어,
+nodeA.connect(param);
+nodeA.connect(param);
+위 코드는 아래와 같은 효과를 가집니다.
+nodeA.connect(param);
+          </pre>
+          <table>
+            <caption>AudioNode.connect(destinationParam, output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationParam</td>
+              <td>AudioParam</td>
+              <td>x</td>
+              <td>x</td>
+              <td>destination 매개변수는 연결할 AudioParam입니다. 이 메서드는 destination AudioParam 객체를 반환하지 않습니다. ⌛ 만약 destinationParam이 이 메서드가 호출된 AudioNode를 생성한 BaseAudioContext와 다른 BaseAudioContext에 속한 AudioNode에 속한다면, InvalidAccessError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>v</td>
+              <td>output 매개변수는 AudioNode의 어떤 출력이 연결될지를 기술하는 인덱스입니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect()</i></dt>
+          <dd>AudioNode로부터 나가는 모든 연결을 해제합니다.</dd>
+          <dd>매개변수 없음</dd>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect(output)</i></dt>
+          <dd>AudioNode의 하나의 출력을 이것이 연결된 다른 AudioNode나 AudioParam으로부터 해제합니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>이 매개변수는 AudioNode의 어떤 출력이 해제될지를 기술하는 인덱스입니다. 이것은 주어진 출력으로부터 나가는 모든 연결을 해제합니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect(destinationNode)</i></dt>
+          <dd>특정한 목적지 AudioNode로 가는 AudioNode의 모든 출력을 해제합니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationNode) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationNode</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>destinationNode 매개변수는 해제할 AudioNode입니다. 이것은 주어진 destinationNode로 나가는 모든 연결을 해제합니다. ⌛ 만약 destinationNode와의 연결이 없다면, InvalidAccessError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
         </dl>
         <br>
         <h3>1.5.6. AudioNodeOptions</h3>
