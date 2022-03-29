@@ -1770,6 +1770,117 @@ nodeA.connect(param);
             </tr>
           </table>
           <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect(destinationNode, output)</i></dt>
+          <dd>목적지 AudioNode의 모든 입력으로부터 AudioNode의 특정한 출력을 해제합니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationNode, output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationNode</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>destinationNode 매개변수는 해제할 AudioNode입니다. ⌛ 만약 주어진 output으로부터 destinationNode에 연결이 없다면, InvalidAccessError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>output 매개변수는 AudioNode의 어떤 출력을 해제할지를 기술하는 인덱스입니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect(destinationNode, output, input)</i></dt>
+          <dd>목적지 AudioNode의 특정한 입력으로부터 AudioNode의 특정한 출력을 해제합니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationNode, output, input) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationNode</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>destinationNode 매개변수는 해제할 AudioNode입니다. ⌛ 만약 주어진 입력으로부터 주어진 출력에 대해 destinationNode에 연결이 없다면, InvalidAccessError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>output 매개변수는 AudioNode의 어떤 출력을 해제할지를 기술하는 인덱스입니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>input</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>input 매개변수는 목적지 AudioNode의 어떤 입력을 해제할지를 기술하는 인덱스입니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
+          <dt><i>disconnect(destinationParam)</i></dt>
+          <dd>특정한 목적지 AudioParm으로 가는 AudioNode의 모든 출력을 해제합니다. 이 동작이 취해지면 계산된(computed) 파라미터 값에 대한 이 AudioNode의 기여는 0이 됩니다. 내재적인 파라미터 값은 이 동작에 의해 영향받지 않습니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationParam) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationParam</td>
+              <td>AudioParam</td>
+              <td>x</td>
+              <td>x</td>
+              <td>destinationParam 매개변수는 해제할 AudioParam입니다. ⌛ 만약 destinationParam에 연결이 없다면, InvalidAccessError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
+          <br>
+          <dt><i>disconnect(destinationParam, output)</i></dt>
+          <dd>특정한 목적지 AudioParam으로부터 AudioNode의 특정한 출력을 해제합니다. 이 동작이 취해지면 계산된(computed) 파라미터 값에 대한 이 AudioNode의 기여는 0이 됩니다. 내재적인 파라미터 값은 이 동작에 의해 영향받지 않습니다.</dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationParam, output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>destinationParam</td>
+              <td>AudioParam</td>
+              <td>x</td>
+              <td>x</td>
+              <td>destinationParam 매개변수는 해제할 AudioParam입니다. ⌛ 만약 destinationParam에 연결이 없다면, InvalidAccessError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>output</td>
+              <td>unsigned long</td>
+              <td>x</td>
+              <td>x</td>
+              <td>output 매개변수는 AudioNode의 어떤 출력을 해제할지를 기술하는 인덱스입니다. ⌛ 만약 이 매개변수가 out-of-bounds라면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+          <dd>반환 유형: undefined</dd>
         </dl>
         <br>
         <h3>1.5.6. AudioNodeOptions</h3>
