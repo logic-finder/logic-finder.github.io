@@ -1933,8 +1933,8 @@ dictionary AudioNodeOptions {
         <ul>
           <li>자동화 이벤트 시간은 일반적인 샘플 레이트에 관하여 양자화되지 않습니다. 곡선과 경사를 결정하는 공식은 이벤트를 예정할 때 주어진 정확한 수치적 시간에 적용됩니다.</li>
           <li>만약 이 이벤트들 중 하나가 이미 하나 이상의 이벤트가 있는 시간에 추가되었다면, 이 이벤트는 그 이벤트들 이후에 리스트에 배치될 것이지만, 시간이 그 이벤트 이후에 있는 이벤트 전입니다.</li>
-          <li>만약 setValueCurveAtTime()이 시간 T와 기간 D로 호출되고 T보다 엄격하게 큰 시간을 가지지만, T+D보다는 엄격히 작은 어떠한 이벤트가 있다면, NotSupportedError 예외가 반드시 발생되어야 합니다. 요컨대, 다른 이벤트를 포함하고 있는 시간 기간 동안에 value curve를 예정하는 것은 괜찮지 않지만, 다른 이벤트의 시간에 정확히 value curve를 예정하는 것은 괜찮습니다.</li>
-          <li>유사하게 만약 [T, T+D)에 포함된 시간에 자동화 메서드가 호출되었다면 NotSupportedError가 반드시 발생되어야만 합니다 (T는 curve의 시간이고 D는 기간임).</li>
+          <li>⌛ 만약 setValueCurveAtTime()이 시간 T와 기간 D로 호출되고 T보다 엄격하게 큰 시간을 가지지만, T+D보다는 엄격히 작은 어떠한 이벤트가 있다면, NotSupportedError 예외가 반드시 발생되어야 합니다. 요컨대, 다른 이벤트를 포함하고 있는 시간 기간 동안에 value curve를 예정하는 것은 괜찮지 않지만, 다른 이벤트의 시간에 정확히 value curve를 예정하는 것은 괜찮습니다.</li>
+          <li>⌛ 유사하게 만약 [T, T+D)에 포함된 시간에 자동화 메서드가 호출되었다면 NotSupportedError가 반드시 발생되어야만 합니다 (T는 curve의 시간이고 D는 기간임).</li>
         </ul>
         <br>
         <div class="note">
@@ -1990,6 +1990,35 @@ interface AudioParam {
 };
         </pre>
         <h3>1.6.1. 어트리뷰트</h3>
+        <dl>
+          <dt><i>automationRate</i> / 자료형: AutomationRate</dt>
+          <dd>AudioParam의 자동화율. 기본값은 실제 AudioParam에 따라 다릅니다. 기본값에 대해선 각 AudioParam의 설명을 참고하십시오.</dd>
+          <dd>몇몇 노드는 다음과 같이 추가적인 <strong><i>자동화율 제약조건</i></strong>이 있습니다.
+            <dl>
+              <dt>AudioBufferSourceNode</dt>
+              <dd>playbackRate와 detune AudioParam은 반드시 "k-rate"여야만 합니다. ⌛ 만약 이 비율이 "a-rate"로 변경된다면 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>DynamicsCompressorNode</dt>
+              <dd>threshold, knee, ratio, attack, release AudioParam은 반드시 "k-rate"여야만 합니다. ⌛ 만약 이 비율이 "a-rate"로 변경된다면 InvalidStateError가 반드시 발생되어야만 합니다.</dd>
+              <dt>PannerNode</dt>
+              <dd>만약 panningModel이 "HRTF"라면, PannerNode의 모든 AudioParam의 automationRate를 설정하는 것은 무시됩니다. 이와 같이, AudioListener의 모든 AudioParam의 automationRate를 설정하는 것은 무시됩니다. 이 경우, AudioParam은 automationRate가 "k-rate"로 설정된 것처럼 행동합니다.</dd>
+            </dl>
+          </dd>
+          <br>
+          <dt><i>defaultValue</i> / 자료형: float / 읽기 전용</dt>
+          <dd>value 어트리뷰트의 초기값</dd>
+          <br>
+          <dt><i>maxValue</i> / 자료형: float / 읽기 전용</dt>
+          <dd>파라미터가 취할 수 있는 명목상의 최대값. minValue와 함께, 이것은 이 파라미터의 명목상의 범위를 형성합니다.</dd>
+          <br>
+          <dt><i>minValue</i> / 자료형: float / 읽기 전용</dt>
+          <dd>파라미터가 취할 수 있는 명목상의 최소값. maxValue와 함께, 이것은 이 파라미터의 명목상의 범위를 형성합니다.</dd>
+          <br>
+          <dt><i>value</i> / 자료형: float</dt>
+          <dd>파라미터의 부동소수점 값. 이 어트리뷰트는 defaultValue로 초기화됩니다.</dd>
+          <dd>이 어트리뷰트를 get하는 것은 [[current value]] 슬롯의 내용을 반환합니다. 반환되는 값의 알고리즘에 대해서는 § 1.6.3. 값의 계산을 참고하십시오.</dd>
+          <dd>이 어트리뷰트를 set하는 것은 요청된 값을 [[current value]] 슬롯에 할당하고, 현재 AudioContext의 currentTime과 [[current value]] 와 함께 setValueAtTime() 메서드를 호출하는 효과를 가지고 있습니다. setValueAtTime()에 의해 발생되는 예외들이 또한 이 어트리뷰트를 set함에 의해 발생됩니다.</dd>
+        </dl>
+        <br>
         <h3>1.6.2. 메서드</h3>
         <h3>1.6.3. 값의 계산</h3>
         <br>
