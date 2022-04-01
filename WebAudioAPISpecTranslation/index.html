@@ -2020,6 +2020,77 @@ interface AudioParam {
         </dl>
         <br>
         <h3>1.6.2. 메서드</h3>
+        <dl>
+          <dt><i>cancelAndHoldAtTime(cancelTime)</i></dt>
+          <dd>이 메서드는 cancelTime과 같거나 큰 시간에서의 모든 예정된 파라미터 변화를 취소한다는 점에서 cancelScheduledValues()와 유사합니다. 그러나, 추가적으로, cancelTime에 일어날 자동화 값이 다른 자동화 이벤트가 시작될 때까지 모든 미래 시간에 대해 전파됩니다.</dd>
+          <br>
+          <dd>자동화가 작동 중이고 cancelAndHoldAtTime()을 호출한 후에, cancelTime이 도달하기 전의 시간에서 자동화가 시작될 수 있을 때 cancelAndHoldAtTime()의 앞에서 타임라인의 동작은 꽤 복잡합니다. 그러므로 cancelAndHoldAtTime()의 동작은 다음의 알고리즘으로 명시됩니다.</dd>
+          <br>
+          <dd>t<sub>c</sub>를 cancelTime의 값이라고 하자.</dd>
+          <ol>
+            <li>E<sub>1</sub>을 시간 t<sub>1</sub>에서의 이벤트라고 하자. 이 때, t<sub>1</sub>은 t<sub>1</sub>&lt;=t<sub>c</sub>을 만족하는 가장 큰 수이다.</li>
+            <li>E<sub>2</sub>을 시간 t<sub>2</sub>에서의 이벤트라고 하자. 이 때, t<sub>2</sub>는 t<sub>c</sub>&lt;=t<sub>2</sub>을 만족하는 가장 작은 수이다.</li>
+            <li>만약 E<sub>2</sub>가 존재한다면
+              <ol>
+                <li>만약 E<sub>2</sub>이 선형 혹은 지수 ramp라면,
+                  <ol>
+                    <li>시간 t<sub>c</sub>에서의 원래 ramp의 값이었을 end value를 가지는, 시간 t<sub>c</sub>에서 끝나는 동일한 종류의 ramp로 E<sub>2</sub>를 효과적으로 rewrite한다.
+                    </li>
+                    <img src="img/cancel-linear.svg" width=500>
+                    <li>단계 5로 간다.</li>
+                  </ol>
+                </li>
+                <li>그렇지 않으면, 단계 4로 간다.</li>
+              </ol>
+            </li>
+            <li>만약 E<sub>1</sub>이 존재한다면
+            <ol>
+              <li>만약 E<sub>1</sub>이 setTarget 이벤트라면
+                <ol>
+                  <li>묵시적으로, setTarget이 시간 t<sub>c</sub>에서 가졌을 값과 함께, 시간 t<sub>c</sub>에 setValueAtTime 이벤트를 삽입한다.</li>
+                  <img src="img/cancel-setTarget.svg" width=500>
+                  <li>단계 5로 간다.</li>
+                </ol>
+              </li>
+              <li>만약 E<sub>1</sub>이 start time t<sub>3</sub>과 duration d를 가지는 setValueCurve라면
+                <ol>
+                  <li>만약 t<sub>c</sub>&gt;t<sub>3</sub>+d라면, 단계 5로 간다.</li>
+                  <li>그렇지 않으면,
+                    <ol>
+                      <li>효과적으로 이 이벤트를 start time t3과 새로운 duration tc-t3을 가지는 setValueCurve 이벤트로 대체한다. 그러나, 이것은 진정한 대체가 아니다. 이 자동화는 반드시 원본과 같은 출력을 생성하는 것에 신경을 써야만 하고, 다른 duration을 사용해 계산된 것이 아니다. (이것은 value curve의 샘플링을 조금 다른 방식으로 유발할 것이며, 다른 결과를 생성할 것이다.)</li>
+                      <img src="img/cancel-setValueCurve.svg" width="500">
+                      <li>단계 5로 간다.</li>
+                    </ol>
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>t<sub>c</sub>보다 큰 시간을 가지는 모든 이벤트를 제거한다.</li>
+        </ol>
+        <br>
+        <dd>만약 어떤 이벤트도 추가되지 않았다면, cancelAndHoldAtTime() 이후의 자동화 값은 원래 타임라인이 시간 t<sub>c</sub>에서 가졌을 상수 값입니다.
+          <table>
+            <caption>AudioNode.disconnect(destinationParam, output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>cancelTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>x</td>
+              <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
+            </tr>
+          </table>
+        </dd>
+        <br>
+        <dd>반환 유형: AudioParam</dd>
+        </dl>
         <h3>1.6.3. 값의 계산</h3>
         <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
