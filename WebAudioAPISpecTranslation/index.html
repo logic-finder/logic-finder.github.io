@@ -2071,7 +2071,7 @@ interface AudioParam {
         <br>
         <dd>만약 어떤 이벤트도 추가되지 않았다면, cancelAndHoldAtTime() 이후의 자동화 값은 원래 타임라인이 시간 t<sub>c</sub>에서 가졌을 상수 값입니다.
           <table>
-            <caption>AudioNode.disconnect(destinationParam, output) 메서드의 인자</caption>
+            <caption>AudioParam.cancelAndHoldAtTime() 메서드의 인자</caption>
             <tr>
               <td>매개변수</td>
               <td>자료형</td>
@@ -2098,7 +2098,7 @@ interface AudioParam {
         <br>
         <dd>
           <table>
-            <caption>AudioNode.disconnect(destinationParam, output) 메서드의 인자</caption>
+            <caption>AudioParam.cancelScheduledValues() 메서드의 인자</caption>
             <tr>
               <td>매개변수</td>
               <td>자료형</td>
@@ -2112,6 +2112,52 @@ interface AudioParam {
               <td>x</td>
               <td>x</td>
               <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
+            </tr>
+          </table>
+        </dd>
+        <br>
+        <dd>반환 유형: AudioParam</dd>
+        <br>
+        <dt><i>exponentialRampToValueAtTime(value, endTime)</i></dt>
+        <dd>이전에 예정된 파라미터 값으로부터 주어진 값으로 파라미터 값에 지수적으로 연속적인 변화를 예정합니다. 필터 주파수와 재생 속도를 나타내는 파라미터는 지수적으로 변화할 때 가장 좋은데, 왜냐하면 인간이 소리를 인지하는 방식 때문입니다.</dd>
+        <br>
+        <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (T<sub>0</sub>은 이전 이벤트의 시간, T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수).</dd>
+        <br>
+        <dd>v(t) = V<sub>0</sub>(V<sub>1</sub>/V<sub>0</sub>)^((t - T<sub>0</sub>) / (T<sub>1</sub> - T<sub>0</sub>))</dd>
+        <br>
+        <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수입니다. 만약 V<sub>0</sub>과 V<sub>1</sub>이 반대되는 부호를 가지고 있거나 V<sub>0</sub>이 0이라면, T<sub>0</sub>&lt;=t&lt;T<sub>1</sub>에 대해 v(t) = V<sub>0</sub>입니다.</dd>
+        <br>
+        <dd>이것은 또한 0으로의 지수적 ramp는 가능하지 않음을 암시합니다. 훌륭한 근사가 적절하게 선택된 시간 상수와 함께 setTargetAtTime()을 사용해 달성될 수 있습니다.</dd>
+        <br>
+        <dd>만약 이 <i>ExponentialRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면, t&gt=T<sub>1</sub>에 대해, v(t) = V<sub>1</sub>입니다.</dd>
+        <br>
+        <dd>만약 이 이벤트에 앞서는 이벤트가 없다면, 지수적 ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 동작하는데 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 exponentialRampToValueAtTime()이 호출된 컨텍스트의 currentTime입니다.</dd>
+        <br>
+        <dd>만약 앞서는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 현재 시간과 SetTarget 자동화의 값으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 방금 전의 값입니다. 이 경우, ExponentialRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작되었다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
+        <br>
+        <dd>
+          <table>
+            <caption>AudioParam.exponentialRampToValueAtTime() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>value</td>
+              <td>float</td>
+              <td>x</td>
+              <td>x</td>
+              <td>주어진 시간에 파라미터가 지수적으로 ramp할 값. ⌛ 만약 이 값이 0과 같다면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+            <tr>
+              <td>endTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>x</td>
+              <td>지수적 ramp가 끝나는 시간이며 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamped됩니다.</td>
             </tr>
           </table>
         </dd>
