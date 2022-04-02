@@ -2090,7 +2090,35 @@ interface AudioParam {
         </dd>
         <br>
         <dd>반환 유형: AudioParam</dd>
+        <br>
+        <dt><i>cancelScheduledValues(cancelTime)</i></dt>
+        <dd>cancelTime보다 크거나 같은 시간에서의 모든 예정된 파라미터 변화를 취소합니다. 예정된 파라미터 변화를 취소한다는 것은 이벤트 리스트에서 예정된 이벤트를 제거한다는 것을 의미합니다. 자동화 이벤트 시간이 cancelTime보다 작은 active automation 또한 취소되고, 그러한 취소는 불연속을 유발할 수도 있는데 왜냐하면 (그러한 자동화 전으로부터의) 원래 값이 즉시 복구되기 때문입니다. cancelAndHoldAtTime()에 의해 예정된 hold value 또한 만약 hold time이 cancelTime 이후에 발생한다면 제거됩니다.</dd>
+        <br>
+        <dd>setValueCurveAtTime()에 대해서, T<sub>0</sub>과 T<sub>D</sub>를 각각 이 이벤트에 대해서, 해당하는 startTime과 duration이라고 합시다. 그렇다면 만약 cancelTime이 [T<sub>0</sub>, T<sub>0</sub>+T<sub>D</sub>]의 범위 내에 있다면, 이 이벤트는 타임라인에서 제거됩니다.</dd>
+        <br>
+        <dd>
+          <table>
+            <caption>AudioNode.disconnect(destinationParam, output) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>cancelTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>x</td>
+              <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
+            </tr>
+          </table>
+        </dd>
+        <br>
+        <dd>반환 유형: AudioParam</dd>
         </dl>
+        <br>
         <h3>1.6.3. 값의 계산</h3>
         <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
