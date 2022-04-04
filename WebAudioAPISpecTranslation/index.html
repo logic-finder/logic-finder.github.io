@@ -2163,6 +2163,51 @@ interface AudioParam {
         </dd>
         <br>
         <dd>반환 유형: AudioParam</dd>
+        <br>
+        <dt><i>linearRampToValueAtTime(value, endTime)</i></dt>
+        <dd>사전에 예정된 파라미터 값에서 주어진 값으로 파라미터 값에 선형으로 연속적인 변화를 예정합니다.</dd>
+        <br>
+        <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (여기서 T<sub>0</sub>은 이전 이벤트의 시간이고 T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수임).</dd>
+        <br>
+        <dd>v(t)=V<sub>0</sub>+[(V<sub>1</sub>-V<sub>0</sub>)(t-T<sub>0</sub>)]/(T<sub>1</sub>-T<sub>0</sub>)</dd>
+        <br>
+        <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수의 값입니다.</dd>
+        <br>
+        <dd>만약 이 <i>LinearRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면 t&gt;=T<sub>1</sub>에 대해서, v(t)=V<sub>1</sub>입니다.</dd>
+        <br>
+        <dd>만약 이 이벤트에 선행하는 이벤트가 없다면, linear ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 행동하는데, 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 linearRampToValueAtTime()이 호출된 시간에서의 컨텍스트 currentTime입니다.</dd>
+        <br>
+        <dd>만약 선행하는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 SetTarget 자동화의 값과 현재 시간으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 바로 전의 값입니다. 이 경우, LinearRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작됐다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 시간 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
+        <br>
+        <dd>
+          <table>
+            <caption>AudioParam.linearRampToValueAtTime() 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>value</td>
+              <td>float</td>
+              <td>x</td>
+              <td>x</td>
+              <td>주어진 시간에 파라미터가 선형적으로 ramp 할 값.</td>
+            </tr>
+            <tr>
+              <td>endTime</td>
+              <td>double</td>
+              <td>x</td>
+              <td>x</td>
+              <td>자동화가 끝나는 시간으로 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
+            </tr>
+          </table>
+        </dd>
+        <br>
+        <dd>반환 유형: AudioParam</dd>
+        <br>
         </dl>
         <br>
         <h3>1.6.3. 값의 계산</h3>
