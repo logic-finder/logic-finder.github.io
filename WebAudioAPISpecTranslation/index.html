@@ -2044,216 +2044,259 @@ interface AudioParam {
               </ol>
             </li>
             <li>만약 E<sub>1</sub>이 존재한다면
-            <ol>
-              <li>만약 E<sub>1</sub>이 setTarget 이벤트라면
-                <ol>
-                  <li>묵시적으로, setTarget이 시간 t<sub>c</sub>에서 가졌을 값과 함께, 시간 t<sub>c</sub>에 setValueAtTime 이벤트를 삽입한다.</li>
-                  <img src="img/cancel-setTarget.svg" width=500>
-                  <li>단계 5로 간다.</li>
-                </ol>
-              </li>
-              <li>만약 E<sub>1</sub>이 start time t<sub>3</sub>과 duration d를 가지는 setValueCurve라면
-                <ol>
-                  <li>만약 t<sub>c</sub>&gt;t<sub>3</sub>+d라면, 단계 5로 간다.</li>
-                  <li>그렇지 않으면,
-                    <ol>
-                      <li>효과적으로 이 이벤트를 start time t3과 새로운 duration tc-t3을 가지는 setValueCurve 이벤트로 대체한다. 그러나, 이것은 진정한 대체가 아니다. 이 자동화는 반드시 원본과 같은 출력을 생성하는 것에 신경을 써야만 하고, 다른 duration을 사용해 계산된 것이 아니다. (이것은 value curve의 샘플링을 조금 다른 방식으로 유발할 것이며, 다른 결과를 생성할 것이다.)</li>
-                      <img src="img/cancel-setValueCurve.svg" width="500">
-                      <li>단계 5로 간다.</li>
-                    </ol>
-                  </li>
-                </ol>
-              </li>
-            </ol>
-          </li>
-          <li>t<sub>c</sub>보다 큰 시간을 가지는 모든 이벤트를 제거한다.</li>
-        </ol>
-        <br>
-        <dd>만약 어떤 이벤트도 추가되지 않았다면, cancelAndHoldAtTime() 이후의 자동화 값은 원래 타임라인이 시간 t<sub>c</sub>에서 가졌을 상수 값입니다.
-          <table>
-            <caption>AudioParam.cancelAndHoldAtTime() 메서드의 인자</caption>
-            <tr>
-              <td>매개변수</td>
-              <td>자료형</td>
-              <td>nullable</td>
-              <td>optional</td>
-              <td>설명</td>
-            </tr>
-            <tr>
-              <td>cancelTime</td>
-              <td>double</td>
-              <td>x</td>
-              <td>x</td>
-              <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
-            </tr>
-          </table>
-        </dd>
-        <br>
-        <dd>반환 유형: AudioParam</dd>
-        <br>
-        <dt><i>cancelScheduledValues(cancelTime)</i></dt>
-        <dd>cancelTime보다 크거나 같은 시간에서의 모든 예정된 파라미터 변화를 취소합니다. 예정된 파라미터 변화를 취소한다는 것은 이벤트 리스트에서 예정된 이벤트를 제거한다는 것을 의미합니다. 자동화 이벤트 시간이 cancelTime보다 작은 active automation 또한 취소되고, 그러한 취소는 불연속을 유발할 수도 있는데 왜냐하면 (그러한 자동화 전으로부터의) 원래 값이 즉시 복구되기 때문입니다. cancelAndHoldAtTime()에 의해 예정된 hold value 또한 만약 hold time이 cancelTime 이후에 발생한다면 제거됩니다.</dd>
-        <br>
-        <dd>setValueCurveAtTime()에 대해서, T<sub>0</sub>과 T<sub>D</sub>를 각각 이 이벤트에 대해서, 해당하는 startTime과 duration이라고 합시다. 그렇다면 만약 cancelTime이 [T<sub>0</sub>, T<sub>0</sub>+T<sub>D</sub>]의 범위 내에 있다면, 이 이벤트는 타임라인에서 제거됩니다.</dd>
-        <br>
-        <dd>
-          <table>
-            <caption>AudioParam.cancelScheduledValues() 메서드의 인자</caption>
-            <tr>
-              <td>매개변수</td>
-              <td>자료형</td>
-              <td>nullable</td>
-              <td>optional</td>
-              <td>설명</td>
-            </tr>
-            <tr>
-              <td>cancelTime</td>
-              <td>double</td>
-              <td>x</td>
-              <td>x</td>
-              <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
-            </tr>
-          </table>
-        </dd>
-        <br>
-        <dd>반환 유형: AudioParam</dd>
-        <br>
-        <dt><i>exponentialRampToValueAtTime(value, endTime)</i></dt>
-        <dd>이전에 예정된 파라미터 값으로부터 주어진 값으로 파라미터 값에 지수적으로 연속적인 변화를 예정합니다. 필터 주파수와 재생 속도를 나타내는 파라미터는 지수적으로 변화할 때 가장 좋은데, 왜냐하면 인간이 소리를 인지하는 방식 때문입니다.</dd>
-        <br>
-        <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (T<sub>0</sub>은 이전 이벤트의 시간, T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수).</dd>
-        <br>
-        <dd>v(t) = V<sub>0</sub>(V<sub>1</sub>/V<sub>0</sub>)^((t - T<sub>0</sub>) / (T<sub>1</sub> - T<sub>0</sub>))</dd>
-        <br>
-        <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수입니다. 만약 V<sub>0</sub>과 V<sub>1</sub>이 반대되는 부호를 가지고 있거나 V<sub>0</sub>이 0이라면, T<sub>0</sub>&lt;=t&lt;T<sub>1</sub>에 대해 v(t) = V<sub>0</sub>입니다.</dd>
-        <br>
-        <dd>이것은 또한 0으로의 지수적 ramp는 가능하지 않음을 암시합니다. 훌륭한 근사가 적절하게 선택된 시간 상수와 함께 setTargetAtTime()을 사용해 달성될 수 있습니다.</dd>
-        <br>
-        <dd>만약 이 <i>ExponentialRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면, t&gt=T<sub>1</sub>에 대해, v(t) = V<sub>1</sub>입니다.</dd>
-        <br>
-        <dd>만약 이 이벤트에 앞서는 이벤트가 없다면, 지수적 ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 동작하는데 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 exponentialRampToValueAtTime()이 호출된 컨텍스트의 currentTime입니다.</dd>
-        <br>
-        <dd>만약 앞서는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 현재 시간과 SetTarget 자동화의 값으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 방금 전의 값입니다. 이 경우, ExponentialRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작되었다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
-        <br>
-        <dd>
-          <table>
-            <caption>AudioParam.exponentialRampToValueAtTime() 메서드의 인자</caption>
-            <tr>
-              <td>매개변수</td>
-              <td>자료형</td>
-              <td>nullable</td>
-              <td>optional</td>
-              <td>설명</td>
-            </tr>
-            <tr>
-              <td>value</td>
-              <td>float</td>
-              <td>x</td>
-              <td>x</td>
-              <td>주어진 시간에 파라미터가 지수적으로 ramp할 값. ⌛ 만약 이 값이 0과 같다면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
-            </tr>
-            <tr>
-              <td>endTime</td>
-              <td>double</td>
-              <td>x</td>
-              <td>x</td>
-              <td>지수적 ramp가 끝나는 시간이며 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamped됩니다.</td>
-            </tr>
-          </table>
-        </dd>
-        <br>
-        <dd>반환 유형: AudioParam</dd>
-        <br>
-        <dt><i>linearRampToValueAtTime(value, endTime)</i></dt>
-        <dd>사전에 예정된 파라미터 값에서 주어진 값으로 파라미터 값에 선형으로 연속적인 변화를 예정합니다.</dd>
-        <br>
-        <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (여기서 T<sub>0</sub>은 이전 이벤트의 시간이고 T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수임).</dd>
-        <br>
-        <dd>v(t)=V<sub>0</sub>+[(V<sub>1</sub>-V<sub>0</sub>)(t-T<sub>0</sub>)]/(T<sub>1</sub>-T<sub>0</sub>)</dd>
-        <br>
-        <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수의 값입니다.</dd>
-        <br>
-        <dd>만약 이 <i>LinearRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면 t&gt;=T<sub>1</sub>에 대해서, v(t)=V<sub>1</sub>입니다.</dd>
-        <br>
-        <dd>만약 이 이벤트에 선행하는 이벤트가 없다면, linear ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 행동하는데, 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 linearRampToValueAtTime()이 호출된 시간에서의 컨텍스트 currentTime입니다.</dd>
-        <br>
-        <dd>만약 선행하는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 SetTarget 자동화의 값과 현재 시간으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 바로 전의 값입니다. 이 경우, LinearRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작됐다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 시간 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
-        <br>
-        <dd>
-          <table>
-            <caption>AudioParam.linearRampToValueAtTime() 메서드의 인자</caption>
-            <tr>
-              <td>매개변수</td>
-              <td>자료형</td>
-              <td>nullable</td>
-              <td>optional</td>
-              <td>설명</td>
-            </tr>
-            <tr>
-              <td>value</td>
-              <td>float</td>
-              <td>x</td>
-              <td>x</td>
-              <td>주어진 시간에 파라미터가 선형적으로 ramp 할 값.</td>
-            </tr>
-            <tr>
-              <td>endTime</td>
-              <td>double</td>
-              <td>x</td>
-              <td>x</td>
-              <td>자동화가 끝나는 시간으로 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
-            </tr>
-          </table>
-        </dd>
-        <br>
-        <dd>반환 유형: AudioParam</dd>
-        <br>
-        <dt><i>setTargetAtTime(target, startTime, timeConstant)</i></dt>
-        <dd>주어진 시간 상수를 가지는 비율로 주어진 시간에 목표 값으로의 지수적 접근을 시작합니다. 다른 사용 가운데서, 이것은 ADSR 엔벨로프의 "decay"와 "release" 부분을 구현하는 데 유용합니다. 파라미터 값이 주어진 시간에 목표 값으로 즉시 변화하지 않고, 대신 목표 값으로 서서히 변화한다는 점에 주의하십시오.</dd>
-        <br>
-        <dd>시간 구간 T<sub>0</sub>= t 동안 (T<sub>0</sub>은 startTime 매개변수)</dd>
-        <br>
-        <dd>v(t)=V<sub>1</sub>+(V<sub>0</sub>-V<sub>1</sub>)e^(-(t-T<sub>0</sub>)/τ)</dd>
-        <br>
-        <dd>여기서 V<sub>0</sub>은 T<sub>0</sub>(startTime 매개변수)에서의 초기값([[current value]] 어트리뷰트)이고, V<sub>1</sub>은 target 매개변수와 같으며, τ는 timeConstant 매개변수입니다.</dd>
-        <br>
-        <dd>만약 LinearRampToValue나 ExponentialRampToValue 이벤트가 이 이벤트의 뒤라면, 동작은 linearRampToValueAtTime() 또는 ExponentialRampToVAlueAtTime()에 각각 기술되어 있습니다. 다른 모든 이벤트에 대해서, SetTarget 이벤트는 다음 이벤트의 시간에 끝납니다.</dd>
-        <br>
-        <dd>
-          <table>
-            <caption>AudioParam.SetTargetAtTime() 메서드의 인자</caption>
-            <tr>
-              <td>매개변수</td>
-              <td>자료형</td>
-              <td>nullable</td>
-              <td>optional</td>
-              <td>설명</td>
-            </tr>
-            <tr>
-              <td>target</td>
-              <td>float</td>
-              <td>x</td>
-              <td>x</td>
-              <td>주어진 시간에 파라미터가 변화를 <i>시작할</i> 값</td>
-            </tr>
-            <tr>
-              <td>startTime</td>
-              <td>double</td>
-              <td>x</td>
-              <td>x</td>
-              <td>지수적 접근이 시작될 시간이며, AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 start가 음수거나 유한한 수가 아니라면, RangeError 예외가 반드시 발생되어야만 합니다. 만약 startTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
-            </tr>
-            <tr>
-              <td>timeConstant</td>
-              <td>float</td>
-              <td>x</td>
-              <td>x</td>
-              <td>목표 값으로의 first-order 필터 (지수적) 접근의 시간-상수 값. 이 값이 클수록, 전이는 더 느려질 것입니다. ⌛ 이 값은 반드시 음수가 아니여야만 하고 그렇지 않다면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 timeConstant가 0이라면, 출력값은 즉시 마지막 값으로 뜁니다. 더욱 정밀하게는, <i>timeConstant</i>는 계단 입력 응답 (0에서 1 값으로의 전이) 이 주어졌을 때 first-order 선형 연속 시불변 시스템이 값 1-1/e (약 63.2%) 에 도달하는 데 걸리는 시간입니다.</td>
-            </tr>
-          </table>
-        </dd>
-        <br>
-        <dd>반환 유형: AudioParam</dd>
+              <ol>
+                <li>만약 E<sub>1</sub>이 setTarget 이벤트라면
+                  <ol>
+                    <li>묵시적으로, setTarget이 시간 t<sub>c</sub>에서 가졌을 값과 함께, 시간 t<sub>c</sub>에 setValueAtTime 이벤트를 삽입한다.</li>
+                    <img src="img/cancel-setTarget.svg" width=500>
+                    <li>단계 5로 간다.</li>
+                  </ol>
+                </li>
+                <li>만약 E<sub>1</sub>이 start time t<sub>3</sub>과 duration d를 가지는 setValueCurve라면
+                  <ol>
+                    <li>만약 t<sub>c</sub>&gt;t<sub>3</sub>+d라면, 단계 5로 간다.</li>
+                    <li>그렇지 않으면,
+                      <ol>
+                        <li>효과적으로 이 이벤트를 start time t3과 새로운 duration tc-t3을 가지는 setValueCurve 이벤트로 대체한다. 그러나, 이것은 진정한 대체가 아니다. 이 자동화는 반드시 원본과 같은 출력을 생성하는 것에 신경을 써야만 하고, 다른 duration을 사용해 계산된 것이 아니다. (이것은 value curve의 샘플링을 조금 다른 방식으로 유발할 것이며, 다른 결과를 생성할 것이다.)</li>
+                        <img src="img/cancel-setValueCurve.svg" width="500">
+                        <li>단계 5로 간다.</li>
+                      </ol>
+                    </li>
+                  </ol>
+                </li>
+              </ol>
+            </li>
+            <li>t<sub>c</sub>보다 큰 시간을 가지는 모든 이벤트를 제거한다.</li>
+          </ol>
+          <br>
+          <dd>만약 어떤 이벤트도 추가되지 않았다면, cancelAndHoldAtTime() 이후의 자동화 값은 원래 타임라인이 시간 t<sub>c</sub>에서 가졌을 상수 값입니다.
+            <table>
+              <caption>AudioParam.cancelAndHoldAtTime() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>cancelTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
+          <dt><i>cancelScheduledValues(cancelTime)</i></dt>
+          <dd>cancelTime보다 크거나 같은 시간에서의 모든 예정된 파라미터 변화를 취소합니다. 예정된 파라미터 변화를 취소한다는 것은 이벤트 리스트에서 예정된 이벤트를 제거한다는 것을 의미합니다. 자동화 이벤트 시간이 cancelTime보다 작은 active automation 또한 취소되고, 그러한 취소는 불연속을 유발할 수도 있는데 왜냐하면 (그러한 자동화 전으로부터의) 원래 값이 즉시 복구되기 때문입니다. cancelAndHoldAtTime()에 의해 예정된 hold value 또한 만약 hold time이 cancelTime 이후에 발생한다면 제거됩니다.</dd>
+          <br>
+          <dd>setValueCurveAtTime()에 대해서, T<sub>0</sub>과 T<sub>D</sub>를 각각 이 이벤트에 대해서, 해당하는 startTime과 duration이라고 합시다. 그렇다면 만약 cancelTime이 [T<sub>0</sub>, T<sub>0</sub>+T<sub>D</sub>]의 범위 내에 있다면, 이 이벤트는 타임라인에서 제거됩니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioParam.cancelScheduledValues() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>cancelTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>사전에 예정된 파라미터 변화가 취소되어 나갈 시간. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있는 시간입니다. ⌛ 만약 cancelTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 cancelTime이 currentTime보다 작다면, 이것은 currentTime으로 clamped됩니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
+          <dt><i>exponentialRampToValueAtTime(value, endTime)</i></dt>
+          <dd>이전에 예정된 파라미터 값으로부터 주어진 값으로 파라미터 값에 지수적으로 연속적인 변화를 예정합니다. 필터 주파수와 재생 속도를 나타내는 파라미터는 지수적으로 변화할 때 가장 좋은데, 왜냐하면 인간이 소리를 인지하는 방식 때문입니다.</dd>
+          <br>
+          <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (T<sub>0</sub>은 이전 이벤트의 시간, T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수).</dd>
+          <br>
+          <dd>v(t) = V<sub>0</sub>(V<sub>1</sub>/V<sub>0</sub>)^((t - T<sub>0</sub>) / (T<sub>1</sub> - T<sub>0</sub>))</dd>
+          <br>
+          <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수입니다. 만약 V<sub>0</sub>과 V<sub>1</sub>이 반대되는 부호를 가지고 있거나 V<sub>0</sub>이 0이라면, T<sub>0</sub>&lt;=t&lt;T<sub>1</sub>에 대해 v(t) = V<sub>0</sub>입니다.</dd>
+          <br>
+          <dd>이것은 또한 0으로의 지수적 ramp는 가능하지 않음을 암시합니다. 훌륭한 근사가 적절하게 선택된 시간 상수와 함께 setTargetAtTime()을 사용해 달성될 수 있습니다.</dd>
+          <br>
+          <dd>만약 이 <i>ExponentialRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면, t&gt=T<sub>1</sub>에 대해, v(t) = V<sub>1</sub>입니다.</dd>
+          <br>
+          <dd>만약 이 이벤트에 앞서는 이벤트가 없다면, 지수적 ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 동작하는데 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 exponentialRampToValueAtTime()이 호출된 컨텍스트의 currentTime입니다.</dd>
+          <br>
+          <dd>만약 앞서는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 현재 시간과 SetTarget 자동화의 값으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 방금 전의 값입니다. 이 경우, ExponentialRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작되었다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioParam.exponentialRampToValueAtTime() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>value</td>
+                <td>float</td>
+                <td>x</td>
+                <td>x</td>
+                <td>주어진 시간에 파라미터가 지수적으로 ramp할 값. ⌛ 만약 이 값이 0과 같다면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+              </tr>
+              <tr>
+                <td>endTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>지수적 ramp가 끝나는 시간이며 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamped됩니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
+          <dt><i>linearRampToValueAtTime(value, endTime)</i></dt>
+          <dd>사전에 예정된 파라미터 값에서 주어진 값으로 파라미터 값에 선형으로 연속적인 변화를 예정합니다.</dd>
+          <br>
+          <dd>시간 구간 T<sub>0</sub>&lt;=t&lt;T<sub>1</sub> 동안의 값은 다음과 같이 계산됩니다 (여기서 T<sub>0</sub>은 이전 이벤트의 시간이고 T<sub>1</sub>은 이 메서드에 전달된 endTime 매개변수임).</dd>
+          <br>
+          <dd>v(t)=V<sub>0</sub>+[(V<sub>1</sub>-V<sub>0</sub>)(t-T<sub>0</sub>)]/(T<sub>1</sub>-T<sub>0</sub>)</dd>
+          <br>
+          <dd>여기서 V<sub>0</sub>은 시간 T<sub>0</sub>에서의 값이고 V<sub>1</sub>은 이 메서드에 전달된 value 매개변수의 값입니다.</dd>
+          <br>
+          <dd>만약 이 <i>LinearRampToValue</i> 이벤트 이후로 더 이상의 이벤트가 없다면 t&gt;=T<sub>1</sub>에 대해서, v(t)=V<sub>1</sub>입니다.</dd>
+          <br>
+          <dd>만약 이 이벤트에 선행하는 이벤트가 없다면, linear ramp는 마치 setValueAtTime(value, currentTime)이 호출된 것처럼 행동하는데, 여기서 value는 어트리뷰트의 현재 값이고 currentTime은 linearRampToValueAtTime()이 호출된 시간에서의 컨텍스트 currentTime입니다.</dd>
+          <br>
+          <dd>만약 선행하는 이벤트가 SetTarget 이벤트라면, T<sub>0</sub>과 V<sub>0</sub>은 SetTarget 자동화의 값과 현재 시간으로부터 선택됩니다. 즉, 만약 SetTarget 이벤트가 시작되지 않았다면, T<sub>0</sub>은 이벤트의 시작 시간이고, V<sub>0</sub>은 SetTarget 이벤트가 시작하기 바로 전의 값입니다. 이 경우, LinearRampToValue 이벤트는 효과적으로 SetTarget 이벤트를 대체합니다. 만약 SetTarget 이벤트가 이미 시작됐다면, T<sub>0</sub>은 현재 컨텍스트 시간이고, V<sub>0</sub>은 시간 T<sub>0</sub>에서의 현재 SetTarget 자동화 값입니다. 두 경우 모두에서, 자동화 curve는 연속적입니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioParam.linearRampToValueAtTime() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>value</td>
+                <td>float</td>
+                <td>x</td>
+                <td>x</td>
+                <td>주어진 시간에 파라미터가 선형적으로 ramp 할 값.</td>
+              </tr>
+              <tr>
+                <td>endTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>자동화가 끝나는 시간으로 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 endTime이 음수거나 유한한 수가 아니라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 endTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
+          <dt><i>setTargetAtTime(target, startTime, timeConstant)</i></dt>
+          <dd>주어진 시간 상수를 가지는 비율로 주어진 시간에 목표 값으로의 지수적 접근을 시작합니다. 다른 사용 가운데서, 이것은 ADSR 엔벨로프의 "decay"와 "release" 부분을 구현하는 데 유용합니다. 파라미터 값이 주어진 시간에 목표 값으로 즉시 변화하지 않고, 대신 목표 값으로 서서히 변화한다는 점에 주의하십시오.</dd>
+          <br>
+          <dd>시간 구간 T<sub>0</sub>= t 동안 (T<sub>0</sub>은 startTime 매개변수)</dd>
+          <br>
+          <dd>v(t)=V<sub>1</sub>+(V<sub>0</sub>-V<sub>1</sub>)e^(-(t-T<sub>0</sub>)/τ)</dd>
+          <br>
+          <dd>여기서 V<sub>0</sub>은 T<sub>0</sub>(startTime 매개변수)에서의 초기값([[current value]] 어트리뷰트)이고, V<sub>1</sub>은 target 매개변수와 같으며, τ는 timeConstant 매개변수입니다.</dd>
+          <br>
+          <dd>만약 LinearRampToValue나 ExponentialRampToValue 이벤트가 이 이벤트의 뒤라면, 동작은 linearRampToValueAtTime() 또는 ExponentialRampToVAlueAtTime()에 각각 기술되어 있습니다. 다른 모든 이벤트에 대해서, SetTarget 이벤트는 다음 이벤트의 시간에 끝납니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioParam.SetTargetAtTime() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>target</td>
+                <td>float</td>
+                <td>x</td>
+                <td>x</td>
+                <td>주어진 시간에 파라미터가 변화를 <i>시작할</i> 값</td>
+              </tr>
+              <tr>
+                <td>startTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>지수적 접근이 시작될 시간이며, AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 start가 음수거나 유한한 수가 아니라면, RangeError 예외가 반드시 발생되어야만 합니다. 만약 startTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
+              </tr>
+              <tr>
+                <td>timeConstant</td>
+                <td>float</td>
+                <td>x</td>
+                <td>x</td>
+                <td>목표 값으로의 first-order 필터 (지수적) 접근의 시간-상수 값. 이 값이 클수록, 전이는 더 느려질 것입니다. ⌛ 이 값은 반드시 음수가 아니여야만 하고 그렇지 않다면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 timeConstant가 0이라면, 출력값은 즉시 마지막 값으로 뜁니다. 더욱 정밀하게는, <i>timeConstant</i>는 계단 입력 응답 (0에서 1 값으로의 전이) 이 주어졌을 때 first-order 선형 연속 시불변 시스템이 값 1-1/e (약 63.2%) 에 도달하는 데 걸리는 시간입니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
+          <dt><i>setValueAtTime(value, startTime)</i></dt>
+          <dd>주어진 시간에서의 파라미터 값 변화를 예정합니다.</dd>
+          <br>
+          <dd>만약 이 SetValue 이벤트 뒤에 더 이상의 이벤트가 없다면, t&gt;=T<sub>0</sub>에 대해 v(t)=V이며, 여기서 T<sub>0</sub>은 startTime 매개변수이고 V는 value 매개변수입니다. 다른 말로 하자면, 값은 일정하게 유지됩니다.</dd>
+          <br>
+          <dd>만약 이 SetValue 이벤트 뒤의 (시간 T<sub>1</sub>을 가지는) 다음 이벤트가 LinearRampToValue나 ExponentialRampToValue 유형의 이벤트가 아니라면, T<sub>0</sub>&lt;=t&lt;T<sub>1</sub>에 대해서</dd>
+          <br>
+          <dd>v(t)=V</dd>
+          <br>
+          <dd>다른 말로 하자면, 이 시간 구간 동안 값은 일정하게 유지되며, 이는 "계단" 함수의 생성을 가능케 합니다.</dd>
+          <br>
+          <dd>만약 이 SetValue 이벤트 뒤의 다음 이벤트가 LinearRampToValue나 ExponentialRampToValue 유형의 이벤트라면 각각 linearRampToValueAtTime() 혹은 exponentialRampToValueAtTime()을 참고하십시오.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioParam.setValueAtTime() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>value</td>
+                <td>float</td>
+                <td>x</td>
+                <td>x</td>
+                <td>주어진 시간에 파라미터가 변화를 시작해나갈 값</td>
+              </tr>
+              <tr>
+                <td>startTime</td>
+                <td>double</td>
+                <td>x</td>
+                <td>x</td>
+                <td>파라미터가 주어진 값으로 변화하는 시간이며 BaseAudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있음. ⌛ 만약 startTime이 음수거나 유한한 수가 아니라면, RangeError 예외가 반드시 발생되어야만 합니다. 만약 startTime이 currentTime보다 작다면, currentTime으로 clamp됩니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: AudioParam</dd>
+          <br>
         </dl>
         <br>
         <h3>1.6.3. 값의 계산</h3>
