@@ -2348,6 +2348,16 @@ interface AudioParam {
         </dl>
         <br>
         <h3>1.6.3. 값의 계산</h3>
+        <p>두 가지 다른 종류의 AudioParam이 있는데, 각각 simple parameter와 compound parameter입니다. <strong>simple parameter</strong>(기본)는 AudioNode의 최종 오디오 출력을 계산하기 위해서 자기 자신이 사용됩니다. <strong>compound parameter</strong>는 다른 AudioParam과 함께 사용되어 AudioNode의 출력을 계산하는 입력으로 사용되는 값을 계산합니다.</p>
+        <br>
+        <p><strong>compoundValue</strong>는 오디오 DSP를 제어하는 최종 값이고 오디오 렌더링 스레드에 의해 각 rendering time quantum 동안 계산됩니다.</p>
+        <br>
+        <p>AudioParam의 값의 계산은 두 부분으로 이루어져 있습니다.</p>
+        <br>
+        <ul>
+          <li><i>paramIntrinsicValue</i> 값은 value 어트리뷰트와 자동화 이벤트로부터 계산됩니다.</li>
+          <li><i>paramComputedValue</i> 값은 오디오 DSP를 제어하는 최종 값이고 오디오 렌더링 스레드에 의해 각 render quantum 동안 계산됩니다.</li>
+        </ul>
         <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
         <p>이 인터페이스는 AudioBufferSourceNode, ConstantSourceNode, OscillatorNode와 같은 소스 노드의 공통적인 기능을 나타냅니다.</p>
