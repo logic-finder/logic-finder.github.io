@@ -2359,6 +2359,16 @@ interface AudioParam {
           <li><i>paramComputedValue</i> 값은 오디오 DSP를 제어하는 최종 값이고 오디오 렌더링 스레드에 의해 각 render quantum 동안 계산됩니다.</li>
         </ul>
         <br>
+        <p>이 값들은 반드시 다음과 같이 계산되어져야만 합니다.</p>
+        <br>
+        <ol>
+          <li>paramIntrinsicValue는 각 time마다 계산될 것인데, 이는 value 어트리뷰트에 직접적으로 설정되는 값이거나, 만약 이 time에 혹은 time들 전의 자동화 이벤트가 이벤트가 있다면, 이 이벤트들로부터 계산되는 값입니다. 만약 자동화 이벤트가 주어진 시간 범위에서 제거된다면, paramIntrinsicValue 값은 변경되지 않은 채로 유지될 것이고 value 어트리뷰트가 직접적으로 설정되거나, 자동화 이벤트가 이 시간 범위에 추가되기 전까지 이것의 이전 값에 머물 것입니다.</li>
+          <li>[[current value]]를 이 render quantum의 시작에 paramIntrinsicValue의 값으로 설정합니다.</li>
+          <li>paramComputedValue는 paramIntrinsicVAlue 값과 입력 AudioParam 버퍼의 값의 합입니다. 만약 이 합이 NaN이라면, 이 합을 defaultValue로 대체합니다.</li>
+          <li>만약 이 AudioParam이 compound parameter라면, 이것의 최종 값을 다른 AudioParam들과 함께 계산합니다.</li>
+          <li>computedValue를 paramComputedValue로 설정합니다.</li>
+        </ol>
+        <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
         <p>이 인터페이스는 AudioBufferSourceNode, ConstantSourceNode, OscillatorNode와 같은 소스 노드의 공통적인 기능을 나타냅니다.</p>
         <br>
