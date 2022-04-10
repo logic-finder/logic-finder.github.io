@@ -2369,6 +2369,8 @@ interface AudioParam {
           <li>computedValue를 paramComputedValue로 설정합니다.</li>
         </ol>
         <br>
+        <p>computedValue의 <strong>명목상의 범위</strong>는 이 파라미터가 효과적으로 가질 수 있는 낮은 값과 높은 값입니다. simple parameter에 대해서, computedValue는 이 파라미터의 simple nominal range로 clamp됩니다. compound parameter는 이루어져 있는 각기 다른 AudioParam 값들로부터 계산된 이후에 명목상의 범위로 clamped된 최종 값을 가집니다.</p>
+        <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
         <p>이 인터페이스는 AudioBufferSourceNode, ConstantSourceNode, OscillatorNode와 같은 소스 노드의 공통적인 기능을 나타냅니다.</p>
         <br>
