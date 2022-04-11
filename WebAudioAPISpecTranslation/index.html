@@ -2371,6 +2371,67 @@ interface AudioParam {
         <br>
         <p>computedValue의 <strong>명목상의 범위</strong>는 이 파라미터가 효과적으로 가질 수 있는 낮은 값과 높은 값입니다. simple parameter에 대해서, computedValue는 이 파라미터의 simple nominal range로 clamp됩니다. compound parameter는 이루어져 있는 각기 다른 AudioParam 값들로부터 계산된 이후에 명목상의 범위로 clamped된 최종 값을 가집니다.</p>
         <br>
+        <p>자동화 메서드가 사용되었을 때, clamping은 여전히 적용됩니다. 그러나, 자동화는 마치 clamping이 전혀 없는 것처럼 작동됩니다. 오직 자동화 값이 출력에 적용될 때만이 clamping이 위에 명시된 것처럼 이루어집니다.</p>
+        <br>
+        <pre>
+예제 7
+예를 들어, 노드 N이 명목상의 범위 [0, 1]을 가지고 있는 AudioParam P와, 다음의 자동화 시퀸스를 가지고 있다고 고려해 봅시다.
+
+N.p.setValueAtTime(0, 0);
+N.p.linearRampToValueAtTime(4, 1);
+N.p.linearRampToValueAtTime(0, 2);
+
+curve의 초기 기울기는 curve가 최대값 1에 도달하기 전까지 4이고, 도달하고 나면 출력은 일정하게 유지됩니다.
+마지막으로, 시간 2 근처에서, curve의 기울기는 -4가 됩니다.
+이것은 아래의 그래프에 그려져 있으며 점선은 clipping이 없었다면 발생했을 것을 나타내며,
+그냥 선은 명목상의 범위에 대한 clipping에 기인한 audioparam의 실제 기대되는 동작을 나타냅니다.
+        </pre>
+        <br>
+        <figure>
+          <img src="img/audioparam-automation-clipping.png" width="915" height="546">
+          <figcaption><strong>도식 4</strong> 명목상의 범위로부터 AudioParam 자동화의 clipping의 예시</figcaption>
+        </figure>
+        <br>
+        <h3>1.6.4. AudioParam 자동화 예시</h3>
+        <br>
+        <figure>
+          <img src="img/audioparam-automation1.png" width="917" height="541">
+          <figcaption><strong>도식 5</strong> 파라미터 자동화의 예시</figcaption>
+        </figure>
+        <br>
+        <pre>
+예제 8
+const curveLength = 44100;
+const curve = new Float32Array(curveLength);
+for (const i = 0; i &lt; curveLength; ++i)
+  curve[i] = Math.sin(Math.PI * i / curveLength);
+const t0 = 0;
+const t1 = 0.1;
+const t2 = 0.2;
+const t3 = 0.3;
+const t4 = 0.325;
+const t5 = 0.5;
+const t6 = 0.6;
+const t7 = 0.7;
+const t8 = 1.0;
+const timeConstant = 0.1;
+param.setValueAtTime(0.2, t0);
+param.setValueAtTime(0.3, t1);
+param.setValueAtTime(0.4, t2);
+param.linearRampToValueAtTime(1, t3);
+param.linearRampToValueAtTime(0.8, t4);
+param.setTargetAtTime(.5, t4, timeConstant);
+// 다음의 exponential이 올바른 곳에서 시작하게 하기 위해
+// setTargetAtTime이 시간 t5에 있을 곳을 계산함
+// 그래서 jump discontinuity가 없음.
+// 명세에 따르면, v(t) = 0.5 + (0.8 - 0.5)*exp(-(t-t4)/timeConstant)
+// 따라서 v(t5) = 0.5 + (0.8 - 0.5)*exp(-(t5-t4)/timeConstant)
+param.setValueAtTime(0.5 + (0.8 - 0.5)*Math.exp(-(t5 - t4)/timeConstant), t5);
+param.exponentialRampToValueAtTime(0.75, t6);
+param.exponentialRampToValueAtTime(0.05, t7);
+param.setValueCurveAtTime(curve, t7, t8 - t7);
+        </pre>
+        <br>
         <h2>1.7. AudioScheduledSourceNode 인터페이스</h2>
         <p>이 인터페이스는 AudioBufferSourceNode, ConstantSourceNode, OscillatorNode와 같은 소스 노드의 공통적인 기능을 나타냅니다.</p>
         <br>
