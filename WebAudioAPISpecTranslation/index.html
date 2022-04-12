@@ -2453,6 +2453,13 @@ interface AudioScheduledSourceNode : AudioNode {
         </pre>
         <br>
         <h3>1.7.1. 어트리뷰트</h3>
+        <dl>
+          <dt><i>onended</i> / 자료형: EventHandler</dt>
+          <dd>AudioScheduledSourceNode 노드 유형에 전파되는 ended 이벤트의 EventHandler (HTML[HTML]에 기술되어 있음) 를 설정하기 위해 사용되는 프로퍼티. 소스 노드가 재생을 멈췄을 때 (concrete 노드에 의해 결정됨), Event (HTML[HTML]에 기술되어 있음) 유형의 이벤트가 이벤트 핸들러에 전파될 것입니다.</dd>
+          <br>
+          <dd>모든 AudioScheduledSourceNode에 대해서, stop()에 의해 결정된 stop time에 도달했을 때 onended 이벤트가 전파됩니다. AudioBufferSourceNode에 대해서, duration에 도달했거나 전체 buffer가 재생되었다면 이 이벤트가 또한 전파됩니다.</dd>
+        </dl>
+        <br>
         <h3>1.7.2. 메서드</h3>
         <br>
         <h2>1.8. AnalyserNode 인터페이스</h2>
