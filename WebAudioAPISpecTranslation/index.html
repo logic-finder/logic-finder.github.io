@@ -2462,6 +2462,30 @@ interface AudioScheduledSourceNode : AudioNode {
         <br>
         <h3>1.7.2. 메서드</h3>
         <br>
+        <dl>
+          <dt><i>start(when)</i></dt>
+          <dd>정확한 시간에 소리에 재생을 예정합니다.</dd>
+          <br>
+          <dd>⌛ 이 메서드가 호출되었을 때, 아래의 절차를 수행합니다.
+            <ol>
+              <li>⌛ 만약 이 AudioScheduledSourceNode 내부 슬롯 [[source started]]가 true라면, InvalidStateError 예외가 반드시 발생되어야만 합니다.</li>
+              <li>아래에서 설명되는 parameter constraint에 기인해 반드시 발생되어야만 하는 error들에 대해서 검사합니다. 만약 이 단계 동안 예외가 발생되었다면, 이 과정들을 중단합니다.</li>
+              <li>이 AudioScheduledSourceNode의 내부 슬롯 [[source started]]를 true로 설정합니다.</li>
+              <li>AudioScheduledSourceNode를 시작하기 위해 control message를 queue하며, 메시지 속에 parameter 값들을 포함합니다.</li>
+              <li>연관된 AudioContext에 control message를 보내 다음의 모든 조건들이 만족되었을 때만 렌더링 스레드의 실행을 시작합니다.
+                <ol>
+                  <li>컨텍스트의 [[control thread state]]가 "suspended"입니다.</li>
+                  <li>컨텍스트가 시작되도록 허용되었습니다.</li>
+                  <li>[[suspended by user]] 플래그가 false입니다.</li>
+                </ol>
+                <div class="note">
+                  <p>알림: 이것은 start()가 시작되도록 허용되지 않았을 AudioContext를 시작되게 만듭니다.</p>
+                </div>
+              </li>
+            </ol>
+          </dd>
+        </dl>
+        <br>
         <h2>1.8. AnalyserNode 인터페이스</h2>
         <p>이 인터페이스는 실시간 주파수 그리고 시간 영역 분석 정보를 제공 가능한 노드를 나타냅니다. 오디오 스트림은 입력에서 출력까지 처리되지 않은 채로 전달될 것입니다.</p>
         <br>
