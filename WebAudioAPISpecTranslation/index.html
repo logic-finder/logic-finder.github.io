@@ -2484,6 +2484,29 @@ interface AudioScheduledSourceNode : AudioNode {
               </li>
             </ol>
           </dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AudioScheduledSourceNode.start(when) 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>when</td>
+                <td>double</td>
+                <td>x</td>
+                <td>v</td>
+                <td>when 매개변수는 어떤 시간에 (단위: 초) 소리가 재생을 시작해야 하는지를 기술합니다. 이것은 AudioContext의 currentTime 어트리뷰트와 동일한 시간 좌표계에 있습니다. AudioScheduledSourceNode에 의해 생성된 신호가 소리의 시작 시간에 좌우될 때, when의 정확한 시간은 항상 가장 가까운 샘플 프레임으로 반올림되는 일 없이 사용됩니다. 만약 0이 이 값에 대해 전달되거나 값이 currentTime보다 작다면, 소리는 즉시 시작될 것입니다. ⌛ 만약 when이 음수면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: undefined</dd>
+          <br>
         </dl>
         <br>
         <h2>1.8. AnalyserNode 인터페이스</h2>
