@@ -2507,6 +2507,18 @@ interface AudioScheduledSourceNode : AudioNode {
           <br>
           <dd>반환 유형: undefined</dd>
           <br>
+          <dt><i>stop(when)</i></dt>
+          <dd>정확한 시간에 소리에 재생 정지를 예정합니다. 만약 stop이 이미 호출된 이후에 다시 호출되었다면, 마지막 호출이 적용되는 호출일 것입니다. 이전 호출에 의해 설정된 stop time들은 버퍼가 차후의 호출에 앞서 정지되지 않는 이상 적용되지 않을 것입니다. 만약 버퍼가 이미 정지되었다면, 추가적인 stop 호출은 효과가 없습니다. 만약 stop time이 예정된 start time에 앞서 도달되었다면, 소리는 재생되지 않을 것입니다.</dd>
+          <br>
+          <dd>⌛ 이 메서드가 호출되었을 때, 아래의 절차를 수행합니다.
+            <ol>
+              <li>⌛ 만약 이 AudioScheduledSourceNode의 내부 슬롯 [[source started]]가 true가 아니라면, InvalidStateError가 반드시 발생되어야만 합니다.</li>
+              <li>아래에서 설명되는 parameter constraint에 기인해 반드시 발생되어야만 하는 오류들을 검사합니다.</li>
+              <li>AudioScheduledSourceNode를 정지하기 위해 control message를 queue하고, 메시지 내에 parameter values를 포함합니다.</li>
+            </ol>
+          </dd>
+          <br>
+          <dd>만약 노드가 AudioBufferSourceNode라면, AudioBufferSourceNode를 정지하기 위해 control messgae를 실행시키는 것은 재생 알고리즘에서 handleStop() 함수를 호출하는 것을 의미합니다.</dd>
         </dl>
         <br>
         <h2>1.8. AnalyserNode 인터페이스</h2>
