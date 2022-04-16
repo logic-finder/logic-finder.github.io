@@ -2521,6 +2521,28 @@ interface AudioScheduledSourceNode : AudioNode {
           <dd>만약 노드가 AudioBufferSourceNode라면, AudioBufferSourceNode를 정지하기 위해 control messgae를 실행시키는 것은 재생 알고리즘에서 handleStop() 함수를 호출하는 것을 의미합니다.</dd>
         </dl>
         <br>
+        <dd>
+          <table>
+            <caption>AudioScheduledSourceNode.stop(when) 메서드의 인자</caption>
+            <tr>
+              <td>매개변수</td>
+              <td>자료형</td>
+              <td>nullable</td>
+              <td>optional</td>
+              <td>설명</td>
+            </tr>
+            <tr>
+              <td>when</td>
+              <td>double</td>
+              <td>x</td>
+              <td>v</td>
+              <td>when 매개변수는 언제 (단위: 초) source가 재생을 멈춰야 하는지를 기술합니다. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있습니다. 만약 0이 이 값에 대해 전달되거나 이 값이 currentTime보다 작다면, 소리는 즉시 정지될 것입니다. ⌛ 만약 when이 음수라면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+            </tr>
+          </table>
+        </dd>
+        <br>
+        <dd>반환 유형: undefined</dd>
+        <br>
         <h2>1.8. AnalyserNode 인터페이스</h2>
         <p>이 인터페이스는 실시간 주파수 그리고 시간 영역 분석 정보를 제공 가능한 노드를 나타냅니다. 오디오 스트림은 입력에서 출력까지 처리되지 않은 채로 전달될 것입니다.</p>
         <br>
