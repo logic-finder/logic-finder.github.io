@@ -2601,6 +2601,38 @@ interface AnalyserNode : AudioNode {
         </pre>
         <br>
         <h3>1.8.1. 생성자</h3>
+        <br>
+        <dl>
+          <dt><i>AnalyserNode(context, options)</i></dt>
+          <dd>이 생성자가 BaseAudioContext c와 옵션 객체 option과 함께 호출되었을 때, user agent는 반드시 이 AudioNode this를 context와 options를 인자로서 함께 초기화해야만 합니다.</dd>
+          <dd>
+            <table>
+              <caption>AnalyserNode.constructor() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>context</td>
+                <td>BaseAudioContext</td>
+                <td>x</td>
+                <td>x</td>
+                <td>이 새로운 AnalyserNode가 연관될 BaseAudioContext.</td>
+              </tr>
+              <tr>
+                <td>options</td>
+                <td>AnalyserOptions</td>
+                <td>x</td>
+                <td>v</td>
+                <td>이 AnalyserNode의 선택적인 초기 파라미터 값.</td>
+              </tr>
+            </table>
+          </dd>
+        </dl>
+        <br>
         <h3>1.8.2. 어트리뷰트</h3>
         <h3>1.8.3. 메서드</h3>
         <h3>1.8.4. AnalyserOptions</h3>
