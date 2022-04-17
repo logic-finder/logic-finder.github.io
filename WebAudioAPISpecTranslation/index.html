@@ -2634,6 +2634,17 @@ interface AnalyserNode : AudioNode {
         </dl>
         <br>
         <h3>1.8.2. 어트리뷰트</h3>
+        <br>
+        <dl>
+          <dt><i>fftSize</i> / 자료형: unsigned long</dt>
+          <dd>주파수 도메인 분석에 사용될 FFT의 크기 (단위: 샘플 프레임). ⌛ 이 값은 반드시 2의 제곱이여야 하며 그 범위는 32에서 32768까지입니다. 그렇지 않으면 IndexSizeError 예외가 반드시 발생되어야만 합니다. 기본값은 2048입니다. 큰 FFT 크기는 계산량이 많을 수 있음에 주의하십시오.</dd>
+          <br>
+          <dd>만약 fftSize가 다른 값으로 변경되면, (getByteFrequencyData()와 getFloatFrequencyData()에 대해서) 주파수 데이터의 smoothing과 연관된 모든 상태가 리셋됩니다. 즉 smoothing over time에 쓰인 이전 블럭인 ^X<sub>-1</sub>[k]가 모든 k에 대해 0으로 설정됩니다.</dd>
+          <br>
+          <dd>증가하는 fftSize는 현재 시간 도메인 데이터가 반드시 이전에는 포함되지 않았던 지난 프레임들을 포함하기 위해 확장되어야만 한다는 것을 의미함에 주목하십시오. 이는 AnalyserNode가 효과적으로 반드시 지난 32768개의 샘플 프레임을 가지고 있어야만 하며 현재 시간 도메인 데이터는 그것으로부터의 가장 최근의 fftSize 샘플 프레임이라는 것을 의미합니다.</dd>
+          <br>
+        </dl>
+        <br>
         <h3>1.8.3. 메서드</h3>
         <h3>1.8.4. AnalyserOptions</h3>
         <h4>1.8.4.1. 딕셔너리 AnalyserOptions 멤버</h4>
