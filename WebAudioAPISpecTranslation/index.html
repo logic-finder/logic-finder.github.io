@@ -2643,6 +2643,9 @@ interface AnalyserNode : AudioNode {
           <br>
           <dd>증가하는 fftSize는 현재 시간 도메인 데이터가 반드시 이전에는 포함되지 않았던 지난 프레임들을 포함하기 위해 확장되어야만 한다는 것을 의미함에 주목하십시오. 이는 AnalyserNode가 효과적으로 반드시 지난 32768개의 샘플 프레임을 가지고 있어야만 하며 현재 시간 도메인 데이터는 그것으로부터의 가장 최근의 fftSize 샘플 프레임이라는 것을 의미합니다.</dd>
           <br>
+          <dt><i>frequencyBinCount</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>fftSize의 절반.</dd>
+          <br>
         </dl>
         <br>
         <h3>1.8.3. 메서드</h3>
