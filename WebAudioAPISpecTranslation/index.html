@@ -2649,6 +2649,9 @@ interface AnalyserNode : AudioNode {
           <dt><i>maxDecibels</i> / 자료형: double</dt>
           <dd>부호없는 바이트 값으로의 전환을 위해 FFT 분석 데이터의 스케일링 범위에서의 최대 파워 값. 기본값은 -30입니다. ⌛ 만약 이 어트리뷰트의 값이 minDecibels와 같거나 작은 값으로 설정되었다면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
           <br>
+          <dt><i>minDecibels</i> / 자료형: double</dt>
+          <dd>부호없는 바이트 값으로의 전환을 위해 FFT 분석 데이터의 스케일링 범위에서의 최소 파워 값. 기본값은 -100입니다. ⌛ 만약 이 어트리뷰트의 값이 maxDecibels와 같거나 큰 값으로 설정되었다면, IndexSizeError 예외가 반드시 발생되어야만 합니다.</dd>
+          <br>
         </dl>
         <br>
         <h3>1.8.3. 메서드</h3>
