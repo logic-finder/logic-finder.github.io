@@ -2665,7 +2665,7 @@ interface AnalyserNode : AudioNode {
           <br>
           <dd>만약 또 다른 getByteFrequencyData()나 getFloatFrequencyData() 호출이 이전과 동일한 render quantum 내에서 발생한다면, 현재 주파수 데이터는 같은 데이터에 의해 갱신되지 않습니다. 대신, 이전에 계산된 데이터가 반환됩니다.</dd>
           <br>
-          <dd>unsigned byte array에 저장된 값들은 다음의 방법으로 계산됩니다. Y[k]를 FFT windowing and smoothing에서 기술되는 현재 주파수 데이터라고 합시다. 그렇다면 바이트 값 b[k]는 다음과 같습니다.</dd>
+          <dd>unsigned byte array에 저장된 값들은 다음의 방식으로 계산됩니다. Y[k]를 FFT windowing and smoothing에서 기술되는 현재 주파수 데이터라고 합시다. 그렇다면 바이트 값 b[k]는 다음과 같습니다.</dd>
           <br>
           <dd>b[k] = Math.floor(255 * (Y[k] - dB<sub>min</sub>) / (dB<sub>max</sub> - dB<sub>min</sub>))</dd>
           <br>
@@ -2693,6 +2693,12 @@ interface AnalyserNode : AudioNode {
           <br>
           <dt><i>getByteTimeDomainData(array)</i></dt>
           <dd>인자로서 전달된 Uint8Array에 의해 소유되는 reference to the bytes를 얻습니다. 현재 시간 도메인 데이터 (파형 데이터) 를 이 bytes에 복제합니다. 만약 배열이 fftSize의 값보다 적은 원소를 가지고 있다면, 초과되는 원소는 탈락될 것입니다. 만약 배열이 fftSize보다 많은 원소를 가지고 있다면, 초과되는 원소는 무시될 것입니다. 가장 최근의 fftSize 프레임이 바이트 데이터를 계산하는 데 사용됩니다.</dd>
+          <br>
+          <dd>unsigned byte array에 저장된 값들은 다음의 방식으로 계산됩니다. x[k]를 시간 도메인 데이터라고 합시다. 그럼 바이트 값 b[k]는 다음과 같습니다.</dd>
+          <br>
+          <dd>b[k] = Math.floor(128(1+x[k]))</dd>
+          <br>
+          <dd>만약 b[k]가 0에서 255 범위 바깥에 있다면, b[k]는 이 범위 안에 들도록 clip됩니다.</dd>
           <br>
         </dl>
         <br>
