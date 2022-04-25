@@ -2700,6 +2700,28 @@ interface AnalyserNode : AudioNode {
           <br>
           <dd>만약 b[k]가 0에서 255 범위 바깥에 있다면, b[k]는 이 범위 안에 들도록 clip됩니다.</dd>
           <br>
+          <dd>
+            <table>
+              <caption>AnalyserNode.getByteTimeDomainData() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>array</td>
+                <td>Uint8Array</td>
+                <td>x</td>
+                <td>x</td>
+                <td>이 매개변수는 시간 도메인 샘플 데이터가 복제될 곳입니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: undefined</dd>
+          <br>
         </dl>
         <br>
         <h3>1.8.4. AnalyserOptions</h3>
