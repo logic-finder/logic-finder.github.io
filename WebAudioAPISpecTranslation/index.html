@@ -2722,6 +2722,11 @@ interface AnalyserNode : AudioNode {
           <br>
           <dd>반환 유형: undefined</dd>
           <br>
+          <dt><i>getFloatFrequencyData(array)</i></dt>
+          <dd>인자로서 전달된 Float32Array에 의해 소유되는 reference to the bytes를 얻습니다. 현재 주파수 데이터를 이 bytes에 복제합니다. 만약 배열이 frequencyBinCount보다 적은 원소를 가지고 있다면, 초과되는 원소는 탈락됩니다. 만약 배열이 frequencyBinCount보다 많은 원소를 가지고 있다면, 초과되는 원소는 무시됩니다. 가장 최근의 fftSize 프레임이 주파수 데이터를 계산하는 데 사용됩니다.</dd>
+          <br>
+          <dd>같은 render quantum 내에서 이전 호출로서 또 다른 getFloatFrequencyData() 나 getByteFrequencyData() 가 발생한다면, 현재 주파수 데이터는 같은 데이터를 가지고 갱신되지 않습니다. 대신, 이전에 계산된 결과가 반환됩니다.</dd>
+          <br>
         </dl>
         <br>
         <h3>1.8.4. AnalyserOptions</h3>
