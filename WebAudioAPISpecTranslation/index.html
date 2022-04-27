@@ -2727,6 +2727,30 @@ interface AnalyserNode : AudioNode {
           <br>
           <dd>같은 render quantum 내에서 이전 호출로서 또 다른 getFloatFrequencyData() 나 getByteFrequencyData() 가 발생한다면, 현재 주파수 데이터는 같은 데이터를 가지고 갱신되지 않습니다. 대신, 이전에 계산된 결과가 반환됩니다.</dd>
           <br>
+          <dd>주파수 데이터는 dB 단위입니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <caption>AnalyserNode.getFloatFrequencyData() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>array</td>
+                <td>Float32Array</td>
+                <td>x</td>
+                <td>x</td>
+                <td>이 매개변수는 주파수 도메인 분석 데이터가 복제될 곳입니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: undefined</dd>
+          <br>
         </dl>
         <br>
         <h3>1.8.4. AnalyserOptions</h3>
