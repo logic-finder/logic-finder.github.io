@@ -2754,6 +2754,27 @@ interface AnalyserNode : AudioNode {
           <dt><i>getFloatTimeDomainData(array)</i></dt>
           <dd>인자로서 전달된 Float32Array에 의해 소유되는 reference to the bytes를 얻습니다. 현재 시간 도메인 데이터 (파형 데이터) 를 이 bytes에 복제합니다. 만약 배열이 fftSize의 값보다 적은 원소를 가지고 있다면, 초과되는 요소는 탈락됩니다. 만약 배열이 fftSize보다 많은 원소를 가지고 있다면, 초과되는 원소는 무시될 것입니다. 가장 최근의 fftSize 프레임이 (다운믹싱 후에) 반환됩니다.</dd>
           <br>
+          <dd>
+            <table>
+              <caption>AnalyserNode.getFloatTimeDomainData() 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>array</td>
+                <td>Float32Array</td>
+                <td>x</td>
+                <td>x</td>
+                <td>이 매개변수는 시간 도메인 샘플 데이터가 복제될 곳입니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: undefined</dd>
         </dl>
         <br>
         <h3>1.8.4. AnalyserOptions</h3>
