@@ -2778,6 +2778,18 @@ interface AnalyserNode : AudioNode {
         </dl>
         <br>
         <h3>1.8.4. AnalyserOptions</h3>
+        <br>
+        <p>이것은 AnalyserNode를 생성할 때 사용될 옵션을 명시합니다. 모든 멤버는 선택적입니다. 만약 명시되지 않았다면, 일반 기본값이 사용되어 노드를 생성합니다.</p>
+        <br>
+        <pre>
+dictionary AnalyserOptions : AudioNodeOptions {
+  unsigned long fftSize = 2048;
+  double maxDecibels = -30;
+  double minDecibels = -100;
+  double smoothingTimeConstant = 0.8;
+};
+        </pre>
+        <br>
         <h4>1.8.4.1. 딕셔너리 AnalyserOptions 멤버</h4>
         <h3>1.8.5. 시간 영역 다운 믹싱</h3>
         <p>현재 시간 영역 데이터가 계산될 때, 입력 신호는 반드시 마치 channelCount가 1이고, channelCountMode가 "max"이고, channelInterpretation이 "speakers"인 것처럼 모노로 다운믹스되어야만 합니다. 이것은 AnalyserNode 자체의 설정과는 무관합니다. 가장 최신의 fftSize 프레임이 다운믹싱 연산에 사용됩니다.</p>
