@@ -2820,6 +2820,22 @@ dictionary AnalyserOptions : AudioNodeOptions {
           <li>dB로 변환합니다.</li>
         </ol>
         <br>
+        <p>다음에서, N을 이 AnalyserNode의 fftSize 어트리뷰트의 값이라고 합시다.</p>
+        <br>
+        <p><strong><i>블랙맨 윈도우를 적용한다는 것</i></strong>은 입력 시간 도메인 데이터에서의 다음의 연산으로 이루어져 있습니다. n = 0, ..., N - 1에 대해 x[n]을 시간 도메인 데이터라고 합시다. 블랙맨 윈도우는 다음과 같이 정의됩니다.</p>
+        <pre>
+α = 0.16
+a0 = (1 - α) / 2
+a1 = 1 / 2
+a2 = α / 2
+w[n] = a0 - a1cos(2πn/N) + a2cos(4πn/N), n = 0, ..., N - 1에 대해서
+        </pre>
+        <br>
+        <p>창이 적용된 신호 x^[n]은</p>
+        <pre>
+x^[n] = x[n]w[n], n = 0, ..., N - 1에 대해서
+        </pre>
+        <br>
         <h2>1.9. AudioBufferSourceNode 인터페이스</h2>
         <p>이 인터페이스는 Audiobuffer 내의 in-memory 오디오 에셋으로부터의 오디오 소스를 나타냅니다. 이것은 높은 정도의 스케쥴링 유연성과 정확성을 요구하는 오디오 에셋 재생에 유용합니다. 만약 network- 또는 disk-backed 에셋의 sample-accurate 재생이 요구된다면, 구현자는 AudioWorkletNode를 사용하여 재생을 구현해야 합니다.</p>
         <br>
