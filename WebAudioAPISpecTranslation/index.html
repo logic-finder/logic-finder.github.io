@@ -2836,6 +2836,13 @@ w[n] = a0 - a1cos(2πn/N) + a2cos(4πn/N), n = 0, ..., N - 1에 대해서
 x^[n] = x[n]w[n], n = 0, ..., N - 1에 대해서
         </pre>
         <br>
+        <p><strong><i>푸리에 변환을 적용한다는 것</i></strong>은 다음의 방법으로 푸리에 변환을 계산하는 것으로 이루어져 있습니다. X[k]를 복소 주파수 도메인 데이터라고 하고 x^[n]을 위에서 계산된 창이 적용된 시간 도메인 데이터라고 합시다. 그럼 X[k]는 다음과 같습니다.</p>
+        <br>
+        <pre>
+X[k] = (1 / N) * sigma(from = n, to = N - 1, x^[n] * WN^(-kn))
+        </pre>
+        <p>k = 0, ..., (N / 2) - 1에 대해서, 그리고 WN = e^(2πi / N).</p>
+        <br>
         <h2>1.9. AudioBufferSourceNode 인터페이스</h2>
         <p>이 인터페이스는 Audiobuffer 내의 in-memory 오디오 에셋으로부터의 오디오 소스를 나타냅니다. 이것은 높은 정도의 스케쥴링 유연성과 정확성을 요구하는 오디오 에셋 재생에 유용합니다. 만약 network- 또는 disk-backed 에셋의 sample-accurate 재생이 요구된다면, 구현자는 AudioWorkletNode를 사용하여 재생을 구현해야 합니다.</p>
         <br>
