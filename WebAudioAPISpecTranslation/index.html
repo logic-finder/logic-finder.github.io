@@ -2843,6 +2843,22 @@ X[k] = (1 / N) * sigma(from = n, to = N - 1, x^[n] * WN^(-kn))
         </pre>
         <p>k = 0, ..., (N / 2) - 1에 대해서, 그리고 WN = e^(2πi / N).</p>
         <br>
+        <p>주파수 데이터를 <strong><i>smoothing over time한다는 것</i></strong>은 다음의 동작으로 이루어져 있습니다.</p>
+        <br>
+        <ul>
+          <li>X^_(-1)[k]를 이전 블럭의 이 동작의 결과라고 합시다. <strong><i>이전 블럭</i></strong>은 이전의 smoothing over time 동작에 의해 계산된 버퍼로 혹은 만약 smoothing over time이 처음이라면 N개의 0으로 이루어진 배열으로 정의됩니다.</li>
+          <li>τ를 이 AnalyserNode의 smoothingTimeConstant 어트리뷰트의 값이라고 합시다.</li>
+          <li>X[k]를 현재 블럭의 푸리에 변환을 적용한 것의 결과라고 합시다.</li>
+        </ul>
+        <br>
+        <p>그럼 smooth된 값인 X^[k]는 다음과 같이 계산됩니다.</p>
+        <br>
+        <pre>
+X^[k] = τX^[k]_(-1)[k] + (1 - τ)|X[k]|
+        </pre>
+        <br>
+        <p>k = 0, ..., N - 1에 대해서.</p>
+        <br>
         <h2>1.9. AudioBufferSourceNode 인터페이스</h2>
         <p>이 인터페이스는 Audiobuffer 내의 in-memory 오디오 에셋으로부터의 오디오 소스를 나타냅니다. 이것은 높은 정도의 스케쥴링 유연성과 정확성을 요구하는 오디오 에셋 재생에 유용합니다. 만약 network- 또는 disk-backed 에셋의 sample-accurate 재생이 요구된다면, 구현자는 AudioWorkletNode를 사용하여 재생을 구현해야 합니다.</p>
         <br>
