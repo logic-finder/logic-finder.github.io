@@ -2950,6 +2950,37 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
         </pre>
         <br>
         <h3>1.9.1. 생성자</h3>
+        <br>
+        <dl>
+          <dt><i>AudioBufferSourceNode(context, options)</i></dt>
+          <dd>생성자가 BaseAudioContext c와 옵션 객체 option과 함께 호출되었을 때, user agent는 반드시 AudioNode this를, context와 options를 인자로서 함께 초기화해야만 합니다.</dd>
+        </dl>
+        <br>
+        <table>
+          <caption>AudioBufferSourceNode.constructor() 메서드의 인자</caption>
+          <tr>
+            <td>매개변수</td>
+            <td>자료형</td>
+            <td>nullable</td>
+            <td>optional</td>
+            <td>설명</td>
+          </tr>
+          <tr>
+            <td>context</td>
+            <td>BaseAudioContext</td>
+            <td>x</td>
+            <td>x</td>
+            <td>이 새로운 AudioBufferSourceNode가 연관될 BaseAudioContext.</td>
+          </tr>
+          <tr>
+            <td>options</td>
+            <td>AudioBufferSourceOptions</td>
+            <td>x</td>
+            <td>v</td>
+            <td>이 AudioBufferSourceNode의 선택적인 초기 파라미터 값.</td>
+          </tr>
+        </table>
+        <br>
         <h3>1.9.2. 어트리뷰트</h3>
         <h3>1.9.3. 메서드</h3>
         <h3>1.9.4. AudioBufferSourceOptions</h3>
