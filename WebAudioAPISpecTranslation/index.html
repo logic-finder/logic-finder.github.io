@@ -2859,6 +2859,16 @@ X^[k] = τX^[k]_(-1)[k] + (1 - τ)|X[k]|
         <br>
         <p>k = 0, ..., N - 1에 대해서.</p>
         <br>
+        <p><strong><i>dB로의 전환</i></strong>은 다음의 동작을 포함하는데, 여기서 X^[k]는 smoothing over time에서 계산된 것입니다.</p>
+        <br>
+        <pre>
+Y[k] = 20log_10(X^[k])
+        </pre>
+        <br>
+        <p>k = 0, ..., N - 1에 대해서.</p>
+        <br>
+        <p>getFloatFrequencyData()의 경우 이 배열 Y[k]는 출력 배열로 복사됩니다. getByteFrequencyData()의 경우, Y[k]는 minDecibels와 maxDecibels 사이에 있도록 clip되며 minDecibels가 0의 값으로 표현되고 maxDecibels가 255의 값으로 표현되는 unsigned byte에 fit되게 scale됩니다.</p>
+        <br>
         <h2>1.9. AudioBufferSourceNode 인터페이스</h2>
         <p>이 인터페이스는 Audiobuffer 내의 in-memory 오디오 에셋으로부터의 오디오 소스를 나타냅니다. 이것은 높은 정도의 스케쥴링 유연성과 정확성을 요구하는 오디오 에셋 재생에 유용합니다. 만약 network- 또는 disk-backed 에셋의 sample-accurate 재생이 요구된다면, 구현자는 AudioWorkletNode를 사용하여 재생을 구현해야 합니다.</p>
         <br>
