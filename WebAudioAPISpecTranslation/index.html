@@ -2982,6 +2982,23 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
         </table>
         <br>
         <h3>1.9.2. 어트리뷰트</h3>
+        <br>
+        <dl>
+          <dt><i>buffer</i> / 자료형: AudioBuffer / nullable</dt>
+          <dd>재생될 오디오 에셋을 나타냅니다.</dd>
+          <br>
+          <dd>buffer 어트리뷰트를 설정하기 위해서, 다음의 절차를 수행합니다.
+            <ol>
+              <li>new buffer를 AudioBuffer 혹은 buffer에 할당된 null 값이라고 하자.</li>
+              <li>만약 new buffer가 null이 아니고 [[buffer set]]이 true라면, InvalidStateError를 발생시키고 이 절차를 중단한다.</li>
+              <li>만약 new buffer가 null이라면, [[buffer set]]을 true로 설정한다.</li>
+              <li>new buffer를 buffer 어트리뷰트에 할당한다.</li>
+              <li>만약 start()가 이 노드에서 이전에 호출되었었다면, 이 buffer에서 acquire the content 동작을 수행한다.</li>
+            </ol>
+          </dd>
+          <br>
+        </dl>
+        <br>
         <h3>1.9.3. 메서드</h3>
         <h3>1.9.4. AudioBufferSourceOptions</h3>
         <h4>1.9.4.1. 딕셔너리 AudioBufferSourceOptions 멤버</h4>
