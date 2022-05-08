@@ -2997,6 +2997,39 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
             </ol>
           </dd>
           <br>
+          <dt><i>detune</i> / 자료형: AudioParam / 읽기 전용</dt>
+          <dd>렌더링되는 오디오 스트림의 속도를 조절하기 위한 추가적인 파라미터 (단위: 센트). 이 파라미터는 playbackRate와 함께 computedPlaybackRate를 형성하는 compound parameter입니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <tr>
+                <td>매개변수</td>
+                <td>값</td>
+                <td>참고사항</td>
+              </tr>
+              <tr>
+                <td>defaultValue</td>
+                <td>0</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>minValue</td>
+                <td>most-negative-single-float</td>
+                <td>약 -3.4028235e38</td>
+              </tr>
+              <tr>
+                <td>maxValue</td>
+                <td>most-positive-single-float</td>
+                <td>약 3.4028235e38</td>
+              </tr>
+              <tr>
+                <td>automationRate</td>
+                <td>"k-rate"</td>
+                <td>automation rate constraints를 가짐</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
         </dl>
         <br>
         <h3>1.9.3. 메서드</h3>
