@@ -1,0 +1,14 @@
+https://logic-finder.github.io
+https://logic-finder.github.io/WebAudioAPISpecTranslation/index.html
+https://logic-finder.github.io/FourierSeriesExploration/opening/opening-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/opening/opening-en.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter1/chapter1-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter1/chapter1-en.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter2/chapter2-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter2/chapter2-en.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter3/chapter3-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter3/chapter3-en.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter4/chapter4-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/chapter4/chapter4-en.html
+https://logic-finder.github.io/FourierSeriesExploration/ending/ending-ko.html
+https://logic-finder.github.io/FourierSeriesExploration/ending/ending-en.html
