@@ -3036,6 +3036,9 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
           <dt><i>loopEnd</i> / 자료형: double</dt>
           <dd>만약 loop 어트리뷰트가 참이라면 루프가 끝나야 하는 선택적인 playhead position. 이것의 값은 루프의 내용을 제외합니다. 이것의 기본값은 0이고, 0과 버퍼의 duration 사이의 어떤 값으로도 유용하게 설정될 수 있습니다. 만약 loopEnd가 0보다 작거나 같거나, 버퍼의 duration보다 크다면, 루프는 버퍼의 끝에서 끝날 것입니다.</dd>
           <br>
+          <dt><i>loopStart</i> / 자료형: double</dt>
+          <dd>만약 loop 어트리뷰트가 참이라면 루프가 시작해야 할 추가적인 playhead position. 기본값은 0이며, 0과 버퍼의 duration 사이의 어떠한 값으로도 유용하게 설정될 수 있습니다. 만약 loopStart가 0보다 작으면, 루프는 0에 시작할 것입니다. 만약 loopStart가 버퍼의 duration보다 크다면, 루프는 버퍼의 끝에서 시작할 것입니다.</dd>
+          <br>
         </dl>
         <br>
         <h3>1.9.3. 메서드</h3>
