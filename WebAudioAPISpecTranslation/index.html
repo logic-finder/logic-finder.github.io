@@ -3039,6 +3039,38 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
           <dt><i>loopStart</i> / 자료형: double</dt>
           <dd>만약 loop 어트리뷰트가 참이라면 루프가 시작해야 할 추가적인 playhead position. 기본값은 0이며, 0과 버퍼의 duration 사이의 어떠한 값으로도 유용하게 설정될 수 있습니다. 만약 loopStart가 0보다 작으면, 루프는 0에 시작할 것입니다. 만약 loopStart가 버퍼의 duration보다 크다면, 루프는 버퍼의 끝에서 시작할 것입니다.</dd>
           <br>
+          <dt><i>playbackRate / 자료형: AudioParam / 읽기 전용</i></dt>
+          <dd>오디오 스트림을 렌더링할 속도. 이것은 detune과 함께 computedPlaybackRate를 형성하는 compound parameter입니다.</dd>
+          <br>
+          <dd>
+            <table>
+              <tr>
+                <td>매개변수</td>
+                <td>값</td>
+                <td>참고사항</td>
+              </tr>
+              <tr>
+                <td>defaultValue</td>
+                <td>1</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>minValue</td>
+                <td>most-negative-single-float</td>
+                <td>약 -3.4028235e38</td>
+              </tr>
+              <tr>
+                <td>maxValue</td>
+                <td>most-positive-single-float</td>
+                <td>약 3.4028235e38</td>
+              </tr>
+              <tr>
+                <td>automationRate</td>
+                <td>"k-rate"</td>
+                <td>automation rate constraints를 가짐</td>
+              </tr>
+            </table>
+          </dd>
         </dl>
         <br>
         <h3>1.9.3. 메서드</h3>
