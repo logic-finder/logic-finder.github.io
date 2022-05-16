@@ -3102,6 +3102,41 @@ interface AudioBufferSourceNode : AudioScheduledSourceNode {
           <br>
           <dd>컨트롤 메시지를 실행해 AudioBufferSourceNode를 시작시킨다는 것은 다음의 재생 알고리즘의 handleStart()를 호출한다는 것을 의미합니다.</dd>
           <br>
+          <dd>
+            <table>
+              <caption>AudioBufferSourceNode.start(when, offset, duration) 메서드의 인자</caption>
+              <tr>
+                <td>매개변수</td>
+                <td>자료형</td>
+                <td>nullable</td>
+                <td>optional</td>
+                <td>설명</td>
+              </tr>
+              <tr>
+                <td>when</td>
+                <td>double</td>
+                <td>x</td>
+                <td>v</td>
+                <td>when 매개변수는 어떤 시간에 (단위: 초) 소리가 재생을 시작해야 하는지를 기술합니다. 이것은 AudioContext의 currentTime 어트리뷰트와 같은 시간 좌표계에 있습니다. 만약 이 값에 0이 전달되었거나 이 값이 <strong>currentTime</strong>보다 작다면, 소리는 즉시 재생되어야 합니다. ⌛ 만약 when이 음수라면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+              </tr>
+              <tr>
+                <td>offset</td>
+                <td>double</td>
+                <td>x</td>
+                <td>v</td>
+                <td>offset 매개변수는 재생이 시작될 playhead position을 제공합니다. 만약 이 값에 0이 전달되었다면, 재생은 버퍼의 시작점에서부터 시작될 것입니다. ⌛ 만약 offset이 음수라면 RangeError 예외가 반드시 발생되어야만 합니다. 만약 offset이 loopEnd보다 크고, playbackRate가 양수거나 0이고, loop이 true라면, 재생은 loopEnd에서 시작될 것입니다. 만약 offset이 loopStart보다 크고, playbackRate가 음수이고, loop이 true라면, 재생은 loopStart에서 시작될 것입니다. offset은 startTime에 도달했을 때 조용히 [0, duration]으로 clamp되며, 여기서 duration은 이 AudioBufferSourceNode의 buffer 어트리뷰트로 설정된 AudioBuffer의 duration 어트리뷰트의 값입니다.</td>
+              </tr>
+              <tr>
+                <td>duration</td>
+                <td>double</td>
+                <td>x</td>
+                <td>v</td>
+                <td>duration 매개변수는 재생될 사운드의 duration을 기술하며, 출력될 전체 버퍼 컨텐츠의 초로서 표현되고, 전체 혹은 부분 loop 반복을 포함합니다. duration의 단위는 playbackRate의 효과에 독립적입니다. 예를 들어, 0.5의 playbackRate를 가진 5초의 duration은 5초의 버퍼 컨텐츠를 절반의 속도로 출력할 것이며, 이는 10초의 들을 수 있는 출력을 생성합니다. ⌛ 만약 duration이 음수면 RangeError 예외가 반드시 발생되어야만 합니다.</td>
+              </tr>
+            </table>
+          </dd>
+          <br>
+          <dd>반환 유형: undefined</dd>
         </dl>
         <br>
         <h3>1.9.4. AudioBufferSourceOptions</h3>
