@@ -3177,6 +3177,19 @@ dictionary AudioBufferSourceOptions {
         </dl>
         <br>
         <h3>1.9.5. 반복</h3>
+        <br>
+        <p><i>이 섹션은 비규범적입니다. 규범적 요구사항에 대해서는 playback algorithm을 참고하십시오.</i></p>
+        <br>
+        <p>loop 어트리뷰트를 true로 설정하는 것은 loopStart와 loopEnd 엔드포인트에 의해 정의된 버퍼의 영역의 재생이, 한 번 반복 영역의 어떠한 부분이라도 재생되었다면 무기한으로 계속되게 유발합니다. loop이 true로 유지되는 동안, 반복되는 재생은 다음 중 하나가 발생할 때까지 계속될 것입니다.</p>
+        <br>
+        <ul>
+          <li>stop()이 호출되었습니다.</li>
+          <li>예정된 stop time에 도달했습니다.</li>
+          <li>start()가 duration 값과 함께 호출되었고, duration이 초과되었습니다.</li>
+        </ul>
+        <br>
+        <p>반복되는 부분은 loopStart까지로부터의 영역을 차지하는 것으로 생각되나, loopEnd는 포함하지 않습니다. 반복 영역의 재생의 방향은 노드의 playback rate의 부호를 따릅니다. 양수 playback rate에 대해서, 반복은 loopStart에서 loopEnd까지 발생합니다. 음수 rate에 대해서, 반복은 loopEnd에서 loopStart까지 발생합니다.</p>
+        <br>
         <h3>1.9.6. AudioBuffer 내용의 재생</h3>
         <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
