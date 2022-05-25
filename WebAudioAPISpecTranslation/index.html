@@ -3192,6 +3192,10 @@ dictionary AudioBufferSourceOptions {
         <br>
         <p>반복은 start()의 offset 인자의 구현에 영향을 주지 않습니다. 재생은 언제나 요청된 offset에서 시작하고, 반복은 오직 한 번 반복의 부분이 재생 중에 조우되면 시작합니다.</p>
         <br>
+        <p>효과적인 반복의 시작점과 끝점은, 아래의 알고리즘에 명시된 대로 0과 버퍼의 duration 범위 내에 있을 것이 요구됩니다. loopEnd는 loopStart에 또는 loopStart의 이후에 있을 것이 추가적으로 제약됩니다. 만약 이 제약 사항 중 어느 것이라도 위반되었다면, 반복은 전체 버퍼 내용을 포함하는 것으로 고려됩니다.</p>
+        <br>
+        <p>반복의 끝점은 subsample accuracy를 가집니다. 끝점이 정확한 sample frame offset에 떨어지지 않을 때, 또는 playback rate가 1과 같지 않을 때, 반복의 재생은 보간되어 반복의 시작과 끝을 함께 splice해 마치 딱 반복된 오디오가 버퍼의 순차적이고, 비반복된 영역에서 발생한 것처럼 합니다.</p>
+        <br>
         <h3>1.9.6. AudioBuffer 내용의 재생</h3>
         <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
