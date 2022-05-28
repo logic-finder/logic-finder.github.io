@@ -3198,6 +3198,8 @@ dictionary AudioBufferSourceOptions {
         <br>
         <p>반복에 관련된 속성들은 버퍼의 재생 중에 변할 수도 있고, 일반적으로 다음 rendering quantum에 영향을 미칩니다. 실제 결과는 다음의 규범적인 재생 알고리즘에 의해 정의됩니다.</p>
         <br>
+        <p>loopStart와 loopEnd 어트리뷰트의 기본값은 0입니다. 0의 loopEnd 값은 버퍼의 길이와 같기 때문에, 기본 끝점은 전체 버퍼가 반복에 포함되는 것을 유발합니다.</p>
+        <br>
         <h3>1.9.6. AudioBuffer 내용의 재생</h3>
         <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
