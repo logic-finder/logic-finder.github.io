@@ -3362,6 +3362,8 @@ function process(numberOfFrames) {
 }
         </pre>
         <br>
+        <p>다음의 비규범적인 그림들은 여러 가지 중요한 시나리오들에서의 알고리즘의 동작을 보여줍니다. 버퍼의 동적 리샘플링은 고려되지 않았지만, 반복 위치의 횟수가 변경되지 않는 한 이것은 물질적으로 결과 재생에 영향을 주지 않을 것입니다. 모든 그림에서, 다음의 약속이 적용됩니다.</p>
+        <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
