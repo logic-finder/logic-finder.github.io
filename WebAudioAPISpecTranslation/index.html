@@ -3220,6 +3220,148 @@ dictionary AudioBufferSourceOptions {
           <li>반복된 버퍼의 재생은 반복된 오디오 컨텐츠의 연이은 발생을 포함하고 있는 반복되지 않은 버퍼와 동일하게 동작해야 하며, 보간에 의한 효과를 제외합니다.</li>
         </ul>
         <br>
+        <p>알고리즘의 설명은 아래와 같습니다.</p>
+        <br>
+        <pre>
+let buffer; // 이 노드에 의해 사용되는 AudioBuffer
+let context; // 이 노드에 의해 사용되는 AudioContext
+// 다음의 변수들은 이 노드의 어트리뷰트와 AudioParam 값들을 포착합니다.
+// 이 변수들은 k-rate 기반으로 갱신되며, 각 process() 호출에 앞섭니다.
+let loop;
+let detune;
+let loopStart;
+let loopEnd;
+let playbackRate;
+// 노드의 재생 파라미터에 대한 변수들
+let start = 0, offset = 0, duration = Infinity; // Set by start()
+let stop = Infinity; // Set by stop()
+// 노드의 재생 상태를 추적하기 위한 변수들
+let bufferTime = 0, started = false, enteredLoop = false;
+let bufferTimeElapsed = 0;
+let dt = 1 / context.sampleRate;
+// start 메서드 호출의 호출을 다룸
+function handleStart(when, pos, dur) {
+  if (arguments.length >= 1) {
+    start = when;
+  }
+  offset = pos;
+  if (arguments.length >= 3) {
+    duration = dur;
+  }
+}
+// stop 메서드 호출의 호출을 다룸
+function handleStop(when) {
+  if (arguments.length >= 1) {
+    stop = when;
+  } else {
+    stop = context.currentTime;
+  }
+}
+// 몇 개의 샘플 프레임에 대해 다(多)채널 신호를 보간합니다.
+// 신호 값들의 배열을 반환합니다.
+function playbackSignal(position) {
+  /*
+     이 함수는 버퍼의 재생 신호 함수를 제공하는데, 이는 playhead 포지션을
+     출력 신호의 집합에, 각 출력 신호에 대해 하나씩, 대응시키는(map) 함수입니다.
+     만약 |position|이 버퍼 내의 정확한 샘플 프레임의 위치와 일치한다면,
+     이 함수는 그 프레임을 반환합니다. 그렇지 않을 경우, 이것의 반환 값은
+     |position|의 이웃에 있는 샘플 프레임들을 보간하는 UA에 의해 제공되는 알고리즘에 의해
+     결정됩니다.
+     만약 |position|이 |loopEnd|보다 크거나 같고 버퍼 내에 연이은 샘플 프레임이 없다면,
+     보간은 |loopStart|에서 시작하는 연이은 프레임들의 시퀸스에 기반하여야 합니다.
+    */
+   ...
+}
+// 출력에 의해 정이되는 채널 배열 내에
+// 배치될 하나의 오디오 render quantum을 생성합니다.
+// 출력될 |numberOfFrames| 샘플 프레임들의 배열을 반환합니다.
+function process(numberOfFrames) {
+  let currentTime = context.currentTime;// 다음 렌더링된 프레임의 context time
+  const output = []; // 렌더링된 샘플 프레임을 누적시킵니다
+  // playback rate에 영향을 미치는 두 개의 k-rate 파라미터를 결합합니다.
+  const computedPlaybackRate = playbackRate * Math.pow(2, detune / 1200);
+  // 해당될 때 loop endpoint를 결정합니다
+  let actualLoopStart, actualLoopEnd;
+  if (loop && buffer != null) {
+    if (loopStart >= 0 && loopEnd > 0 && loopStart < loopEnd) {
+      actualLoopStart = loopStart;
+      actualLoopEnd = Math.min(loopEnd, buffer.duration);
+    } else {
+      actualLoopStart = 0;
+      actualLoopEnd = buffer.duration;
+    }
+  } else {
+    // 만약 loop flag가 false라면, 입력된 반복의 모든 기록을 제거합니다.
+    enteredLoop = false;
+  }
+  // buffer가 null인 경우를 다룹니다
+  if (buffer == null) {
+    stop = currentTime; // 모든 시간에 대해 0의 출력을 강제합니다
+  }
+  // quantum 내의 각 샘플 프레임을 렌더링합니다.
+  for (let index = 0; index < numberOfFrames; index++) {
+    // currentTime과 bufferTimeElapsed가
+    // 허용되는 재생 범위 내에 있는지 검사합니다.
+    if (currentTime < start || currentTime >= stop || bufferTimeElapsed >= duration) {
+      output.push(0); // 이 샘플 프레임은 무음입니다
+      currentTime += dt;
+      continue;
+    }
+    if (!started) {
+      // buffer가 재생을 시작하였고 초기
+      // playhead poisition을 얻었음에 주의하십시오.
+      if (loop && computedPlaybackRate >= 0 && offset >= actualLoopEnd) {
+        offset = actualLoopEnd;
+      }
+      if (computedPlaybackRate < 0 && loop && offset < actualLoopStart) {
+        offset = actualLoopStart;
+      }
+      bufferTime = offset;
+      started = true;
+    }
+    // 반복에 관련된 계산을 다룹니다
+    if (loop) {
+      // 반복된 부분이 처음으로 입력되었는지를 결정합니다.
+      if (!enteredLoop) {
+        if (offset < actualLoopEnd && bufferTime >= actualLoopStart) {
+          // 재생이 반복 전에 혹은 내에서 시작되었고, playhead가
+          // 이제 지난 loop start입니다
+          enteredLoop = true;
+        }
+        if (offset >= actualLoopEnd && bufferTime < actualLoopEnd) {
+          // 재생이 반복 후에 시작되었고, playhead가 이제
+          // loop end에 앞섭니다.
+          enteredLoop = true;
+        }
+      }
+      // 필요할 때 loop 반복(iteration)을 wrap합니다. enteredLoop이
+      // 선행하는 조건문 내에서 true가 될 수 있음에 주의하십시오.
+      if (enteredLoop) {
+        while (bufferTime >= actualLoopEnd) {
+          bufferTime -= actualLoopEnd - actualLoopStart;
+        }
+        while (bufferTime < actualLoopStart) {
+          bufferTime += actualLoopEnd - actualLoopStart;
+        }
+      }
+    }
+    if (bufferTime >= 0 && bufferTime < buffer.duration) {
+      output.push(playbackSignal(bufferTime));
+    } else {
+      output.push(0); // 지난 버퍼의 끝, 그러므로 무음의 프레임을 출력합니다
+    }
+    bufferTime += dt * computedPlaybackRate;
+    bufferTimeElapsed += dt * computedPlaybackRate;
+    currentTime += dt;
+  } // render quantum 반복의 끝
+  if (currentTime >= stop) {
+    // 이 노드의 재생 상태의 끝. 추가적인 process() 호출이
+    // 발생하지 않을 것입니다. 출력 채널의 숫자를 1로 설정하는 변경을 예정합니다.
+  }
+  return output;
+}
+        </pre>
+        <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
