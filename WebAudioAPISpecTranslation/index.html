@@ -3372,6 +3372,13 @@ function process(numberOfFrames) {
           <li>그림에 나타난 duration 값들은 buffer를 나타내는 것이지, start()의 인자가 아닙니다</li>
         </ul>
         <br>
+        <p>이 그림은 버퍼 내의 마지막 샘플 프레임 이후에 끝나는 간단한 반복이 있는 버퍼의 기본적인 재생을 보여줍니다.</p>
+        <br>
+        <figure>
+          <img src="img/absn-basic.png" width="556" height="485">
+          <figcaption><strong>도식 6</strong> AudioBufferSourceNode 기본 재생</figcaption>
+        </figure>
+        <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
