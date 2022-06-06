@@ -3388,6 +3388,13 @@ function process(numberOfFrames) {
         <br>
         <p>※ 보간은 다음 데이터 포인트로 loopStart에 있는 샘플을 사용하는데, 왜냐하면 버퍼 내에 더 이상의 샘플들이 없기 때문입니다.</p>
         <br>
+        <p>이 그림은 샘플 레이트 보간을 나타내는데, 샘플 레이트가 컨텍스트 샘플 레이트의 50%인 버퍼의 재생을 보여줍니다. 그 결과로 0.5의 computed playback rate를 낳으며 이는 버퍼와 컨텍스트 사이의 샘플 레이트에서의 차이를 정정합니다. 결과 출력은 선행하는 예제와 같지만, 이유는 다릅니다.</p>
+        <br>
+        <figure>
+          <img src="img/absn-half-sample-rate.png" width="543" height="459">
+          <figcaption><strong>도식 8</strong> AudioBufferSourceNode 샘플 레이트 보간</figcaption>
+        </figure>
+        <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
