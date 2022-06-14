@@ -3399,7 +3399,14 @@ function process(numberOfFrames) {
         <br>
         <figure>
           <img src="img/absn-offset.png" width="543" height="448">
-          <figcaption><strong>도식 9</strong> subsample offset 재생</figcaption>
+          <figcaption><strong>도식 9</strong> AudioBufferSourceNode subsample offset 재생</figcaption>
+        </figure>
+        <br>
+        <p>이 그림은 subsample loop 재생을 나타내는데, 어떻게 반복 끝점들 내에 있는 단편적인 frame offset들이 마치 보간된 data point들이 실제의 샘플 프레임들에 대한 참조인 것처럼 이 offset들을 준수하는 버퍼 내의 보간된 data point들에 매핑되는지를 보여줍니다.</p>
+        <br>
+        <figure>
+          <img src="img/absn-subsample-loop.png" width="543" height="480">
+          <figcaption><strong>도식 10</strong> AudioBufferSourceNode subsample loop 재생</figcaption>
         </figure>
         <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
@@ -4727,7 +4734,7 @@ class Vec3 {
     this.y = y;
     this.z = z;
   }
-  // 다른 벡터와이 dot product
+  // 다른 벡터와의 dot product
   dot(v) {
     return (this.x * v.x) + (this.y * v.y) + (this.z * v.z);
   }
