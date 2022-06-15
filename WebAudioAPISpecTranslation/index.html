@@ -3410,6 +3410,7 @@ function process(numberOfFrames) {
         </figure>
         <br>
         <h2>1.10. AudioDestinationNode 인터페이스</h2>
+        <br>
         <p>이것은 최종 오디오 목적지를 나타내는 AudioNode이며 유저가 최종적으로 듣게 될 것입니다. 이것은 종종 스피커에 연결되는 오디오 출력 장치로써 여겨집니다. 들릴 모든 렌더링된 오디오는 이 노드로 라우팅될 것입니다. 즉, AudioContext의 라우팅 그래프의 "최종" 노드입니다. AudioContext당 오직 하나의 AudioDestinationNode가 있는데, 이는 AudioContext의 destination 어트리뷰트를 통해 제공됩니다.</p>
         <br>
         <p>AudioDestinationNode의 출력은 이것의 입력을 합침으로써 생산되며, MediaStreamAudioDestinationNode 또는 MediaRecorder로 가는 AudioContext의 출력을 캡쳐할 수도 있습니다 ([mediastream-recording] 에서 기술됩니다).</p>
@@ -3455,7 +3456,7 @@ function process(numberOfFrames) {
           </tr>
         </table>
         <br>
-        <p>channelCount는 maxChannelCount보다 작거나 같은 값 무엇으로든 설정될 수 있습니다. 만약 이 값이 유효한 범위 내에 없다면 IndexSizeError는 반드시 발생되어야 합니다. 구체적인 예제로써, 만약 오디오 하드웨어가 8 채널의 출력을 지원한다면, channelCount는 8로 설정되고, 출력의 8 채널을 렌더링할 수 있을 것입니다.</p>
+        <p>channelCount는 maxChannelCount보다 작거나 같은 값 무엇으로든 설정될 수 있습니다. ⌛ 만약 이 값이 유효한 범위 내에 없다면 IndexSizeError는 반드시 발생되어야 합니다. 구체적인 예제로써, 만약 오디오 하드웨어가 8 채널의 출력을 지원한다면, channelCount는 8로 설정되고, 출력의 8 채널을 렌더링할 수 있을 것입니다.</p>
         <br>
         <p>OfflineAudioContext에 대해, 기본값은 아래와 같습니다.</p>
         <table>
@@ -3496,7 +3497,7 @@ function process(numberOfFrames) {
           </tr>
         </table>
         <br>
-        <p>numberOfChannels는 OfflineAudioContext를 생성할 때 명시됩니다. 이 값은 변하지 않을 것입니다. 만약 channelCount가 다른 값으로 변경된다면 NotSupportedError 예외가 반드시 발생되어야 합니다.</p>
+        <p>numberOfChannels는 OfflineAudioContext를 생성할 때 명시됩니다. 이 값은 변하지 않을 것입니다. ⌛ 만약 channelCount가 다른 값으로 변경된다면 NotSupportedError 예외가 반드시 발생되어야 합니다.</p>
         <br>
         <pre>
 [Exposed=Window]
@@ -3506,7 +3507,11 @@ interface AudioDestinationNode : AudioNode {
         </pre>
         <br>
         <h3>1.10.1. 어트리뷰트</h3>
-        <p>추후 번역</p>
+        <br>
+        <dl>
+          <dt><i>maxChannelCount</i> / 자료형: unsigned long / 읽기 전용</dt>
+          <dd>channelCount 어트리뷰트가 설정될 수 있는 최대 채널의 수. 오디오 하드웨어 엔드포인트 (일반적 경우) 를 나타내는 AudioDestinationNode는 만약 오디오 하드웨어가 multi-channel이라면 2 채널 이상의 오디오를 잠재적으로 출력할 수 있습니다. maxChannelCount는 이 하드웨어가 지원할 수 있는 최대 채널의 수입니다.</dd>
+        </dl>
         <br>
         <h2>1.11. AudioListener 인터페이스</h2>
         <p>이 인터페이스는 오디오 장면을 듣고 있는 사람의 위지와 방향을 나타냅니다. 모든 PannerNode 객체는 BaseAudioContext의 listener에 관하여 공간화합니다. § 6 공간화에 대한 더욱 자세한 사항은 공간화/패닝을 참고하세요.</p>
